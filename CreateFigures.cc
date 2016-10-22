@@ -30,6 +30,46 @@
 
 #include "CanvasHelper.h"
 
+
+class StackHistHelper
+{
+private:
+  std::vector<TH1*> vHist;
+
+public:
+  StackHistHelper() {};
+
+  void addHist(TH1* h)
+  {
+    TH1* hStack = (TH1*)h->Clone( TString(h->GetName()) + "_Stack" );
+
+    if( vHist.size() != 0 ) hStack->Add( vHist[vHist.size()-1] );
+    vHist.push_back(hStack);
+  }
+
+  unsigned int getHistSize() { return vHist.size(); }
+
+  TH1* getHist(unsigned int nbr, bool reverse=true)
+  {
+    if( nbr >= vHist.size() ) return NULL;
+
+    if( reverse ) {
+      return vHist[ vHist.size()-1-nbr ];
+    }
+
+    return vHist[nbr];
+  }
+
+  
+
+};
+
+
+
+
+
+
+
 int main( int argc, char** argv )
 {
 
@@ -79,6 +119,20 @@ int main( int argc, char** argv )
 
   ctest->cd(1);
   // plot other hist e.g.
+
+
+  
+  StackHistHelper shh;
+  shh.addHist(htest);
+  shh.addHist(htest_3);
+
+  CanvasHelper ch2("ch2");
+  ch2.initNormalCanvas(-3,3,1,1e5,"A.U.","N");
+  Color_t col[4] = {kBlue,kRed,kGreen,kRed};
+  for(unsigned int iHist=0; iHist<shh.getHistSize()&&iHist<4; iHist++) {
+    ch2.addHist( shh.getHist(iHist), "HIST", col[iHist], kSolid, 20, 1001 );
+  }
+  ch2.DrawHist();
   //////////////////////////////////////////////////////////////////////////
 
 
