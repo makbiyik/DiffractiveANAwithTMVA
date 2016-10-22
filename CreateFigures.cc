@@ -63,9 +63,9 @@ int main( int argc, char** argv )
   htest_3->SetFillStyle(1001);
   
   CanvasHelper chelpertest("test");
-  TCanvas * ctest = chelpertest.initNormalCanvas(-3,3,1,1e5,"A.U.","N");
-  chelpertest.addNormalDataHist(htest);
-  chelpertest.addNormalMCHist(htest_2);
+  TCanvas * ctest = chelpertest.initRatioCanvas(-3,3,1,1e5,0,2,"A.U.","N","Ratio");
+  chelpertest.addDataHist(htest);
+  chelpertest.addMCHist(htest_2);
   chelpertest.DrawHist();
 
   ctest->cd(1);
