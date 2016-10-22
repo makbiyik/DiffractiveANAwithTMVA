@@ -39,3 +39,4 @@ createfigures:
 clean:
 		@rm -rfv Diffractive_TMVAClassification
 		@rm -rfv Diffractive_TMVApplication
+		@rm -rfv CreateFigures

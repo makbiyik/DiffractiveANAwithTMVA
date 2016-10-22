@@ -28,6 +28,8 @@
 
 #include "tdrstyle.C"
 
+#include "CanvasHelper.h"
+
 int main( int argc, char** argv )
 {
 
@@ -48,13 +50,26 @@ int main( int argc, char** argv )
 
   //////////////////////////////////////////////////////////////////////////
   // for test purpose
-  TH1* htest = new TH1F("htest",";var1 [GeV];N",100,-3,3);
+  TH1* htest = new TH1F("htest","",100,-3,3);
   htest->FillRandom("gaus",10000);
-  TCanvas * ctest = new TCanvas("ctest");
-  ctest->cd();
-  htest->Draw();
 
+  TH1* htest_2 = new TH1F("htest_2","",100,-3,3);
+  htest_2->FillRandom("gaus",10000);
+
+  TH1* htest_3 = new TH1F("htest_3","",100,-3,3);
+  htest_3->FillRandom("gaus",9000);
+  htest_3->SetFillColor(kYellow);
+  htest_3->SetLineColor(kYellow);
+  htest_3->SetFillStyle(1001);
   
+  CanvasHelper chelpertest("test");
+  TCanvas * ctest = chelpertest.initNormalCanvas(-3,3,1,1e5,"A.U.","N");
+  chelpertest.addNormalDataHist(htest);
+  chelpertest.addNormalMCHist(htest_2);
+  chelpertest.DrawHist();
+
+  ctest->cd(1);
+  htest_3->Draw("same");
 
 
   /////////////////////////////////////////////////
