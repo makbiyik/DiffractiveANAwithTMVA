@@ -38,14 +38,14 @@ void TMVAClassificationApplication( TString myMethodList = "" )
 
    // Default MVA methods to be trained + tested
    std::map<std::string,int> Use;
-   Use["Fisher"]          = 1;
-   Use["FisherG"]         = 1;
+   Use["Fisher"]          = 0;
+   Use["FisherG"]         = 0;
    Use["BoostedFisher"]   = 0; // uses generalised MVA method boosting
   
 
    // --- Boosted Decision Trees
-   Use["BDT"]             = 1; // uses Adaptive Boost
-   Use["BDTG"]            = 0; // uses Gradient Boost
+   Use["BDT"]             = 0; // uses Adaptive Boost
+   Use["BDTG"]            = 1; // uses Gradient Boost
 
   
    std::cout << std::endl;
@@ -161,7 +161,7 @@ void TMVAClassificationApplication( TString myMethodList = "" )
    // in this example, there is a toy tree with signal and one with background events
    // we'll later on use only the "signal" events for the test in this example.
    //   
-   TString fname = "/home/lxadmin/MyRoot/root/tutorials/tmva/MC_PYTHIA8/trackanddiffractive_data_sigDD.root";
+   TString fname = "/home/hauke/root/tmva/test/DiffractiveANAwithTMVA/data/trackanddiffractive_sigDD_epos.root";
    TFile *input = TFile::Open( fname );
    std::cout << "--- TMVAClassification       : Using input file: " << input->GetName() << std::endl;
  
@@ -170,7 +170,7 @@ void TMVAClassificationApplication( TString myMethodList = "" )
    std::cout << "--- Select signal sample" << std::endl;
    // TTree* theTree = (TTree*)input->Get("MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise/sigTree");
    
-   TTree* theTree = (TTree*)input->Get("data_ZeroBias1_CASTOR/bkgTree");
+   TTree* theTree = (TTree*)input->Get("MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise/AllTree");
    Int_t HFminusNtowers_tree ,HFplusNtowers_tree ,CastorNtowers_tree,Ntracks_tree;
    theTree->SetBranchAddress("deltazero", &deltazero);
    theTree->SetBranchAddress("etamax", &etamax);
@@ -194,7 +194,7 @@ void TMVAClassificationApplication( TString myMethodList = "" )
    std::cout << "--- Processing: " << theTree->GetEntries() << " events" << std::endl;
    TStopwatch sw;
    sw.Start();
-   for (Long64_t ievt=0; ievt<theTree->GetEntries();ievt++) {
+   for (Long64_t ievt=0; ievt<theTree->GetEntries() && ievt<10000; ievt++) {
 
       if (ievt%1000 == 0) std::cout << "--- ... Processing event: " << ievt << std::endl;
 
@@ -207,13 +207,13 @@ void TMVAClassificationApplication( TString myMethodList = "" )
       //var1 = userVar1 + userVar2;
       //var2 = userVar1 - userVar2;
 
+
       /////////////////////////////////////////////////////////////////////////
       // Start Own Code Example
       // I used Fisser method e.g.
-      double discriminant_value = reader->EvaluateMVA("Fisher method");
+      double discriminant_value = reader->EvaluateMVA("BDTG method");
       double discriminant_cut = 0.;
      
-   
 
       if( discriminant_value < discriminant_cut) {
          // Reject event
@@ -295,7 +295,7 @@ void TMVAClassificationApplication( TString myMethodList = "" )
 
    // --- Write histograms
 
-   TFile *target  = new TFile( "TMVApp_DD.root","RECREATE" );
+   TFile *target  = new TFile( "data/TMVApp_DD.root","RECREATE" );
   
    if (Use["Fisher"       ])   histFi     ->Write();
    if (Use["FisherG"      ])   histFiG    ->Write();

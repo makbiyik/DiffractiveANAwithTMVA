@@ -13,6 +13,8 @@ CXXFLAGS    +=-ansi
 CXXFLAGS    +=$(shell root-config --cflags)
 LDFLAGS     +=$(shell root-config --libs)
 
+CXXFLAGS    +=-I./lib/
+
 # Add RooUnfold package
 # CXXFLAGS    +=-I/home/hauke/RooUnfold-1.1.1/src/
 # LDFLAGS     +=-L/home/hauke/RooUnfold-1.1.1
@@ -23,7 +25,7 @@ LDFLAGS += -lMLP -lMinuit -lTreePlayer -lTMVA -lXMLIO  -lMLP
 
 .PHONY : all
 
-all: classification application
+all: classification application createfigures
 
 classification:
 		@$(CXX) $(CXXFLAGS) Diffractive_TMVAClassification.cc $(LDFLAGS) -o Diffractive_TMVAClassification
@@ -31,6 +33,8 @@ classification:
 application:
 		@$(CXX) $(CXXFLAGS) Diffractive_TMVApplication.cc $(LDFLAGS) -o Diffractive_TMVApplication
 
+createfigures:
+		@$(CXX) $(CXXFLAGS) CreateFigures.cc $(LDFLAGS) -o CreateFigures
 
 clean:
 		@rm -rfv Diffractive_TMVAClassification

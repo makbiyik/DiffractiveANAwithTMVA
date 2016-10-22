@@ -72,14 +72,14 @@ int TMVA_DDifractive_TEST( TString myMethodList = "" )
   
    // --- Linear Discriminant Analysis
   
-   Use["Fisher"]          = 1;
-   Use["FisherG"]         = 1;
-   Use["BoostedFisher"]   = 1; // uses generalised MVA method boosting
+   Use["Fisher"]          = 0;
+   Use["FisherG"]         = 0;
+   Use["BoostedFisher"]   = 0; // uses generalised MVA method boosting
    
  
    // --- Boosted Decision Trees
   
-   Use["BDT"]             = 1; // uses Adaptive Boost
+   Use["BDT"]             = 0; // uses Adaptive Boost
    Use["BDTG"]            = 1; // uses Gradient Boost
    std::cout << std::endl;
    std::cout << "==> Start TMVAClassification" << std::endl;
@@ -109,7 +109,7 @@ int TMVA_DDifractive_TEST( TString myMethodList = "" )
    // --- Here the preparation phase begins
 
    // Create a ROOT output file where TMVA will store ntuples, histograms, etc.
-   TString outfileName( "TMVA.root" );
+   TString outfileName( "data/TMVA.root" );
    TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
    TMVA::Factory *factory = new TMVA::Factory( "TMVAClassification", outputFile,
                                                "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification" );
@@ -128,7 +128,8 @@ int TMVA_DDifractive_TEST( TString myMethodList = "" )
    factory->AddVariable( "Ntracks","Ntracks", "units", 'I' );
    // factory->AddVariable( "log10XiDD","log10XiDD", "units", 'F' );
 
-   TString fname = "/home/lxadmin/MyRoot/root/tutorials/tmva/MC_PYTHIA8/trackanddiffractive_mc_sigDD.root";
+   // TString fname = "/home/lxadmin/MyRoot/root/tutorials/tmva/MC_PYTHIA8/trackanddiffractive_mc_sigDD.root";
+   TString fname = "/home/hauke/root/tmva/test/DiffractiveANAwithTMVA/data/trackanddiffractive_sigDD_epos.root";
   
    
    TFile *input = TFile::Open( fname );
@@ -137,8 +138,8 @@ int TMVA_DDifractive_TEST( TString myMethodList = "" )
    
    // --- Register the training and test trees
 
-   TTree *signal = (TTree*)input->Get("MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise/sigTree");
-   TTree *background = (TTree*)input->Get("MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise/bkgTree");
+   TTree *signal = (TTree*)input->Get("MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise/sigTree");
+   TTree *background = (TTree*)input->Get("MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise/bkgTree");
   
 
    // TTree *signal = (TTree*)input->Get("data_ZeroBias1_CASTOR/sigTree");
@@ -157,7 +158,7 @@ int TMVA_DDifractive_TEST( TString myMethodList = "" )
    TCut mycutb = "deltazero>=0"; // for example: TCut mycutb = "abs(var1)<0.5";
    
    factory->PrepareTrainingAndTestTree( mycuts, mycutb,
-                                        "nTrain_Signal=100000:nTest_Signal=100000:nTrain_Background=100000:nTest_Background=100000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                        "nTrain_Signal=10000:nTest_Signal=10000:nTrain_Background=100000:nTest_Background=100000:SplitMode=Random:NormMode=NumEvents:!V" );
 
 
    
