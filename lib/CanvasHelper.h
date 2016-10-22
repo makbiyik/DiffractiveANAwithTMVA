@@ -38,24 +38,21 @@ private:
   TString chName;
   TCanvas * c;
 
-  // double xmin,xmax,ymin,ymax;
-  // double ymin_rat, ymax_rat;
-  // TString xTitle, yTitle, yTitle_rat;
-
-  TLegend * leg;
-
-  std::vector<TH1*> vData;
-  std::vector<TH1*> vMC;
-  // std::vector<TH1*> vRatio;
-
   double relpadhigh;
+  bool bRatioCanvas;
+
+  struct sHistInfo
+  {
+    TH1* hist;
+    TString draw_option;
+  };
+
+  std::vector<sHistInfo> vHist;
+  std::vector<sHistInfo> vRatio;
 
 public:
   CanvasHelper(TString _chName)
-    : chName(_chName), c(NULL), 
-      // xmin(0), xmax(0), ymin(0), ymax(0), ymin_rat(0), ymax_rat(0),
-      // xTitle(""), yTitle(""), yTitle_rat(""), 
-      leg(NULL), relpadhigh(0.34)
+    : chName(_chName), c(NULL), relpadhigh(0.34), bRatioCanvas(false)
   {
     c = new TCanvas(TString("c") + chName,chName);
   }
@@ -73,210 +70,44 @@ public:
                            TString xTitle, TString yTitle, TString yTitle_RatioPad,
                            int xAxisNdiv=505, int yAxisNdiv=505);  
 
-  //////////////////////////////////////////////////////////////////////////
-  // add histograms to draw
-  void addDataHist(TH1* h, Color_t col=kBlack, Style_t stl=kSolid, int mkstyle=20);
-  void addMCHist(TH1* h, Color_t col=kBlue, Style_t stl=kSolid, int mkstyle=20);
 
   //////////////////////////////////////////////////////////////////////////
-  void SetUpHist(TH1* h, Color_t col=kBlue, Style_t stl=kSolid, int mkstyle=20);
+  // add histogram for normal pad
+  // the option 'same' will automatically added to the draw option
+  void addHist(TH1* h, TString draw_option, 
+               Color_t col=kBlack, Style_t stl=kSolid, 
+               int mkstyle=20, int fillstyle=0);
+  // will add the ratio hist
+  // hist are only plotted when 'initRatioCanvas()' was used
+  void addRatioHist(TH1* h, TString draw_option, 
+                    Color_t col=kBlack, Style_t stl=kSolid, 
+                    int mkstyle=20, int fillstyle=0);
+
+
+  //////////////////////////////////////////////////////////////////////////
+  // the difference in the add... functions between MC and DATA 
+  // is only the automatic set of draw options
+
+  //////////////////////////////////////////////////////////////////////////
+  // add histograms to draw
+  // use addHist
+  void addDataHist(TH1* h, Color_t col=kBlack, Style_t stl=kSolid, int mkstyle=20) 
+  { addHist(h,"EP",col,stl,mkstyle); }
+  void addMCHist(TH1* h, Color_t col=kBlue, Style_t stl=kSolid, int mkstyle=20)
+  { addHist(h,"HIST",col,stl,mkstyle); }
+  // use addRatioHist
+  void addRatioDataHist(TH1* h, Color_t col=kBlack, Style_t stl=kSolid, int mkstyle=20)
+  { addRatioHist(h,"EP",col,stl,mkstyle); }
+  void addRatioMCHist(TH1* h, Color_t col=kBlue, Style_t stl=kSolid, int mkstyle=20)
+  { addRatioHist(h,"HIST",col,stl,mkstyle); }
+
+
+  //////////////////////////////////////////////////////////////////////////
+  void SetUpHist(TH1* h, Color_t col=kBlue, Style_t stl=kSolid, int mkstyle=20, int fillstyle=0);
 
   //////////////////////////////////////////////////////////////////////////
   void DrawHist(bool logScale=true);
 
-  // //////////////////////////////////////////////////////////////////////////
-  // CanvasHelper(TCanvas * c_,
-  //                   double xlow, double xup,
-  //                   double uppad_ylow, double uppad_yup,
-  //                   double lowpad_ylow, double lowpad_yup,
-  //                   TString xTitle_,
-  //                   TString uppad_yTitle, TString lowpad_yTitle)
-  // : c(c_), xmin(xlow), xmax(xup), ymin(uppad_ylow), ymax(uppad_yup),
-  //   ymin_rat(lowpad_ylow), ymax_rat(lowpad_yup),
-  //   xTitle(xTitle_), yTitle(uppad_yTitle), yTitle_rat(lowpad_yTitle), 
-  //   leg(NULL), relpadhigh(0.34)
-  // {}
-
-  // //////////////////////////////////////////////////////////////////////////
-  // TH1F* DrawRatioHist(TH1* hData, TH1* hMc)
-  // {
-  //   TString title = "Ratio_"; 
-  //   title += hData->GetTitle();
-
-  //   TH1F* hRatio = (TH1F*)hData->Clone(title);
-  //   hRatio->Divide(hMc);
-
-  //   hRatio->Draw("same");
-  //   return hRatio;
-  // }
-
-  
-
-  // //////////////////////////////////////////////////////////////////////////
-  // static Color_t GetCircColor(int idx)
-  // {
-  //   const int ncol = 6;
-  //   Color_t col[ncol] = {kBlack,kRed,kAzure+10,kGreen+2,kCyan+2,kMagenta};
-
-  //   return col[idx%ncol];
-  // }
-
-  // //////////////////////////////////////////////////////////////////////////
-  // static Style_t GetCircLineStyle(int idx)
-  // {
-  //   const int nstl = 3;
-  //   Style_t stl[nstl] = {kDashed,kDashDotted,kSolid};
-
-  //   return stl[idx%nstl];
-  // }
-
-  // //////////////////////////////////////////////////////////////////////////
-  // void SetupRatioCanvas()
-  // {
-  //   // c->Divide(1,2,0.0001,0.0001);
-  //   c->Divide(1,2);
-
-  //   double middlemargin = 0.05;
-  //   double bottommargin = 0.35;
-  //   double rightmargin = 0.05;
-
-  //   c->cd(1)->SetPad(0,relpadhigh,1,1);
-  //   c->cd(1)->SetBottomMargin(middlemargin);
-  //   c->cd(1)->SetRightMargin(rightmargin);
-
-  //   c->cd(2)->SetPad(0,0,1,relpadhigh);
-  //   c->cd(2)->SetTopMargin(middlemargin);
-  //   c->cd(2)->SetBottomMargin(bottommargin);
-  //   c->cd(2)->SetRightMargin(rightmargin);
-  //   c->cd(2)->SetTitle("");
-  // }
-
-  // //////////////////////////////////////////////////////////////////////////
-  // void initCanvas(int xAxisNdiv=505, int yAxisNdiv=505)   
-  // {
-  //   TString hname1 = TString(c->GetName()) + "_h1";
-  //   TString hname2 = TString(c->GetName()) + "_h2";
-
-  //   this->SetupRatioCanvas();
-
-  //   // fake hist for draw
-  //   TH1F * hsetup1 = new TH1F(hname1,"",100,xmin,xmax);
-  //   TH1F * hsetup2 = new TH1F(hname2,"",100,xmin,xmax);
-
-
-  //   double lablesize = 0.05;
-  //   double titlesize = 0.05;//0.04;
-  //   double titleoffset = 1.02;
-
-  //   c->cd(1)->SetTickx();
-  //   c->cd(1)->SetTicky();
-  //   hsetup1->SetMinimum(ymin); hsetup1->SetMaximum(ymax);
-  //   hsetup1->Draw();
-  //   hsetup1->GetYaxis()->SetLabelSize(lablesize/(1-relpadhigh));
-  //   hsetup1->GetXaxis()->SetLabelSize(0);
-
-  //   hsetup1->GetXaxis()->SetNdivisions(xAxisNdiv);
-
-  //   hsetup1->GetYaxis()->SetTitleSize(titlesize/(1-relpadhigh));
-  //   hsetup1->GetYaxis()->SetTitleOffset(titleoffset);
-  //   hsetup1->GetYaxis()->SetTitle(yTitle);
-
-  //   // hsetup1->GetYaxis()->CenterTitle();
-
-  //   TLine * lh = new TLine(xmin,1.,xmax,1.0);
-  //   lh->SetLineStyle(3);
-
-  //   c->cd(2)->SetTickx();
-  //   c->cd(2)->SetTicky();
-  //   hsetup2->SetMinimum(ymin_rat); hsetup2->SetMaximum(ymax_rat);
-  //   hsetup2->Draw();
-  //   lh->Draw("same");
-
-  //   hsetup2->GetYaxis()->SetLabelSize(lablesize/relpadhigh);
-  //   hsetup2->GetXaxis()->SetLabelSize(lablesize/relpadhigh);
-
-  //   hsetup2->GetXaxis()->SetTitle(xTitle);
-  //   hsetup2->GetYaxis()->SetTitle(yTitle_rat);
-  //   hsetup2->GetYaxis()->CenterTitle();
-
-  //   hsetup2->GetXaxis()->SetNdivisions(xAxisNdiv);
-  //   hsetup2->GetYaxis()->SetNdivisions(yAxisNdiv);
-
-  //   hsetup2->GetYaxis()->SetTitleSize(titlesize/relpadhigh);
-  //   hsetup2->GetXaxis()->SetTitleSize(titlesize/relpadhigh);
-
-  //   double offset_correction = relpadhigh/(1-relpadhigh)*1.04;
-  //   hsetup2->GetYaxis()->SetTitleOffset(titleoffset*offset_correction);
-  //   hsetup2->GetXaxis()->SetTitleOffset(titleoffset);
-  // }
-
-  // //////////////////////////////////////////////////////////////////////////
-  // void cleanHistToDraw() { vData.clear(); vMC.clear(); vRatio.clear(); }
-
-  // //////////////////////////////////////////////////////////////////////////
-  // void AddHistToDraw(TH1* hData, TH1* hMC)
-  // {
-  //   vData.push_back(hData);
-  //   vMC.push_back(hMC);
-  // }
-
-  // //////////////////////////////////////////////////////////////////////////
-  // void DrawHist(bool logScale=true, bool showMC=true, bool showData=true)
-  // {
-  //   this->initCanvas();
-
-  //   vRatio.resize(vData.size());
-
-  //   // c->cd(1)->SetLogx();
-  //   // c->cd(2)->SetLogx();
-
-  //   c->cd(1)->SetLogy(logScale);
-  //   for(int ih=0; ih<vData.size(); ih++) {
-  //     SetUpHist(vData[ih], GetCircColor(ih), 21+ih);
-  //     SetUpHist(vMC[ih], GetCircColor(ih), 21+ih);
-
-  //     c->cd(1);
-  //     if(showData) vData[ih]->Draw("same");
-  //     if(showMC)   vMC[ih]->Draw("same hist");
-
-  //     c->cd(2);
-  //     // vRatio[ih] = DrawRatioHist(vData[ih],vMC[ih]);
-  //     vRatio[ih] = DrawRatioHist(vMC[ih],vData[ih]);
-  //   }
-  // }
-
-  // //////////////////////////////////////////////////////////////////////////
-  // void DrawLegend(double xmin, double xmax, double ymin, double ymax,
-  //                 TString legTitle, std::vector<TString>& vDataName, bool useMC = false) {
-  //   c->cd(1);
-
-  //   if( vDataName.size() != vData.size() ) return;
-
-  //   leg = new TLegend(xmin,ymin,xmax,ymax);
-  //   leg->SetHeader(legTitle);
-
-  //   leg->SetFillColor(0);
-  //   leg->SetTextSize(0.035);
-
-  //   for(int ih=0; ih<vData.size(); ih++) {
-  //     if(!useMC) leg->AddEntry(vData[ih], vDataName[ih], "p");
-  //     else leg->AddEntry(vMC[ih], vDataName[ih], "l");
-  //   }
-
-  //   leg->Draw("same");
-  // }
-
-  // //////////////////////////////////////////////////////////////////////////
-  // TVirtualPad* getUpPad() { return c->cd(1); }
-  // TVirtualPad* getLowPad() { return c->cd(2); }
-
-  // //////////////////////////////////////////////////////////////////////////
-  // TLegend* getLegend() { return leg; }
-
-  // //////////////////////////////////////////////////////////////////////////
-  // std::vector<TH1*>& getDataHists() { return vData; }
-  // std::vector<TH1*>& getMCHists() { return vMC; }
-  // std::vector<TH1*>& getRatioHists() { return vRatio; }
 
 };
 //////////////////////////////////////////////////////////////////////////
@@ -297,6 +128,8 @@ CanvasHelper::initNormalCanvas(double xlow, double xup,
                                TString xTitle, TString yTitle,
                                int xAxisNdiv, int yAxisNdiv)
 {
+  bRatioCanvas = false;
+
   TString hname1 = chName + "_h1";
 
   // fake hist for draw
@@ -330,78 +163,80 @@ CanvasHelper::initRatioCanvas(double xlow, double xup,
                               TString xTitle, TString yTitle, TString yTitle_RatioPad,
                               int xAxisNdiv, int yAxisNdiv)
 {
-    c->Divide(1,2);
+  bRatioCanvas = true;
 
-    // internal parameter for fine tuning of the pad's margin
-    double middlemargin = 0.05;
-    double bottommargin = 0.35;
-    double rightmargin = 0.05;
+  c->Divide(1,2);
 
-    // setup pad size in canvas
-    c->cd(1)->SetPad(0,relpadhigh,1,1);
-    c->cd(1)->SetBottomMargin(middlemargin);
-    c->cd(1)->SetRightMargin(rightmargin);
+  // internal parameter for fine tuning of the pad's margin
+  double middlemargin = 0.05;
+  double bottommargin = 0.35;
+  double rightmargin = 0.05;
 
-    c->cd(2)->SetPad(0,0,1,relpadhigh);
-    c->cd(2)->SetTopMargin(middlemargin);
-    c->cd(2)->SetBottomMargin(bottommargin);
-    c->cd(2)->SetRightMargin(rightmargin);
-    // c->cd(2)->SetTitle("");
+  // setup pad size in canvas
+  c->cd(1)->SetPad(0,relpadhigh,1,1);
+  c->cd(1)->SetBottomMargin(middlemargin);
+  c->cd(1)->SetRightMargin(rightmargin);
 
-    TString hname1 = chName + "_h1";
-    TString hname2 = chName + "_h2";
+  c->cd(2)->SetPad(0,0,1,relpadhigh);
+  c->cd(2)->SetTopMargin(middlemargin);
+  c->cd(2)->SetBottomMargin(bottommargin);
+  c->cd(2)->SetRightMargin(rightmargin);
+  // c->cd(2)->SetTitle("");
 
-    // fake hist for draw
-    TH1F * hsetup1 = new TH1F(hname1,"",100,xlow,xup);
-    TH1F * hsetup2 = new TH1F(hname2,"",100,xlow,xup);
+  TString hname1 = chName + "_h1";
+  TString hname2 = chName + "_h2";
+
+  // fake hist for draw
+  TH1F * hsetup1 = new TH1F(hname1,"",100,xlow,xup);
+  TH1F * hsetup2 = new TH1F(hname2,"",100,xlow,xup);
 
 
-    double lablesize = 0.05;
-    double titlesize = 0.05;//0.04;
-    double titleoffset = 1.02;
+  double lablesize = 0.05;
+  double titlesize = 0.05;//0.04;
+  double titleoffset = 1.02;
 
-    c->cd(1)->SetTickx();
-    c->cd(1)->SetTicky();
-    hsetup1->SetMinimum(ylow); hsetup1->SetMaximum(yup);
-    hsetup1->Draw();
-    hsetup1->GetYaxis()->SetLabelSize(lablesize/(1-relpadhigh));
-    hsetup1->GetXaxis()->SetLabelSize(0);
+  c->cd(1)->SetTickx();
+  c->cd(1)->SetTicky();
+  hsetup1->SetMinimum(ylow); hsetup1->SetMaximum(yup);
+  hsetup1->Draw();
+  hsetup1->GetYaxis()->SetLabelSize(lablesize/(1-relpadhigh));
+  hsetup1->GetXaxis()->SetLabelSize(0);
 
-    hsetup1->GetXaxis()->SetNdivisions(xAxisNdiv);
+  hsetup1->GetXaxis()->SetNdivisions(xAxisNdiv);
 
-    hsetup1->GetYaxis()->SetTitleSize(titlesize/(1-relpadhigh));
-    hsetup1->GetYaxis()->SetTitleOffset(titleoffset);
-    hsetup1->GetYaxis()->SetTitle(yTitle);
+  hsetup1->GetYaxis()->SetTitleSize(titlesize/(1-relpadhigh));
+  hsetup1->GetYaxis()->SetTitleOffset(titleoffset);
+  hsetup1->GetYaxis()->SetTitle(yTitle);
 
-    // hsetup1->GetYaxis()->CenterTitle();
+  // hsetup1->GetYaxis()->CenterTitle();
 
-    TLine * lh = new TLine(xlow,1.,xup,1.0);
-    lh->SetLineStyle(3);
+  TLine * lh = new TLine(xlow,1.,xup,1.0);
+  lh->SetLineStyle(3);
 
-    c->cd(2)->SetTickx();
-    c->cd(2)->SetTicky();
-    hsetup2->SetMinimum(ylow_RatioPad); hsetup2->SetMaximum(yup_RatioPad);
-    hsetup2->Draw();
-    lh->Draw("same");
+  c->cd(2)->SetTickx();
+  c->cd(2)->SetTicky();
+  hsetup2->SetMinimum(ylow_RatioPad); hsetup2->SetMaximum(yup_RatioPad);
+  hsetup2->Draw();
+  lh->Draw("same");
 
-    hsetup2->GetYaxis()->SetLabelSize(lablesize/relpadhigh);
-    hsetup2->GetXaxis()->SetLabelSize(lablesize/relpadhigh);
+  hsetup2->GetYaxis()->SetLabelSize(lablesize/relpadhigh);
+  hsetup2->GetXaxis()->SetLabelSize(lablesize/relpadhigh);
 
-    hsetup2->GetXaxis()->SetTitle(xTitle);
-    hsetup2->GetYaxis()->SetTitle(yTitle_RatioPad);
-    hsetup2->GetYaxis()->CenterTitle();
+  hsetup2->GetXaxis()->SetTitle(xTitle);
+  hsetup2->GetYaxis()->SetTitle(yTitle_RatioPad);
+  hsetup2->GetYaxis()->CenterTitle();
 
-    hsetup2->GetXaxis()->SetNdivisions(xAxisNdiv);
-    hsetup2->GetYaxis()->SetNdivisions(yAxisNdiv);
+  hsetup2->GetXaxis()->SetNdivisions(xAxisNdiv);
+  hsetup2->GetYaxis()->SetNdivisions(yAxisNdiv);
 
-    hsetup2->GetYaxis()->SetTitleSize(titlesize/relpadhigh);
-    hsetup2->GetXaxis()->SetTitleSize(titlesize/relpadhigh);
+  hsetup2->GetYaxis()->SetTitleSize(titlesize/relpadhigh);
+  hsetup2->GetXaxis()->SetTitleSize(titlesize/relpadhigh);
 
-    double offset_correction = relpadhigh/(1-relpadhigh)*1.04;
-    hsetup2->GetYaxis()->SetTitleOffset(titleoffset*offset_correction);
-    hsetup2->GetXaxis()->SetTitleOffset(titleoffset);
+  double offset_correction = relpadhigh/(1-relpadhigh)*1.04;
+  hsetup2->GetYaxis()->SetTitleOffset(titleoffset*offset_correction);
+  hsetup2->GetXaxis()->SetTitleOffset(titleoffset);
 
-    return c;
+  return c;
 }
 //////////////////////////////////////////////////////////////////////////
 
@@ -411,7 +246,7 @@ CanvasHelper::initRatioCanvas(double xlow, double xup,
 
 //////////////////////////////////////////////////////////////////////////
 void 
-CanvasHelper::SetUpHist(TH1* h, Color_t col, Style_t stl, int mkstyle)
+CanvasHelper::SetUpHist(TH1* h, Color_t col, Style_t stl, int mkstyle, int fillstyle)
 {
   h->SetLineColor(col);
   h->SetMarkerColor(col);
@@ -419,28 +254,39 @@ CanvasHelper::SetUpHist(TH1* h, Color_t col, Style_t stl, int mkstyle)
   h->SetLineStyle(stl);
   h->SetMarkerStyle(mkstyle);
   h->SetMarkerSize(1.3);
+  h->SetFillColor(col);
+  h->SetFillStyle(fillstyle);
 }
 //////////////////////////////////////////////////////////////////////////
-
-
-
 
 
 //////////////////////////////////////////////////////////////////////////
 void 
-CanvasHelper::addDataHist(TH1* h, Color_t col, Style_t stl, int mkstyle)
+CanvasHelper::addHist(TH1* h, TString draw_option, 
+                      Color_t col, Style_t stl, int mkstyle, int fillstyle)
 {
-  vData.push_back(h);
-  SetUpHist(h,col,stl,mkstyle);
+  SetUpHist(h,col,stl,mkstyle,fillstyle);
+
+  sHistInfo shi;
+  shi.hist = h;
+  shi.draw_option = draw_option;
+
+  vHist.push_back(shi);
 }
 
-void 
-CanvasHelper::addMCHist(TH1* h, Color_t col, Style_t stl, int mkstyle)
-{
-  vMC.push_back(h);
-  SetUpHist(h,col,stl,mkstyle);
-}
 //////////////////////////////////////////////////////////////////////////
+void 
+CanvasHelper::addRatioHist(TH1* h, TString draw_option, 
+                           Color_t col, Style_t stl, int mkstyle, int fillstyle)
+{
+  SetUpHist(h,col,stl,mkstyle,fillstyle);
+
+  sHistInfo shi;
+  shi.hist = h;
+  shi.draw_option = draw_option;
+
+  vRatio.push_back(shi);
+}
 
 
 
@@ -454,12 +300,17 @@ CanvasHelper::DrawHist(bool logScale)
   c->cd(1);
   if(logScale) c->cd(1)->SetLogy();
 
-  for(unsigned int iMCHist=0; iMCHist<vMC.size(); iMCHist++) {
-    vMC[iMCHist]->Draw("HIST same");
+  for(unsigned int iHist=0; iHist<vHist.size(); iHist++) {
+    vHist[iHist].hist->Draw( vHist[iHist].draw_option + " same" );
   }
 
-  for(unsigned int iDataHist=0; iDataHist<vData.size(); iDataHist++) {
-    vData[iDataHist]->Draw("EP same");
+
+  if(bRatioCanvas) {
+    c->cd(2);
+
+    for(unsigned int iRatioHist=0; iRatioHist<vRatio.size(); iRatioHist++) {
+      vRatio[iRatioHist].hist->Draw( vRatio[iRatioHist].draw_option + " same" );
+    }
   }
 }
 //////////////////////////////////////////////////////////////////////////

@@ -49,7 +49,7 @@ int main( int argc, char** argv )
 
 
   //////////////////////////////////////////////////////////////////////////
-  // for test purpose
+  // as example and for testing
   TH1* htest = new TH1F("htest","",100,-3,3);
   htest->FillRandom("gaus",10000);
 
@@ -58,18 +58,31 @@ int main( int argc, char** argv )
 
   TH1* htest_3 = new TH1F("htest_3","",100,-3,3);
   htest_3->FillRandom("gaus",9000);
-  htest_3->SetFillColor(kYellow);
-  htest_3->SetLineColor(kYellow);
-  htest_3->SetFillStyle(1001);
   
+  TH1* hRatio = (TH1*)htest_3->Clone("hRatio");
+  hRatio->Divide(htest);
+
+
+
   CanvasHelper chelpertest("test");
   TCanvas * ctest = chelpertest.initRatioCanvas(-3,3,1,1e5,0,2,"A.U.","N","Ratio");
+
   chelpertest.addDataHist(htest);
   chelpertest.addMCHist(htest_2);
+
+  chelpertest.addHist(htest_3,"HIST",kYellow,kSolid,20,1001);
+
+  chelpertest.addRatioHist(hRatio,"HIST",kBlue);
+  hRatio->SetLineColor(kRed);
+
   chelpertest.DrawHist();
 
   ctest->cd(1);
-  htest_3->Draw("same");
+  // plot other hist e.g.
+  //////////////////////////////////////////////////////////////////////////
+
+
+
 
 
   /////////////////////////////////////////////////
