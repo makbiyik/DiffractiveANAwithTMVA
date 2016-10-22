@@ -47,6 +47,14 @@ public:
     vHist.push_back(hStack);
   }
 
+  void addHistFromFileWithPrefix(TFile* file, TString histname, std::vector<TString> vPrefix)
+  {
+    for(unsigned int iPrefix=0; iPrefix<vPrefix.size(); iPrefix++) {
+      TH1* h = (TH1*)file->Get(histname + vPrefix[iPrefix]);
+      addHist(h);
+    }
+  }
+
   unsigned int getHistSize() { return vHist.size(); }
 
   TH1* getHist(unsigned int nbr, bool reverse=true)
@@ -61,6 +69,8 @@ public:
   }
 
   
+
+
 
 };
 
@@ -121,14 +131,27 @@ int main( int argc, char** argv )
   // plot other hist e.g.
 
 
-  
+
+
+
+  // test stacking hists
+  TFile* file = TFile::Open("data/trackanddiffractive_sigDD_epos.root");
+  std::vector<TString> vPrefix;
+  vPrefix.push_back("_NONE");
+  vPrefix.push_back("_SD1");
+  vPrefix.push_back("_SD2");
+  vPrefix.push_back("_DD");
+
+
   StackHistHelper shh;
-  shh.addHist(htest);
-  shh.addHist(htest_3);
+  shh.addHistFromFileWithPrefix(file,"MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise/Hist_GP_DeltaZero",vPrefix);
+
 
   CanvasHelper ch2("ch2");
-  ch2.initNormalCanvas(-3,3,1,1e5,"A.U.","N");
-  Color_t col[4] = {kBlue,kRed,kGreen,kRed};
+  ch2.initNormalCanvas(0,8,1,1e5,"A.U.","N");
+
+  Color_t col[4] = {kBlue,kRed,kGreen,kMagenta};
+
   for(unsigned int iHist=0; iHist<shh.getHistSize()&&iHist<4; iHist++) {
     ch2.addHist( shh.getHist(iHist), "HIST", col[iHist], kSolid, 20, 1001 );
   }
