@@ -59,7 +59,7 @@
 
 #include "TMVA/Factory.h"
 #include "TMVA/Tools.h"
-#include "TMVA/TMVAGui.h"
+// #include "TMVA/TMVAGui.h"
 
 int TMVA_DDifractive_TEST( TString myMethodList = "" )
 {
@@ -217,7 +217,7 @@ int TMVA_DDifractive_TEST( TString myMethodList = "" )
    delete factory;
 
    // Launch the GUI for the root macros
-   if (!gROOT->IsBatch()) TMVA::TMVAGui( outfileName );
+   // if (!gROOT->IsBatch()) TMVA::TMVAGui( outfileName );
 
    return 0;
 }
