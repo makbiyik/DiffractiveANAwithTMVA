@@ -1,6 +1,6 @@
 # DiffractiveANAwithTMVA
 
-## Analysis code for selecting diffractive events in [CMS](http://cms.web.cern.ch/)
+Analysis code for selecting diffractive events in [CMS](http://cms.web.cern.ch/)
 
 ## Install
 
