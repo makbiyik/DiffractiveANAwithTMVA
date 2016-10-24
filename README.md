@@ -4,7 +4,7 @@
 
 ## Install
 
-* Checkout code into the [TMVA](tmva.sourceforge.net/) working directory 
+* Checkout code into the [TMVA](http://tmva.sourceforge.net/) working directory 
   of your [ROOT](https://root.cern.ch/) installation.
 
   ```shell
