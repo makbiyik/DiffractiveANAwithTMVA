@@ -29,6 +29,8 @@
 #include "TF1.h"
 #include "TEfficiency.h"
 
+#include "CMS_lumi.C"
+
 
 //////////////////////////////////////////////////////////////////////////
 // class defenition
@@ -108,7 +110,20 @@ public:
   //////////////////////////////////////////////////////////////////////////
   void DrawHist(bool logScale=true);
 
-
+  //////////////////////////////////////////////////////////////////////////
+  // draw CMS always on top
+  // options posCMSlogo:
+  //   alignment * 10 + x-position
+  //   true for alignment and x-position
+  //   1: left
+  //   2: center
+  //   3: right
+  //   e.g. 13 will plot CMS and Prelimimary on the right but alignt on the left
+  // 
+  // lumiPeriod:
+  //   defines luminosity text written on the top of the plot
+  //   for changing please look at CMS_lumi.C and the parameter iPeriod
+  void DrawCMSPreliminary(bool writePreliminary=true, int posCMSlogo=11, int lumiPeriod=3);
 };
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -313,6 +328,14 @@ CanvasHelper::DrawHist(bool logScale)
     }
   }
 }
+
 //////////////////////////////////////////////////////////////////////////
+void 
+CanvasHelper::DrawCMSPreliminary(bool writePreliminary, int posCMSlogo, int lumiPeriod)
+{
+  cms_lumi::writeExtraText = writePreliminary;
+
+  cms_lumi::CMS_lumi((TPad*)c->cd(1),lumiPeriod,posCMSlogo);
+}
 
 #endif

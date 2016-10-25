@@ -101,7 +101,7 @@ int main( int argc, char** argv )
 
 
   CanvasHelper ch2("ch2");
-  ch2.initNormalCanvas(0,8,1,1e5,"A.U.","N");
+  ch2.initNormalCanvas(0,8,1,1e6,"A.U.","N");
 
   Color_t col[4] = {kBlue,kRed,kGreen,kMagenta};
 
@@ -109,6 +109,8 @@ int main( int argc, char** argv )
     ch2.addHist( shh.getHist(iHist), "HIST", col[iHist], kSolid, 20, 1001 );
   }
   ch2.DrawHist();
+  // plot CMS Preliminary
+  ch2.DrawCMSPreliminary(true,33,3);
   //////////////////////////////////////////////////////////////////////////
 
 

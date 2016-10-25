@@ -21,7 +21,10 @@ CXXFLAGS    +=-I./lib/
 # LDFLAGS     +=-lRooUnfold
 
 # Add TMVA libraries WITHOUT -lTMVAGui (Hauke: not on my system older TMVA version)
-LDFLAGS += -lMLP -lMinuit -lTreePlayer -lTMVA -lXMLIO  -lMLP
+LDFLAGS     += -lMLP -lMinuit -lTreePlayer -lTMVA -lXMLIO -lMLP
+
+# Needed for ROOT TASImage in CMS_lumi.C
+LDFLAGS     += -lASImage
 
 .PHONY : all
 
