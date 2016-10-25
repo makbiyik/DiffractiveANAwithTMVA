@@ -29,54 +29,7 @@
 #include "tdrstyle.C"
 
 #include "CanvasHelper.h"
-
-
-class StackHistHelper
-{
-private:
-  std::vector<TH1*> vHist;
-
-public:
-  StackHistHelper() {};
-
-  void addHist(TH1* h)
-  {
-    TH1* hStack = (TH1*)h->Clone( TString(h->GetName()) + "_Stack" );
-
-    if( vHist.size() != 0 ) hStack->Add( vHist[vHist.size()-1] );
-    vHist.push_back(hStack);
-  }
-
-  void addHistFromFileWithPrefix(TFile* file, TString histname, std::vector<TString> vPrefix)
-  {
-    for(unsigned int iPrefix=0; iPrefix<vPrefix.size(); iPrefix++) {
-      TH1* h = (TH1*)file->Get(histname + vPrefix[iPrefix]);
-      addHist(h);
-    }
-  }
-
-  unsigned int getHistSize() { return vHist.size(); }
-
-  TH1* getHist(unsigned int nbr, bool reverse=true)
-  {
-    if( nbr >= vHist.size() ) return NULL;
-
-    if( reverse ) {
-      return vHist[ vHist.size()-1-nbr ];
-    }
-
-    return vHist[nbr];
-  }
-
-  
-
-
-
-};
-
-
-
-
+#include "StackHistHelper.h"
 
 
 
