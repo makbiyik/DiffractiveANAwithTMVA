@@ -7,8 +7,9 @@
 //////////////////////////////////////////////////////////////////////////
 // Based on files from https://ghm.web.cern.ch/ghm/plots/
 // 
-// the variable iPeriod change the lumi text 
-// written on top of the plot and needed to be updated
+// the string lumiText is written on top of the plot
+// and should look like "XXX nb^{1} (XX TeV)"
+// the original parameter iPeriod is fixed to 0
 //////////////////////////////////////////////////////////////////////////
 
 // define namespace just to be sure that the naming of 
@@ -47,7 +48,7 @@ namespace cms_lumi {
 
   bool drawLogo      = false;
 
-  void CMS_lumi( TPad* pad, int iPeriod=3, int iPosX=10 )
+  void CMS_lumi( TPad* pad, TString lumiText_, int iPosX=10 )
   {            
     bool outOfFrame    = false;
     if( iPosX/10==0 ) 
@@ -76,6 +77,11 @@ namespace cms_lumi {
     pad->cd();
 
     TString lumiText;
+    //////////////////////////////////////////////////////////////////////////
+    // added by hand and not part of the original code
+    lumiText = lumiText_;
+    int iPeriod = 0;
+
     if( iPeriod==1 )
       {
         lumiText += lumi_7TeV;

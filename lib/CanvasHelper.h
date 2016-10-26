@@ -115,18 +115,19 @@ public:
 
   //////////////////////////////////////////////////////////////////////////
   // draw CMS always on top
+  //   + Preliminary when first bool is set
+  // 
   // options posCMSlogo:
   //   alignment * 10 + x-position
   //   true for alignment and x-position
   //   1: left
   //   2: center
   //   3: right
-  //   e.g. 13 will plot CMS and Prelimimary on the right but alignt on the left
+  //   e.g. 13 will plot CMS and Prelimimary on the right but align the text to the left
   // 
-  // lumiPeriod:
+  // lumiText:
   //   defines luminosity text written on the top of the plot
-  //   for changing please look at CMS_lumi.C and the parameter iPeriod
-  void DrawCMSPreliminary(bool writePreliminary=true, int posCMSlogo=11, int lumiPeriod=3);
+  void DrawCMSPreliminary(bool writePreliminary=true, int posCMSlogo=11, TString lumiText = "XXX nb^{1} (XX TeV)");
 };
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -334,11 +335,11 @@ CanvasHelper::DrawHist(bool logScale)
 
 //////////////////////////////////////////////////////////////////////////
 void 
-CanvasHelper::DrawCMSPreliminary(bool writePreliminary, int posCMSlogo, int lumiPeriod)
+CanvasHelper::DrawCMSPreliminary(bool writePreliminary, int posCMSlogo, TString lumiText)
 {
   cms_lumi::writeExtraText = writePreliminary;
 
-  cms_lumi::CMS_lumi((TPad*)c->cd(1),lumiPeriod,posCMSlogo);
+  cms_lumi::CMS_lumi((TPad*)c->cd(1),lumiText,posCMSlogo);
 }
 
 #endif
