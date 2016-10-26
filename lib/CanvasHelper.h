@@ -61,6 +61,7 @@ public:
 
   //////////////////////////////////////////////////////////////////////////
   // init funcitons for canvas to create normal or with ratio plots
+  // both returns pointer to the canvas for adjustments
   TCanvas* initNormalCanvas(double xlow, double xup,
                             double ylow, double yup,
                             TString xTitle, TString yTitle,
@@ -81,6 +82,7 @@ public:
                int mkstyle=20, int fillstyle=0);
   // will add the ratio hist
   // hist are only plotted when 'initRatioCanvas()' was used
+  // the option 'same' will automatically added to the draw option
   void addRatioHist(TH1* h, TString draw_option, 
                     Color_t col=kBlack, Style_t stl=kSolid, 
                     int mkstyle=20, int fillstyle=0);
@@ -93,21 +95,22 @@ public:
   //////////////////////////////////////////////////////////////////////////
   // add histograms to draw
   // use addHist
-  void addDataHist(TH1* h, Color_t col=kBlack, Style_t stl=kSolid, int mkstyle=20) 
-  { addHist(h,"EP",col,stl,mkstyle); }
-  void addMCHist(TH1* h, Color_t col=kBlue, Style_t stl=kSolid, int mkstyle=20)
-  { addHist(h,"HIST",col,stl,mkstyle); }
+  void addDataHist(TH1* h, Color_t col=kBlack, Style_t stl=kSolid, int mkstyle=20) { addHist(h,"EP",col,stl,mkstyle); }
+  void addMCHist(TH1* h, Color_t col=kBlue, Style_t stl=kSolid, int mkstyle=20) { addHist(h,"HIST",col,stl,mkstyle); }
   // use addRatioHist
-  void addRatioDataHist(TH1* h, Color_t col=kBlack, Style_t stl=kSolid, int mkstyle=20)
-  { addRatioHist(h,"EP",col,stl,mkstyle); }
-  void addRatioMCHist(TH1* h, Color_t col=kBlue, Style_t stl=kSolid, int mkstyle=20)
-  { addRatioHist(h,"HIST",col,stl,mkstyle); }
+  void addRatioDataHist(TH1* h, Color_t col=kBlack, Style_t stl=kSolid, int mkstyle=20) { addRatioHist(h,"EP",col,stl,mkstyle); }
+  void addRatioMCHist(TH1* h, Color_t col=kBlue, Style_t stl=kSolid, int mkstyle=20) { addRatioHist(h,"HIST",col,stl,mkstyle); }
 
 
   //////////////////////////////////////////////////////////////////////////
+  // do basic style adjustments to the hist
+  // like thicker lines and markers
+  // col is set line, marker and fill color 
   void SetUpHist(TH1* h, Color_t col=kBlue, Style_t stl=kSolid, int mkstyle=20, int fillstyle=0);
 
   //////////////////////////////////////////////////////////////////////////
+  // plot the histograms add before by addHist or addRatioHist
+  // loop over vector vHist and vRatio
   void DrawHist(bool logScale=true);
 
   //////////////////////////////////////////////////////////////////////////

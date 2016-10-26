@@ -29,6 +29,11 @@
 #include "TF1.h"
 #include "TEfficiency.h"
 
+
+
+//////////////////////////////////////////////////////////////////////////
+// class defenition
+//////////////////////////////////////////////////////////////////////////
 class StackHistHelper
 {
 private:
@@ -37,6 +42,8 @@ private:
 public:
   StackHistHelper() {};
 
+  //////////////////////////////////////////////////////////////////////////
+  // stack histogram to the previous one in the vector vHist
   void addHist(TH1* h)
   {
     TH1* hStack = (TH1*)h->Clone( TString(h->GetName()) + "_Stack" );
@@ -45,16 +52,27 @@ public:
     vHist.push_back(hStack);
   }
 
-  void addHistFromFileWithPrefix(TFile* file, TString histname, std::vector<TString> vPrefix)
+  //////////////////////////////////////////////////////////////////////////
+  // loop over the hist with the histname + vSuffix and 
+  // add them to the previous hist
+  // the suffix and the order is given by the vector vSuffix 
+  //   (first hist will be untoched)
+  void addHistFromFileWithPrefix(TFile* file, TString histname, std::vector<TString> vSuffix)
   {
-    for(unsigned int iPrefix=0; iPrefix<vPrefix.size(); iPrefix++) {
-      TH1* h = (TH1*)file->Get(histname + vPrefix[iPrefix]);
+    vHist.clear();
+
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+      TH1* h = (TH1*)file->Get(histname + vSuffix[iSuffix]);
       addHist(h);
     }
   }
 
+  //////////////////////////////////////////////////////////////////////////
   unsigned int getHistSize() { return vHist.size(); }
 
+  //////////////////////////////////////////////////////////////////////////
+  // get hist pointer beginning from 
+  // the last (most stacked) when reverse = true
   TH1* getHist(unsigned int nbr, bool reverse=true)
   {
     if( nbr >= vHist.size() ) return NULL;
@@ -68,6 +86,8 @@ public:
 
   
 };
-
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
 #endif
