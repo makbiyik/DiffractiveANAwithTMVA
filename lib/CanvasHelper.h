@@ -116,6 +116,7 @@ public:
   //////////////////////////////////////////////////////////////////////////
   // draw CMS always on top
   //   + Preliminary when first bool is set
+  //   + Simulation
   // 
   // options posCMSlogo:
   //   alignment * 10 + x-position
@@ -128,6 +129,7 @@ public:
   // lumiText:
   //   defines luminosity text written on the top of the plot
   void DrawCMSPreliminary(bool writePreliminary=true, int posCMSlogo=11, TString lumiText = "XXX nb^{1} (XX TeV)");
+  void DrawCMSSimulation(bool writePreliminary=true, int posCMSlogo=11, TString lumiText = "");
 };
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -338,6 +340,15 @@ void
 CanvasHelper::DrawCMSPreliminary(bool writePreliminary, int posCMSlogo, TString lumiText)
 {
   cms_lumi::writeExtraText = writePreliminary;
+
+  cms_lumi::CMS_lumi((TPad*)c->cd(1),lumiText,posCMSlogo);
+}
+//////////////////////////////////////////////////////////////////////////
+void 
+CanvasHelper::DrawCMSSimulation(bool writePreliminary, int posCMSlogo, TString lumiText)
+{
+  cms_lumi::writeExtraText = writePreliminary;
+  cms_lumi::extraText = "Simulation";
 
   cms_lumi::CMS_lumi((TPad*)c->cd(1),lumiText,posCMSlogo);
 }

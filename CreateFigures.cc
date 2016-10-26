@@ -125,7 +125,9 @@ int main( int argc, char** argv )
   // draw stacked hists
   ch2.DrawHist();
   // plot CMS Preliminary
-  ch2.DrawCMSPreliminary(true,33,"FAKE: 2.34 nb^{-1} (13 TeV)");
+  // ch2.DrawCMSPreliminary(true,33,"FAKE: 2.34 nb^{-1} (13 TeV)");
+  // or CMS Simulation 
+  ch2.DrawCMSSimulation(true,33);
   //////////////////////////////////////////////////////////////////////////
 
 
