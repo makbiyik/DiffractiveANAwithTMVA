@@ -37,6 +37,7 @@ namespace cms_lumi {
   float relPosX    = 0.045;
   float relPosY    = 0.035;
   float relExtraDY = 1.2;
+  float relExtraDX = 1.2;
 
   // ratio of "CMS" and extra text size
   float extraOverCmsTextSize  = 0.76;
@@ -203,7 +204,7 @@ namespace cms_lumi {
       {
         if( iPosX==0) 
           {
-            posX_ =   l +  relPosX*(1-l-r);
+            posX_ =   l + 3.2*relPosX*(1-l-r);
             posY_ =   1-t+lumiTextOffset*t;
           }
         latex.SetTextFont(extraTextFont);

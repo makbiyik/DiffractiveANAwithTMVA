@@ -45,6 +45,7 @@ int main( int argc, char** argv )
   // setup plot style
   // gStyle->SetOptStat("");
   TStyle* tdrStyle = setTDRStyle();
+  // own adjustments
   tdrStyle->SetOptFit(0);
   tdrStyle->SetPalette(1);
   tdrStyle->SetPadTopMargin(0.06);
@@ -125,9 +126,9 @@ int main( int argc, char** argv )
   // draw stacked hists
   ch2.DrawHist();
   // plot CMS Preliminary
-  // ch2.DrawCMSPreliminary(true,33,"FAKE: 2.34 nb^{-1} (13 TeV)");
+  ch2.DrawCMSPreliminary(true,33,"FAKE: 2.34 nb^{-1} (13 TeV)");
   // or CMS Simulation 
-  ch2.DrawCMSSimulation(true,33);
+  // ch2.DrawCMSSimulation(true,0);
   //////////////////////////////////////////////////////////////////////////
 
 

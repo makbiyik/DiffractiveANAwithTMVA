@@ -40,6 +40,9 @@ private:
   TString chName;
   TCanvas * c;
 
+  TH1* hsetup1;
+  TH1* hsetup2;
+
   double relpadhigh;
   bool bRatioCanvas;
 
@@ -54,7 +57,8 @@ private:
 
 public:
   CanvasHelper(TString _chName)
-    : chName(_chName), c(NULL), relpadhigh(0.34), bRatioCanvas(false)
+    : chName(_chName), c(NULL), hsetup1(NULL), hsetup2(NULL),
+      relpadhigh(0.34), bRatioCanvas(false)
   {
     c = new TCanvas(TString("c") + chName,chName);
   }
@@ -124,12 +128,21 @@ public:
   //   1: left
   //   2: center
   //   3: right
-  //   e.g. 13 will plot CMS and Prelimimary on the right but align the text to the left
+  //   e.g. 13 will plot CMS and Prelimimary on the right 
+  //        but align the text to the left
+  //
+  //  only
+  //   0: the text will be plotted on the left side 
+  //      above the pad similar like the lumi text
   // 
   // lumiText:
   //   defines luminosity text written on the top of the plot
   void DrawCMSPreliminary(bool writePreliminary=true, int posCMSlogo=11, TString lumiText = "XXX nb^{1} (XX TeV)");
   void DrawCMSSimulation(bool writePreliminary=true, int posCMSlogo=11, TString lumiText = "");
+
+  // to fine tune the drawings
+  TH1* getSetupHist1() { return hsetup1; }
+  TH1* getSetupHist2() { return hsetup2; }
 };
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -154,7 +167,7 @@ CanvasHelper::initNormalCanvas(double xlow, double xup,
   TString hname1 = chName + "_h1";
 
   // fake hist for draw
-  TH1F * hsetup1 = new TH1F(hname1,"",100,xlow,xup);
+  hsetup1 = new TH1F(hname1,"",100,xlow,xup);
 
   c->cd(1)->SetTickx();
   c->cd(1)->SetTicky();
@@ -208,8 +221,8 @@ CanvasHelper::initRatioCanvas(double xlow, double xup,
   TString hname2 = chName + "_h2";
 
   // fake hist for draw
-  TH1F * hsetup1 = new TH1F(hname1,"",100,xlow,xup);
-  TH1F * hsetup2 = new TH1F(hname2,"",100,xlow,xup);
+  hsetup1 = new TH1F(hname1,"",100,xlow,xup);
+  hsetup2 = new TH1F(hname2,"",100,xlow,xup);
 
 
   double lablesize = 0.05;
@@ -325,6 +338,8 @@ CanvasHelper::DrawHist(bool logScale)
     vHist[iHist].hist->Draw( vHist[iHist].draw_option + " same" );
   }
 
+  // Draw axis again
+  hsetup1->Draw("same axis");
 
   if(bRatioCanvas) {
     c->cd(2);
@@ -332,7 +347,12 @@ CanvasHelper::DrawHist(bool logScale)
     for(unsigned int iRatioHist=0; iRatioHist<vRatio.size(); iRatioHist++) {
       vRatio[iRatioHist].hist->Draw( vRatio[iRatioHist].draw_option + " same" );
     }
+
+    // Draw axis again
+    hsetup2->Draw("same axis");
   }
+
+
 }
 
 //////////////////////////////////////////////////////////////////////////
