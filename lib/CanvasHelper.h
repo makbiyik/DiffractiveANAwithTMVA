@@ -43,8 +43,8 @@ private:
   TH1* hsetup1;
   TH1* hsetup2;
 
-  double relpadhigh;
   bool bRatioCanvas;
+  bool b2DHistCanvas;
 
   struct sHistInfo
   {
@@ -55,10 +55,24 @@ private:
   std::vector<sHistInfo> vHist;
   std::vector<sHistInfo> vRatio;
 
+  // internal parameter for fine tuning of the pad's margin
+  double relpadhigh;
+  double topmargin;
+  double middlemargin;
+  double bottommargin;
+  double rightmargin;
+
+  //////////////////////////////////////////////////////////////////////////
+  // privat function to copy configuration of hsetup1 to TH2
+  // is needed to draw 2D hist ohterwise DrawHist is not working correctly
+  void copyHsetupConfigTo2DHist(TH2* h);
+
 public:
   CanvasHelper(TString _chName)
     : chName(_chName), c(NULL), hsetup1(NULL), hsetup2(NULL),
-      relpadhigh(0.34), bRatioCanvas(false)
+      bRatioCanvas(false), b2DHistCanvas(false),
+      relpadhigh(0.34), topmargin(0.06), middlemargin(0.05), 
+      bottommargin(0.35), rightmargin(0.05)
   {
     c = new TCanvas(TString("c") + chName,chName);
   }
@@ -75,7 +89,12 @@ public:
                            double ylow, double yup,
                            double ylow_RatioPad, double yup_RatioPad,
                            TString xTitle, TString yTitle, TString yTitle_RatioPad,
-                           int xAxisNdiv=505, int yAxisNdiv=505);  
+                           int xAxisNdiv=505, int yAxisNdiv=505);
+  TCanvas* initTH2Canvas(double xlow, double xup,
+                         double ylow, double yup,
+                         double zlow, double zup,
+                         TString xTitle, TString yTitle, TString zTitle,
+                         int xAxisNdiv=505, int yAxisNdiv=505, int zAxisNdiv=505); 
 
 
   //////////////////////////////////////////////////////////////////////////
@@ -139,6 +158,7 @@ public:
   //   defines luminosity text written on the top of the plot
   void DrawCMSPreliminary(bool writePreliminary=true, int posCMSlogo=11, TString lumiText = "XXX nb^{1} (XX TeV)");
   void DrawCMSSimulation(bool writePreliminary=true, int posCMSlogo=11, TString lumiText = "");
+  void DrawCMSOwnWork(bool writePreliminary=true, int posCMSlogo=11, TString lumiText = "");
 
   // to fine tune the drawings
   TH1* getSetupHist1() { return hsetup1; }
@@ -156,13 +176,38 @@ public:
 // function definition
 
 //////////////////////////////////////////////////////////////////////////
+// private function
+void 
+CanvasHelper::copyHsetupConfigTo2DHist(TH2* h)
+{
+  h->GetXaxis()->SetRangeUser( hsetup1->GetXaxis()->GetBinLowEdge(1), hsetup1->GetXaxis()->GetBinUpEdge(100) );
+  h->GetYaxis()->SetRangeUser( hsetup1->GetYaxis()->GetBinLowEdge(1), hsetup1->GetYaxis()->GetBinUpEdge(100) );
+  h->SetMinimum( hsetup1->GetMinimum() ); h->SetMaximum( hsetup1->GetMaximum() );
+
+  h->GetXaxis()->SetTitle( hsetup1->GetXaxis()->GetTitle() );
+  h->GetYaxis()->SetTitle( hsetup1->GetYaxis()->GetTitle() );
+  h->GetZaxis()->SetTitle( hsetup1->GetZaxis()->GetTitle() );
+
+  h->GetXaxis()->SetNdivisions( hsetup1->GetXaxis()->GetNdivisions() );
+  h->GetYaxis()->SetNdivisions( hsetup1->GetYaxis()->GetNdivisions() );
+  h->GetZaxis()->SetNdivisions( hsetup1->GetZaxis()->GetNdivisions() );
+}
+//////////////////////////////////////////////////////////////////////////
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
 TCanvas *
 CanvasHelper::initNormalCanvas(double xlow, double xup,
                                double ylow, double yup,
                                TString xTitle, TString yTitle,
                                int xAxisNdiv, int yAxisNdiv)
 {
-  bRatioCanvas = false;
+
+  // setup pad size in canvas
+  c->cd(1)->SetTopMargin(topmargin);
+  c->cd(1)->SetRightMargin(rightmargin);
 
   TString hname1 = chName + "_h1";
 
@@ -201,13 +246,9 @@ CanvasHelper::initRatioCanvas(double xlow, double xup,
 
   c->Divide(1,2);
 
-  // internal parameter for fine tuning of the pad's margin
-  double middlemargin = 0.05;
-  double bottommargin = 0.35;
-  double rightmargin = 0.05;
-
   // setup pad size in canvas
   c->cd(1)->SetPad(0,relpadhigh,1,1);
+  c->cd(1)->SetTopMargin(topmargin*1/(1-relpadhigh));
   c->cd(1)->SetBottomMargin(middlemargin);
   c->cd(1)->SetRightMargin(rightmargin);
 
@@ -278,6 +319,53 @@ CanvasHelper::initRatioCanvas(double xlow, double xup,
 
 
 
+
+//////////////////////////////////////////////////////////////////////////
+TCanvas *
+CanvasHelper::initTH2Canvas(double xlow, double xup,
+                            double ylow, double yup,
+                            double zlow, double zup,
+                            TString xTitle, TString yTitle, TString zTitle,
+                            int xAxisNdiv, int yAxisNdiv, int zAxisNdiv)
+{
+  b2DHistCanvas = true;
+
+  // setup pad size in canvas
+  c->cd(1)->SetTopMargin(topmargin);
+  c->cd(1)->SetRightMargin(0.21); // need to be adjust for Z palette
+
+  TString hname1 = chName + "_h1";
+
+  // fake hist for draw
+  hsetup1 = new TH2F(hname1,"",100,xlow,xup,100,ylow,yup);
+
+  c->cd(1)->SetTickx();
+  c->cd(1)->SetTicky();
+
+  hsetup1->SetMinimum(zlow); hsetup1->SetMaximum(zup);
+  hsetup1->GetXaxis()->SetTitle(xTitle);
+  hsetup1->GetYaxis()->SetTitle(yTitle);
+  hsetup1->GetZaxis()->SetTitle(zTitle);
+
+  hsetup1->GetXaxis()->SetNdivisions(xAxisNdiv);
+  hsetup1->GetYaxis()->SetNdivisions(yAxisNdiv);
+  hsetup1->GetZaxis()->SetNdivisions(zAxisNdiv);
+
+  // Do not draw => instead copy this to 
+  // first 2D hist which is drawn by DrawHist
+  // otherwise destroy plot
+  // hsetup1->Draw();
+
+  return c;
+}
+//////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
 //////////////////////////////////////////////////////////////////////////
 void 
 CanvasHelper::SetUpHist(TH1* h, Color_t col, Style_t stl, int mkstyle, int fillstyle)
@@ -332,9 +420,17 @@ void
 CanvasHelper::DrawHist(bool logScale)
 {
   c->cd(1);
-  if(logScale) c->cd(1)->SetLogy();
+  if(logScale) {
+    if(b2DHistCanvas) c->cd(1)->SetLogz();
+    else              c->cd(1)->SetLogy();
+  }
 
   for(unsigned int iHist=0; iHist<vHist.size(); iHist++) {
+    // need to do this again; root do not take the Z range & title from hsetup
+    if(b2DHistCanvas) {
+      copyHsetupConfigTo2DHist((TH2*)vHist[iHist].hist);
+    }
+
     vHist[iHist].hist->Draw( vHist[iHist].draw_option + " same" );
   }
 
@@ -369,6 +465,15 @@ CanvasHelper::DrawCMSSimulation(bool writePreliminary, int posCMSlogo, TString l
 {
   cms_lumi::writeExtraText = writePreliminary;
   cms_lumi::extraText = "Simulation";
+
+  cms_lumi::CMS_lumi((TPad*)c->cd(1),lumiText,posCMSlogo);
+}
+//////////////////////////////////////////////////////////////////////////
+void 
+CanvasHelper::DrawCMSOwnWork(bool writePreliminary, int posCMSlogo, TString lumiText)
+{
+  cms_lumi::writeExtraText = writePreliminary;
+  cms_lumi::extraText = "Own Work";
 
   cms_lumi::CMS_lumi((TPad*)c->cd(1),lumiText,posCMSlogo);
 }

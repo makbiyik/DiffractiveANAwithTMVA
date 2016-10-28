@@ -24,6 +24,7 @@
 #include "TVectorD.h"
 #include "TLatex.h"
 #include "TF1.h"
+#include "TF2.h"
 #include "TEfficiency.h"
 
 #include "tdrstyle.C"
@@ -31,8 +32,17 @@
 #include "CanvasHelper.h"
 #include "StackHistHelper.h"
 
+#define UNUSED(x) (void)(x) // to avoid unused compiler warning
 
 
+//////////////////////////////////////////////////////////////////////////
+// as example and for testing
+void exampleCode();
+
+
+//////////////////////////////////////////////////////////////////////////
+// main function
+//////////////////////////////////////////////////////////////////////////
 int main( int argc, char** argv )
 {
 
@@ -45,15 +55,37 @@ int main( int argc, char** argv )
   // setup plot style
   // gStyle->SetOptStat("");
   TStyle* tdrStyle = setTDRStyle();
-  // own adjustments
+  // own adjustments => !!! mixing up with CanvasHelper
   tdrStyle->SetOptFit(0);
   tdrStyle->SetPalette(1);
   tdrStyle->SetPadTopMargin(0.06);
-  tdrStyle->SetPadRightMargin(0.17);
+  tdrStyle->SetPadRightMargin(0.2);
+  tdrStyle->SetTitleOffset(1.25, "Z");
 
 
   //////////////////////////////////////////////////////////////////////////
-  // as example and for testing
+  // for testing
+  exampleCode();
+
+
+
+
+  /////////////////////////////////////////////////
+  // freeze program
+  app->Run();
+  /////////////////////////////////////////////////
+
+  return 0; 
+}
+//////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
+void exampleCode() {
+
   TH1* htest = new TH1F("htest","",100,-3,3);
   htest->FillRandom("gaus",10000);
 
@@ -85,6 +117,7 @@ int main( int argc, char** argv )
   //////////////////////////////////////////////////////////////////////////
   // draw hist add before
   chelpertest.DrawHist();
+  chelpertest.DrawCMSPreliminary();
 
   //////////////////////////////////////////////////////////////////////////
   // acces the top pad for more adjustments or plots
@@ -126,19 +159,36 @@ int main( int argc, char** argv )
   // draw stacked hists
   ch2.DrawHist();
   // plot CMS Preliminary
-  ch2.DrawCMSPreliminary(true,33,"FAKE: 2.34 nb^{-1} (13 TeV)");
+  ch2.DrawCMSPreliminary(true,33,"FAKE: 666 nb^{-1} (08.15 TeV)");
   // or CMS Simulation 
-  // ch2.DrawCMSSimulation(true,0);
+  // ch2.DrawCMSSimulation(true,11);
+  // or CMS Own Work
+  // ch2.DrawCMSOwnWork(true,11);
   //////////////////////////////////////////////////////////////////////////
 
 
 
 
 
-  /////////////////////////////////////////////////
-  // freeze program
-  app->Run();
-  /////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////
+  // create 2D example hist
+  TH2F* h2_test = new TH2F("h2_test","h2_test",30,-3,3,30,-3,3);
+  // create 2D function
+  TF2* f2d = new TF2("f2d","sin(x)**2 * cos(y)**2",-3,3,-3,3);
+  UNUSED(f2d);
+  // fill histogram with 2D function
+  h2_test->FillRandom("f2d",10000);
 
-  return 0; 
+
+  //////////////////////////////////////////////////////////////////////////
+  // init canvas just with one pad
+  CanvasHelper ch3("ch3");
+  ch3.initTH2Canvas(-3,3,-3,3,1,1000,"X","Y","1/N_{evt} d^{2}N/dXdY");
+  ch3.addHist( h2_test, "colz" );
+
+  //////////////////////////////////////////////////////////////////////////
+  // draw 2D hist
+  ch3.DrawHist();
+  ch3.DrawCMSSimulation(true,0);
+
 }
