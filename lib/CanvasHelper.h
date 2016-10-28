@@ -351,10 +351,7 @@ CanvasHelper::initTH2Canvas(double xlow, double xup,
   hsetup1->GetYaxis()->SetNdivisions(yAxisNdiv);
   hsetup1->GetZaxis()->SetNdivisions(zAxisNdiv);
 
-  // Do not draw => instead copy this to 
-  // first 2D hist which is drawn by DrawHist
-  // otherwise destroy plot
-  // hsetup1->Draw();
+  hsetup1->Draw();
 
   return c;
 }

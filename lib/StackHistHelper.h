@@ -57,7 +57,7 @@ public:
   // add them to the previous hist
   // the suffix and the order is given by the vector vSuffix 
   //   (first hist will be untoched)
-  void addHistFromFileWithPrefix(TFile* file, TString histname, std::vector<TString> vSuffix)
+  void addHistFromFileWithSuffix(TFile* file, TString histname, std::vector<TString> vSuffix)
   {
     vHist.clear();
 

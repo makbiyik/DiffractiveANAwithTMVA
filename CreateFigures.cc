@@ -40,6 +40,9 @@
 void exampleCode();
 
 
+
+
+
 //////////////////////////////////////////////////////////////////////////
 // main function
 //////////////////////////////////////////////////////////////////////////
@@ -62,13 +65,9 @@ int main( int argc, char** argv )
   tdrStyle->SetPadRightMargin(0.2);
   tdrStyle->SetTitleOffset(1.25, "Z");
 
-
   //////////////////////////////////////////////////////////////////////////
   // for testing
   exampleCode();
-
-
-
 
   /////////////////////////////////////////////////
   // freeze program
@@ -140,7 +139,7 @@ void exampleCode() {
   //////////////////////////////////////////////////////////////////////////
   // stack the hists together
   StackHistHelper shh;
-  shh.addHistFromFileWithPrefix(file,"MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise/Hist_GP_DeltaZero",vSuffix);
+  shh.addHistFromFileWithSuffix(file,"MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise/Hist_GP_DeltaZero",vSuffix);
 
   //////////////////////////////////////////////////////////////////////////
   // init canvas just with one pad
@@ -174,7 +173,7 @@ void exampleCode() {
   // create 2D example hist
   TH2F* h2_test = new TH2F("h2_test","h2_test",30,-3,3,30,-3,3);
   // create 2D function
-  TF2* f2d = new TF2("f2d","sin(x)**2 * cos(y)**2",-3,3,-3,3);
+  TF2* f2d = new TF2("f2d","exp( -(x**2+y**2) ) * sin(x)**2 * cos(y)**2",-3,3,-3,3);
   UNUSED(f2d);
   // fill histogram with 2D function
   h2_test->FillRandom("f2d",10000);
@@ -183,7 +182,9 @@ void exampleCode() {
   //////////////////////////////////////////////////////////////////////////
   // init canvas just with one pad
   CanvasHelper ch3("ch3");
-  ch3.initTH2Canvas(-3,3,-3,3,1,1000,"X","Y","1/N_{evt} d^{2}N/dXdY");
+  ch3.initTH2Canvas(-3,3, -3,3, 1e-3,1, "X","Y","1/N_{evt} d^{2}N/dXdY");
+
+  h2_test->Scale( 1./10000, "width" ); // 1/N | width -> 1/dx dy
   ch3.addHist( h2_test, "colz" );
 
   //////////////////////////////////////////////////////////////////////////
