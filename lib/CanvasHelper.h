@@ -72,7 +72,7 @@ public:
     : chName(_chName), c(NULL), hsetup1(NULL), hsetup2(NULL),
       bRatioCanvas(false), b2DHistCanvas(false),
       relpadhigh(0.34), topmargin(0.06), middlemargin(0.05), 
-      bottommargin(0.35), rightmargin(0.05)
+      bottommargin(0.13), rightmargin(0.05)
   {
     c = new TCanvas(TString("c") + chName,chName);
   }
@@ -208,6 +208,7 @@ CanvasHelper::initNormalCanvas(double xlow, double xup,
   // setup pad size in canvas
   c->cd(1)->SetTopMargin(topmargin);
   c->cd(1)->SetRightMargin(rightmargin);
+  c->cd(1)->SetBottomMargin(bottommargin);
 
   TString hname1 = chName + "_h1";
 
@@ -248,13 +249,13 @@ CanvasHelper::initRatioCanvas(double xlow, double xup,
 
   // setup pad size in canvas
   c->cd(1)->SetPad(0,relpadhigh,1,1);
-  c->cd(1)->SetTopMargin(topmargin*1/(1-relpadhigh));
+  c->cd(1)->SetTopMargin(topmargin * 1/(1-relpadhigh));
   c->cd(1)->SetBottomMargin(middlemargin);
   c->cd(1)->SetRightMargin(rightmargin);
 
   c->cd(2)->SetPad(0,0,1,relpadhigh);
   c->cd(2)->SetTopMargin(middlemargin);
-  c->cd(2)->SetBottomMargin(bottommargin);
+  c->cd(2)->SetBottomMargin(bottommargin * 1/relpadhigh);
   c->cd(2)->SetRightMargin(rightmargin);
   // c->cd(2)->SetTitle("");
 
@@ -333,6 +334,7 @@ CanvasHelper::initTH2Canvas(double xlow, double xup,
   // setup pad size in canvas
   c->cd(1)->SetTopMargin(topmargin);
   c->cd(1)->SetRightMargin(0.21); // need to be adjust for Z palette
+  c->cd(1)->SetBottomMargin(bottommargin);
 
   TString hname1 = chName + "_h1";
 
