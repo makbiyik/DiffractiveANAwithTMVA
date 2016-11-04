@@ -156,7 +156,7 @@ public:
   // 
   // lumiText:
   //   defines luminosity text written on the top of the plot
-  void DrawCMSPreliminary(bool writePreliminary=true, int posCMSlogo=11, TString lumiText = "XXX nb^{1} (XX TeV)");
+  void DrawCMSPreliminary(bool writePreliminary=true, int posCMSlogo=11, TString lumiText = "XXX nb^{-1} (XX TeV)");
   void DrawCMSSimulation(bool writePreliminary=true, int posCMSlogo=11, TString lumiText = "");
   void DrawCMSOwnWork(bool writePreliminary=true, int posCMSlogo=11, TString lumiText = "");
 

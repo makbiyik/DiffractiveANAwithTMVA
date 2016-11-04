@@ -116,7 +116,7 @@ void exampleCode() {
   //////////////////////////////////////////////////////////////////////////
   // draw hist add before
   chelpertest.DrawHist();
-  chelpertest.DrawCMSPreliminary();
+  chelpertest.DrawCMSOwnWork();
 
   //////////////////////////////////////////////////////////////////////////
   // acces the top pad for more adjustments or plots
@@ -128,7 +128,8 @@ void exampleCode() {
 
   //////////////////////////////////////////////////////////////////////////
   // open example file for test stacking hists
-  TFile* file = TFile::Open("data/trackanddiffractive_sigDD_epos.root");
+  // TFile* file = TFile::Open("data/trackanddiffractive_sigDD_epos.root");
+  TFile* file = TFile::Open("data/trackanddiffractive_sigDD_mc.root");
   std::vector<TString> vSuffix;
   // in this order order the hists are stacked as follows
   vSuffix.push_back("_NONE"); //=> NONE
@@ -139,7 +140,7 @@ void exampleCode() {
   //////////////////////////////////////////////////////////////////////////
   // stack the hists together
   StackHistHelper shh;
-  shh.addHistFromFileWithSuffix(file,"MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise/Hist_GP_DeltaZero",vSuffix);
+  shh.addHistFromFileWithSuffix(file,"MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise/Hist_GP_DeltaZero",vSuffix);
 
   //////////////////////////////////////////////////////////////////////////
   // init canvas just with one pad

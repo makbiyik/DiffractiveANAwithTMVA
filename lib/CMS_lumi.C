@@ -8,7 +8,7 @@
 // Based on files from https://ghm.web.cern.ch/ghm/plots/
 // 
 // the string lumiText is written on top of the plot
-// and should look like "XXX nb^{1} (XX TeV)"
+// and should look like "XXX nb^{-1} (XX TeV)"
 // the original parameter iPeriod is fixed to 0
 //////////////////////////////////////////////////////////////////////////
 
