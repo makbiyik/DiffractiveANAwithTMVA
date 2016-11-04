@@ -169,7 +169,6 @@ void exampleCode() {
 
 
 
-
   //////////////////////////////////////////////////////////////////////////
   // create 2D example hist
   TH2F* h2_test = new TH2F("h2_test","h2_test",30,-3,3,30,-3,3);
