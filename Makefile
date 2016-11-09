@@ -14,6 +14,7 @@ CXXFLAGS    +=$(shell root-config --cflags)
 LDFLAGS     +=$(shell root-config --libs)
 
 CXXFLAGS    +=-I./lib/
+# CXXFLAGS    +=-I./boost_lib/
 
 # Add RooUnfold package
 # CXXFLAGS    +=-I/home/hauke/RooUnfold-1.1.1/src/
