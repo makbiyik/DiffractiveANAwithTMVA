@@ -41,7 +41,7 @@
 
 
 // As hint how to do it
-// g++ -Wall -O2 `root-config --cflags` TMVA_DDifractive_TEST.C `root-config --libs` -lMLP -lMinuit -lTreePlayer -lTMVA -lTMVAGui -lXMLIO  -lMLP -o TMVA_DDifractive_TEST
+// g++ -Wall -O2 `root-config --cflags` Diffractive_TMVAClassification.cc `root-config --libs` -lMLP -lMinuit -lTreePlayer -lTMVA -lTMVAGui -lXMLIO  -lMLP -o Diffractive_TMVAClassification
 
 
 #include <cstdlib>
@@ -61,7 +61,9 @@
 #include "TMVA/Tools.h"
 // #include "TMVA/TMVAGui.h"
 
-int TMVA_DDifractive_TEST( TString myMethodList = "" )
+#define UNUSED(x) (void)(x) // to avoid unused compiler warning
+
+int Diffractive_TMVAClassification( TString myMethodList = "" )
 {
    
    TMVA::Tools::Instance();
@@ -126,10 +128,12 @@ int TMVA_DDifractive_TEST( TString myMethodList = "" )
    factory->AddVariable( "HFplusNtowers","HFplusNtowers", "units", 'I' );//Log->logdegistirdin
    factory->AddVariable( "CastorNtowers","CastorNtowers", "units", 'I' );
    factory->AddVariable( "Ntracks","Ntracks", "units", 'I' );
+   factory->AddVariable( "Pythia8processid","Pythia8processid", "units", 'I' );
+
    // factory->AddVariable( "log10XiDD","log10XiDD", "units", 'F' );
 
    // TString fname = "/home/lxadmin/MyRoot/root/tutorials/tmva/MC_PYTHIA8/trackanddiffractive_mc_sigDD.root";
-   TString fname = "/home/hauke/root/tmva/test/DiffractiveANAwithTMVA/data/trackanddiffractive_sigDD_epos.root";
+   TString fname = "/home/lxadmin/MyRoot/root/tutorials/tmva/DiffractiveANAwithTMVA/data/trackanddiffractive_sigDD_Epos.root";
   
    
    TFile *input = TFile::Open( fname );
@@ -158,7 +162,7 @@ int TMVA_DDifractive_TEST( TString myMethodList = "" )
    TCut mycutb = "deltazero>=0"; // for example: TCut mycutb = "abs(var1)<0.5";
    
    factory->PrepareTrainingAndTestTree( mycuts, mycutb,
-                                        "nTrain_Signal=10000:nTest_Signal=10000:nTrain_Background=100000:nTest_Background=100000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                        "nTrain_Signal=100000:nTest_Signal=100000:nTrain_Background=1000000:nTest_Background=1000000:SplitMode=Random:NormMode=NumEvents:!V" );
 
 
    
@@ -225,6 +229,10 @@ int TMVA_DDifractive_TEST( TString myMethodList = "" )
 
 int main( int argc, char** argv )
 {
+   UNUSED(argc);
+   UNUSED(argv);
+
+
    // Select methods (don't look at this code - not of interest)
    TString methodList = ""; 
    // for (int i=1; i<argc; i++) {
@@ -233,5 +241,5 @@ int main( int argc, char** argv )
    //    if (!methodList.IsNull()) methodList += TString(","); 
    //    methodList += regMethod;
    // }
-   return TMVA_DDifractive_TEST(methodList); 
+   return Diffractive_TMVAClassification(methodList); 
 }
