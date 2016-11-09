@@ -31,6 +31,7 @@
 
 #include "CanvasHelper.h"
 #include "StackHistHelper.h"
+#include "SystErrHelper.h"
 
 #define UNUSED(x) (void)(x) // to avoid unused compiler warning
 
