@@ -37,10 +37,60 @@
 
 
 //////////////////////////////////////////////////////////////////////////
+// global struct for ordering data info
+struct sSample
+{
+  bool isData;
+  double lumi;
+  double xs; // in nb
+
+  TFile* file;
+  TString tree_name;
+};
+
+
+
+//////////////////////////////////////////////////////////////////////////
+// do ratio without error propagation
+TH1F* get_Ratio(TH1* hMC, TH1* hData) {
+  TH1F* hRatio = (TH1F*)hMC->Clone(TString(hMC->GetName()) + "_Ratio");
+  hRatio->Divide(hData);
+
+  int nBins = hRatio->GetXaxis()->GetNbins();
+  for(int ibin=1; ibin<=nBins; ibin++) {
+    hRatio->SetBinError( ibin, hMC->GetBinError(ibin)/hMC->GetBinContent(ibin) );
+    if( hMC->GetBinContent(ibin) == 0 ) hRatio->SetBinError( ibin, 0 );
+  }
+
+  return hRatio;
+}
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
+// read in data and mc files with important informations
+std::map<TString, sSample> read_data_mc_files();
+
+
+//////////////////////////////////////////////////////////////////////////
 // as example and for testing
 void exampleCode();
 
 
+//////////////////////////////////////////////////////////////////////////
+// plot the variables for tmva training and compare this with data
+void training_variables_compare_mc_data(std::map<TString, sSample>& mSample);
+void single_sample_compare_mc_data(std::map<TString, sSample>& mSample,
+                                   std::vector<TString>& vSuffix,
+                                   TString sample_name,
+                                   bool scale_data = true);
+void single_figure_compare_mc_data(CanvasHelper& ch,
+                                   std::map<TString, sSample>& mSample,
+                                   std::vector<TString>& vSuffix,
+                                   TString sample_name,
+                                   TString hist_var_name,
+                                   bool scale_data = true);
 
 
 
@@ -70,7 +120,17 @@ int main( int argc, char** argv )
 
   //////////////////////////////////////////////////////////////////////////
   // for testing
-  exampleCode();
+  // exampleCode();
+
+  //////////////////////////////////////////////////////////////////////////
+  // run code to creat figures
+  //////////////////////////////////////////////////////////////////////////
+  // read data files
+  std::map<TString, sSample> mSample = read_data_mc_files();
+  //////////////////////////////////////////////////////////////////////////
+  // compare training variables MC with DATA
+  training_variables_compare_mc_data(mSample);
+
 
   /////////////////////////////////////////////////
   // freeze program
@@ -81,6 +141,46 @@ int main( int argc, char** argv )
 }
 //////////////////////////////////////////////////////////////////////////
 
+
+
+
+//////////////////////////////////////////////////////////////////////////
+std::map<TString, sSample> read_data_mc_files() {
+  TH1F * htmp;
+
+  sSample sPythia8;
+  sPythia8.isData = false;
+  sPythia8.xs = 71390.000000; // nb
+  sPythia8.file = TFile::Open("data/trackanddiffractive_sigDD_Pythia8.root");
+  sPythia8.tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
+  htmp = (TH1F*)sPythia8.file->Get(sPythia8.tree_name + "/hNentries");
+  sPythia8.lumi = htmp->GetBinContent(1)/sPythia8.xs;
+
+
+  sSample sEPOS;
+  sEPOS.isData = false;
+  sEPOS.lumi = 0;
+  sEPOS.xs = 79948.200000; // nb
+  sEPOS.file = TFile::Open("data/trackanddiffractive_sigDD_Epos.root");
+  sEPOS.tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
+  htmp = (TH1F*)sEPOS.file->Get(sEPOS.tree_name + "/hNentries");
+  sEPOS.lumi = htmp->GetBinContent(1)/sEPOS.xs;
+
+  sSample sData;
+  sData.isData = true;
+  sData.lumi = 0.34; // 1/nb
+  sData.xs = 0;
+  sData.file = TFile::Open("data/trackanddiffractive_sigDD_Data.root");
+  sData.tree_name = "data_ZeroBias1_CASTOR";
+
+  std::map<TString, sSample> mSample;
+
+  mSample["Pythia8"] =  sPythia8;
+  mSample["EPOS"] = sEPOS;
+  mSample["Data"] = sData;
+
+  return mSample;
+}
 
 
 
@@ -139,12 +239,10 @@ void exampleCode() {
   vSuffix.push_back("_SD1");  //=> NONE + SD1
   vSuffix.push_back("_SD2");  //=> NONE + SD1 + SD2
   vSuffix.push_back("_DD");   //=> NONE + SD1 + SD2 + DD
-
   //////////////////////////////////////////////////////////////////////////
   // stack the hists together
   StackHistHelper shh;
-  shh.addHistFromFileWithSuffix(file,"MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise/Hist_GP_DeltaZero",vSuffix);
-
+  shh.addHistFromFileWithSuffix(file,"MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise/Hist_Eta_DeltaZero",vSuffix);
   //////////////////////////////////////////////////////////////////////////
   // init canvas just with one pad
   CanvasHelper ch2("ch2");
@@ -152,17 +250,19 @@ void exampleCode() {
 
   //////////////////////////////////////////////////////////////////////////
   // color code for the different hists
-  Color_t col[4] = {kBlue,kRed,kGreen,kMagenta};
+  Color_t col[4] = {kRed+2, kGreen -1, kGreen,kYellow};
 
   //////////////////////////////////////////////////////////////////////////
   // access the stacked hists and add it to the canvas helper
   for(unsigned int iHist=0; iHist<shh.getHistSize()&&iHist<4; iHist++) {
     ch2.addHist( shh.getHist(iHist), "HIST", col[iHist], kSolid, 20, 1001 );
   }
+
+
   // draw stacked hists
   ch2.DrawHist();
   // plot CMS Preliminary
-  ch2.DrawCMSPreliminary(true,33,"FAKE: 666 nb^{-1} (08.15 TeV)");
+  ch2.DrawCMSPreliminary(true,33,"0.34 nb^{-1} (13 TeV)");
   // or CMS Simulation 
   // ch2.DrawCMSSimulation(true,11);
   // or CMS Own Work
@@ -194,5 +294,114 @@ void exampleCode() {
   // draw 2D hist
   ch3.DrawHist();
   ch3.DrawCMSSimulation(true,0);
+}
 
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
+void training_variables_compare_mc_data(std::map<TString, sSample>& mSample) {
+  
+  std::vector<TString> vSuffix;
+  vSuffix.push_back("_NONE");
+  vSuffix.push_back("_SD1");
+  vSuffix.push_back("_SD2");
+  vSuffix.push_back("_DD");
+  vSuffix.push_back("_Rest");
+
+
+  single_sample_compare_mc_data(mSample,vSuffix,"Pythia8");
+  single_sample_compare_mc_data(mSample,vSuffix,"EPOS",false);
+}
+
+void single_sample_compare_mc_data(std::map<TString, sSample>& mSample,
+                                   std::vector<TString>& vSuffix,
+                                   TString sample_name,
+                                   bool scale_data) {
+
+  //////////////////////////////////////////////////////////////////////////
+  // plot delta eta zero
+  CanvasHelper cDeltaEtaZero("cDeltaEtaZero_" + sample_name);
+  cDeltaEtaZero.initRatioCanvas(0,6,1,1e7,0,3,"#Delta#eta_{0}","1/L dN/d#eta [nb^{1}]","MC / Data");
+  single_figure_compare_mc_data(cDeltaEtaZero,mSample,vSuffix,sample_name,"Hist_Eta_DeltaZero",scale_data);
+  // plot CMS Preliminary
+  cDeltaEtaZero.DrawCMSPreliminary(true,33,"0.34 nb^{-1} (13 TeV)");
+
+
+  // plot eta min
+  CanvasHelper cEtaMin("cEtaMin_" + sample_name);
+  cEtaMin.initRatioCanvas(-4,4,1,1e6,0,3,"#eta_{min}","1/L dN/d#eta [nb^{1}]","MC / Data");
+  single_figure_compare_mc_data(cEtaMin,mSample,vSuffix,sample_name,"Hist_Eta_Min",scale_data);
+  // plot CMS Preliminary
+  cEtaMin.DrawCMSPreliminary(true,33,"0.34 nb^{-1} (13 TeV)");
+
+
+  // plot eta max
+  CanvasHelper cEtaMax("cEtaMax_" + sample_name);
+  cEtaMax.initRatioCanvas(-4,4,1,1e6,0,3,"#eta_{max}","1/L dN/d#eta [nb^{1}]","MC / Data");
+  single_figure_compare_mc_data(cEtaMax,mSample,vSuffix,sample_name,"Hist_Eta_Max",scale_data);
+  // plot CMS Preliminary
+  cEtaMax.DrawCMSPreliminary(true,11,"0.34 nb^{-1} (13 TeV)");
+
+
+  // plot number of towers above noise in HF plus side
+  CanvasHelper cNTowHF_plus("cNTowHF_plus_" + sample_name);
+  cNTowHF_plus.initRatioCanvas(0,200,1,1e6,0,3,"N_{tow}","1/L dN/dN_{tow} [nb^{1}]","MC / Data");
+  single_figure_compare_mc_data(cNTowHF_plus,mSample,vSuffix,sample_name,"Hist_numberoftowerebovenoise_forwardplus",scale_data);
+  // plot CMS Preliminary
+  cNTowHF_plus.DrawCMSPreliminary(true,11,"0.34 nb^{-1} (13 TeV)");
+
+
+  // plot number of towers above noise in HF plus side
+  CanvasHelper cNTowHF_minus("cNTowHF_minus_" + sample_name);
+  cNTowHF_minus.initRatioCanvas(0,200,1,1e6,0,3,"N_{tow}","1/L dN/dN_{tow} [nb^{1}]","MC / Data");
+  single_figure_compare_mc_data(cNTowHF_minus,mSample,vSuffix,sample_name,"Hist_numberoftowerebovenoise_forwardminus",scale_data);
+  // plot CMS Preliminary
+  cNTowHF_minus.DrawCMSPreliminary(true,11,"0.34 nb^{-1} (13 TeV)");
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+void single_figure_compare_mc_data(CanvasHelper& ch,
+                                   std::map<TString, sSample>& mSample,
+                                   std::vector<TString>& vSuffix,
+                                   TString sample_name,
+                                   TString hist_var_name,
+                                   bool scale_data) {
+
+  //////////////////////////////////////////////////////////////////////////
+  // stack the hists together
+  StackHistHelper shh;
+  shh.addHistFromFileWithSuffix(mSample[sample_name].file,
+                                mSample[sample_name].tree_name + "/" + hist_var_name,
+                                vSuffix,
+                                sample_name + "_Stack");
+
+  //////////////////////////////////////////////////////////////////////////
+  // color code for the different hists
+  Color_t col[5] = {kRed+2, kGreen -1, kGreen, kYellow, kMagenta};
+
+  //////////////////////////////////////////////////////////////////////////
+  // access the stacked hists and add it to the canvas helper
+  for(unsigned int iHist=0; iHist<shh.getHistSize(); iHist++) {
+    shh.getHist(iHist)->Scale( 1/mSample[sample_name].lumi, "width" );
+    ch.addHist( shh.getHist(iHist), "HIST", col[iHist], kSolid, 20, 1001 );
+  }
+
+  TH1F* hMC = (TH1F*)mSample[sample_name].file->Get(mSample[sample_name].tree_name + "/" + hist_var_name);
+  hMC->Scale( 1/mSample[sample_name].lumi, "width" );
+  ch.addHist( hMC, "HIST", kBlue );
+
+  //////////////////////////////////////////////////////////////////////////
+  // access data hist
+  TH1F* hData = (TH1F*)mSample["Data"].file->Get(mSample["Data"].tree_name + "/" + hist_var_name);
+  if(scale_data) hData->Scale( 1/mSample["Data"].lumi , "width" );
+  ch.addDataHist( hData );
+
+  ch.addRatioHist( get_Ratio(hMC,hData), "HIST", kBlue );
+  ch.addRatioHist( get_Ratio(hData,hData), "EP", kBlack );
+
+  // draw stacked hists
+  ch.DrawHist();
 }

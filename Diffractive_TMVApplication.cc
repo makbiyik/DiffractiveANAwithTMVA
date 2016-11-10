@@ -95,7 +95,7 @@ void Diffractive_TMVApplication( TString myMethodList = "" )
    reader->AddVariable("HFplusNtowers", &HFplusNtowers);
    reader->AddVariable("CastorNtowers", &CastorNtowers);
    reader->AddVariable("Ntracks",&Ntracks);
-   reader->AddVariable("Pythia8processid",&Pythia8processid);
+   // reader->AddVariable("Pythia8processid",&Pythia8processid);
    // reader->AddVariable("log10XiDD",&log10XiDD);
  
 

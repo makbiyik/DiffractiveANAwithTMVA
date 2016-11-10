@@ -44,9 +44,9 @@ public:
 
   //////////////////////////////////////////////////////////////////////////
   // stack histogram to the previous one in the vector vHist
-  void addHist(TH1* h)
+  void addHist(TH1* h, TString hist_suffix = "_Stack" )
   {
-    TH1* hStack = (TH1*)h->Clone( TString(h->GetName()) + "_Stack" );
+    TH1* hStack = (TH1*)h->Clone( TString(h->GetName()) + hist_suffix );
 
     if( vHist.size() != 0 ) hStack->Add( vHist[vHist.size()-1] );
     vHist.push_back(hStack);
@@ -57,13 +57,13 @@ public:
   // add them to the previous hist
   // the suffix and the order is given by the vector vSuffix 
   //   (first hist will be untoched)
-  void addHistFromFileWithSuffix(TFile* file, TString histname, std::vector<TString> vSuffix)
+  void addHistFromFileWithSuffix(TFile* file, TString histname, std::vector<TString> vSuffix, TString hist_suffix = "_Stack")
   {
     vHist.clear();
 
     for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
       TH1* h = (TH1*)file->Get(histname + vSuffix[iSuffix]);
-      addHist(h);
+      addHist(h,hist_suffix);
     }
   }
 
