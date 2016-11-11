@@ -29,6 +29,25 @@
 #define UNUSED(x) (void)(x) // to avoid unused compiler warning
 
 using namespace TMVA;
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//Pythia8
+TString get_Pythia_Process_ID(int Pythia8processid) {
+
+   if(Pythia8processid == 101) {
+      return "_Rest";
+   } else if (Pythia8processid == 103) {
+      return "_SD1";
+   } else if (Pythia8processid == 104) {
+      return "_SD2";
+   } else if (Pythia8processid == 105) {
+      return "_DD";
+   } else if (Pythia8processid == 106) {
+      return "_CD";
+   }
+   return "_NONE";
+
+
+}
 
 void Diffractive_TMVApplication( TString myMethodList = "" ) 
 {   
@@ -95,7 +114,7 @@ void Diffractive_TMVApplication( TString myMethodList = "" )
    reader->AddVariable("HFplusNtowers", &HFplusNtowers);
    reader->AddVariable("CastorNtowers", &CastorNtowers);
    reader->AddVariable("Ntracks",&Ntracks);
-   // reader->AddVariable("Pythia8processid",&Pythia8processid);
+   reader->AddVariable("Pythia8processid",&Pythia8processid);
    // reader->AddVariable("log10XiDD",&log10XiDD);
  
 
@@ -189,7 +208,7 @@ void Diffractive_TMVApplication( TString myMethodList = "" )
    // in this example, there is a toy tree with signal and one with background events
    // we'll later on use only the "signal" events for the test in this example.
    //   
-   TString fname = "/home/lxadmin/MyRoot/root/tutorials/tmva/DiffractiveANAwithTMVA/data/trackanddiffractive_sigDD_Epos.root";
+   TString fname = "/home/lxadmin/MyRoot/root/tutorials/tmva/DiffractiveANAwithTMVA/data/trackanddiffractive_sigDD_data.root";
    TFile *input = TFile::Open( fname );
    std::cout << "--- TMVAClassification       : Using input file: " << input->GetName() << std::endl;
  
@@ -198,8 +217,17 @@ void Diffractive_TMVApplication( TString myMethodList = "" )
    std::cout << "--- Select signal sample" << std::endl;
    // TTree* theTree = (TTree*)input->Get("MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise/sigTree");
    
-   TTree* theTree = (TTree*)input->Get("MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise/AllTree");
-   Int_t HFminusNtowers_tree ,HFplusNtowers_tree ,CastorNtowers_tree,Ntracks_tree,Pythia8processid_tree;
+   //Data
+   TTree* theTree = (TTree*)input->Get("data_ZeroBias1_CASTOR/AllTree");
+
+   //pythia8
+   // TTree* theTree = (TTree*)input->Get("MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise/AllTree");
+   
+   // //EPOS
+   // TTree* theTree = (TTree*)input->Get("MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise/AllTree");
+
+
+   Int_t HFminusNtowers_tree ,HFplusNtowers_tree ,CastorNtowers_tree,Ntracks_tree;
    theTree->SetBranchAddress("deltazero", &deltazero);
    theTree->SetBranchAddress("etamax", &etamax);
    theTree->SetBranchAddress("etamin", &etamin);
@@ -210,8 +238,12 @@ void Diffractive_TMVApplication( TString myMethodList = "" )
    theTree->SetBranchAddress("HFplusNtowers", &HFplusNtowers_tree);
    theTree->SetBranchAddress("CastorNtowers", &CastorNtowers_tree);
    theTree->SetBranchAddress("Ntracks",&Ntracks_tree);
-   theTree->SetBranchAddress("Pythia8processid",&Pythia8processid_tree);
+   theTree->SetBranchAddress("Pythia8processid",&Pythia8processid);
  
+
+       
+  
+
 
    // Efficiency calculator for cut method
    Int_t    nSelCutsGA = 0;
@@ -232,7 +264,7 @@ void Diffractive_TMVApplication( TString myMethodList = "" )
       HFminusNtowers = (Float_t)HFminusNtowers_tree;
       CastorNtowers = (Float_t)CastorNtowers_tree;
       Ntracks =(Float_t)Ntracks_tree;
-      Pythia8processid = (Float_t)Pythia8processid_tree;
+     
       //var1 = userVar1 + userVar2;
       //var2 = userVar1 - userVar2;
       hSignal_deltazero_nodiscriminantcut->Fill(deltazero);
@@ -335,9 +367,11 @@ void Diffractive_TMVApplication( TString myMethodList = "" )
       }
    }
 
+
+
    // --- Write histograms
 
-   TFile *target  = new TFile( "data/TMVApp_DD.root","RECREATE" );
+   TFile *target  = new TFile( "data/TMVApp_DD_trainingispythi8_appisdata.root","RECREATE" );
   
    if (Use["Fisher"       ])   histFi     ->Write();
    if (Use["FisherG"      ])   histFiG    ->Write();

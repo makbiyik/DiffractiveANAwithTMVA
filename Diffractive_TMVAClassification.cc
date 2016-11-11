@@ -128,12 +128,12 @@ int Diffractive_TMVAClassification( TString myMethodList = "" )
    factory->AddVariable( "HFplusNtowers","HFplusNtowers", "units", 'I' );//Log->logdegistirdin
    factory->AddVariable( "CastorNtowers","CastorNtowers", "units", 'I' );
    factory->AddVariable( "Ntracks","Ntracks", "units", 'I' );
-   // factory->AddVariable( "Pythia8processid","Pythia8processid", "units", 'I' );
+   factory->AddVariable( "Pythia8processid","Pythia8processid", "units", 'I' );
 
    // factory->AddVariable( "log10XiDD","log10XiDD", "units", 'F' );
 
    // TString fname = "/home/lxadmin/MyRoot/root/tutorials/tmva/MC_PYTHIA8/trackanddiffractive_mc_sigDD.root";
-   TString fname = "/home/lxadmin/MyRoot/root/tutorials/tmva/DiffractiveANAwithTMVA/data/trackanddiffractive_sigDD_Epos.root";
+   TString fname = "/home/lxadmin/MyRoot/root/tutorials/tmva/DiffractiveANAwithTMVA/data/trackanddiffractive_sigDD_pythia8.root";
   
    
    TFile *input = TFile::Open( fname );
@@ -141,10 +141,14 @@ int Diffractive_TMVAClassification( TString myMethodList = "" )
    
    
    // --- Register the training and test trees
-
-   TTree *signal = (TTree*)input->Get("MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise/sigTree");
-   TTree *background = (TTree*)input->Get("MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise/bkgTree");
+   //Epos
+   // TTree *signal = (TTree*)input->Get("MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise/sigTree");
+   // TTree *background = (TTree*)input->Get("MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise/bkgTree");
   
+
+   //Pythia8
+   TTree *signal = (TTree*)input->Get("MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise/sigTree");
+   TTree *background = (TTree*)input->Get("MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise/bkgTree");
 
    // TTree *signal = (TTree*)input->Get("data_ZeroBias1_CASTOR/sigTree");
    // TTree *background = (TTree*)input->Get("data_ZeroBias1_CASTOR/bkgTree");
@@ -162,7 +166,7 @@ int Diffractive_TMVAClassification( TString myMethodList = "" )
    TCut mycutb = "deltazero>=0"; // for example: TCut mycutb = "abs(var1)<0.5";
    
    factory->PrepareTrainingAndTestTree( mycuts, mycutb,
-                                        "nTrain_Signal=1000:nTest_Signal=1000:nTrain_Background=1000:nTest_Background=1000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                        "nTrain_Signal=80000:nTest_Signal=80000:nTrain_Background=80000:nTest_Background=80000:SplitMode=Random:NormMode=NumEvents:!V" );
 
    
    
