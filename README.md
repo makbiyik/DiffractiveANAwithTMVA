@@ -19,6 +19,11 @@ Analysis code for selecting diffractive events in [CMS](http://cms.web.cern.ch/)
 * Information about [CFF](https://github.com/hvanhaev/CommonFSQFramework) can be found: <br>
   https://twiki.cern.ch/twiki/bin/viewauth/CMS/FSQCommonFW
 
+* Ouput data of the CFF analyzer can be received by the given python script: <br>
+  ```shell
+  $ ./copy_data_from_lxplus.py -u LXPLUS_ACCOUNT_NAME
+  ```
+
 ## Workflow
 
 * Diffractive_TMVAClassification: <br>
