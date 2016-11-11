@@ -151,7 +151,7 @@ std::map<TString, sSample> read_data_mc_files() {
   sSample sPythia8;
   sPythia8.isData = false;
   sPythia8.xs = 71390.000000; // nb
-  sPythia8.file = TFile::Open("data/trackanddiffractive_sigDD_Pythia8.root");
+  sPythia8.file = TFile::Open("data/trackanddiffractive_sigDD_pythia8.root");
   sPythia8.tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
   htmp = (TH1F*)sPythia8.file->Get(sPythia8.tree_name + "/hNentries");
   sPythia8.lumi = htmp->GetBinContent(1)/sPythia8.xs;
@@ -161,7 +161,7 @@ std::map<TString, sSample> read_data_mc_files() {
   sEPOS.isData = false;
   sEPOS.lumi = 0;
   sEPOS.xs = 79948.200000; // nb
-  sEPOS.file = TFile::Open("data/trackanddiffractive_sigDD_Epos.root");
+  sEPOS.file = TFile::Open("data/trackanddiffractive_sigDD_epos.root");
   sEPOS.tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
   htmp = (TH1F*)sEPOS.file->Get(sEPOS.tree_name + "/hNentries");
   sEPOS.lumi = htmp->GetBinContent(1)/sEPOS.xs;
@@ -170,7 +170,7 @@ std::map<TString, sSample> read_data_mc_files() {
   sData.isData = true;
   sData.lumi = 0.34; // 1/nb
   sData.xs = 0;
-  sData.file = TFile::Open("data/trackanddiffractive_sigDD_Data.root");
+  sData.file = TFile::Open("data/trackanddiffractive_sigDD_data.root");
   sData.tree_name = "data_ZeroBias1_CASTOR";
 
   std::map<TString, sSample> mSample;
