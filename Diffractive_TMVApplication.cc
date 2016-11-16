@@ -26,6 +26,8 @@
 #include "TMVA/Reader.h"
 #include "TMVA/MethodCuts.h"
 
+#include "SampleList.h"
+
 #define UNUSED(x) (void)(x) // to avoid unused compiler warning
 
 using namespace TMVA;
@@ -113,6 +115,8 @@ void Diffractive_TMVApplication()
    // Book output histograms
    std::map<TString, TH1*> mHist;
 
+   mHist["hNentries"] = new TH1F("hNentries","hNentries",10,0,10);
+
    int NbrEtaBins = 50;
    double BinEtaMin = -5.5;
    double BinEtaMax = 4.5;
@@ -123,7 +127,6 @@ void Diffractive_TMVApplication()
    int NbrLogXiBins = 100;
    double BinLogXiMin = -11.5;
    double BinLogXiMax =0.5;
-
    
    ////////////////////////////////////////////////////////////////////////////
    // loop over proccess ID
@@ -176,14 +179,16 @@ void Diffractive_TMVApplication()
    // end loop over proccess ID
    ////////////////////////////////////////////////////////////////////////////
 
-   
-   TString fname = "/home/lxadmin/MyRoot/root/tutorials/tmva/DiffractiveANAwithTMVA/data/trackanddiffractive_sigDD_epos.root";
-   TFile *input = TFile::Open( fname );
-   std::cout << "--- TMVAClassification       : Using input file: " << input->GetName() << std::endl;
+   std::map<TString, SampleList::sSample> mSample = SampleList::read_data_mc_files();
+   ////////////////////////////////////////////////////////////////////////////
+   TString sampleName = "Pythia8";
+   ////////////////////////////////////////////////////////////////////////////
+
+   std::cout << "--- TMVAClassification       : Using input file: " << mSample[sampleName].file->GetName() << std::endl;
  
    // --- Register the training and test trees   
    std::cout << "--- Select signal sample" << std::endl;
-   TTree* theTree = (TTree*)input->Get("MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise/AllTree");
+   TTree* theTree = (TTree*)mSample[sampleName].file->Get(mSample[sampleName].tree_name + "/AllTree");
 
 
    Int_t HFminusNtowers_tree ,HFplusNtowers_tree ,CastorNtowers_tree,Ntracks_tree;
@@ -213,6 +218,8 @@ void Diffractive_TMVApplication()
       if (ievt%1000 == 0) std::cout << "--- ... Processing event: " << ievt << std::endl;
 
       theTree->GetEntry(ievt);
+
+      mHist["hNentries"]->Fill("all",1);
 
       HFplusNtowers = (Float_t)HFplusNtowers_tree;
       HFminusNtowers = (Float_t)HFminusNtowers_tree;
@@ -258,6 +265,8 @@ void Diffractive_TMVApplication()
          // Reject event
          continue;
       }
+
+      mHist["hNentries"]->Fill("signal",1);
 
       // Start to fill my histograms with events selected as DoubleDiffractive
       mHist[TString("hSignal_etamax") + proccess]->Fill(etamax); 

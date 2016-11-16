@@ -33,18 +33,10 @@
 #include "StackHistHelper.h"
 #include "SystErrHelper.h"
 
+#include "SampleList.h"
+
 #define UNUSED(x) (void)(x) // to avoid unused compiler warning
 
-// global struct for ordering data info
-struct sSample
-{
-  bool isData;
-  double lumi;
-  double xs; // in nb
-
-  TFile* file;
-  TString tree_name;
-};
 
 
 // temporary struct for training variables directly compared to data
@@ -85,7 +77,6 @@ TH1F* get_Ratio(TH1* hMC, TH1* hData) {
 
 //////////////////////////////////////////////////////////////////////////
 // read in data and mc files with important informations
-std::map<TString, sSample> read_data_mc_files();
 std::map<TString, sSingleVar> build_hist_parameters();
 
 
@@ -96,26 +87,19 @@ void exampleCode();
 
 //////////////////////////////////////////////////////////////////////////
 // plot the variables for tmva training and compare this with data
-void training_variables_compare_mc_data(std::map<TString, sSample>& mSample);
-void single_sample_compare_mc_data(std::map<TString, sSample>& mSample,
+void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& mSample);
+void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSample,
                                    std::vector<TString>& vSuffix,
                                    std::map<TString, sSingleVar>& mSingleTrainingVar,
                                    TString sample_name,
                                    bool scale_data = true);
 void single_figure_compare_mc_data(CanvasHelper& ch,
-                                   std::map<TString, sSample>& mSample,
+                                   std::map<TString, SampleList::sSample>& mSample,
                                    std::vector<TString>& vSuffix,
                                    TString sample_name,
                                    TString hist_var_name,
                                    bool scale_data = true);
 
-
-// void TH2_compare_mc_data(CanvasHelper& ch,
-//                                    std::map<TString, sSample>& mSample,
-//                                    std::vector<TString>& vSuffix,
-//                                    TString sample_name,
-//                                    TString hist_var_name
-//                                             );
 
 //////////////////////////////////////////////////////////////////////////
 // main function
@@ -149,7 +133,7 @@ int main( int argc, char** argv )
   // run code to creat figures
   //////////////////////////////////////////////////////////////////////////
   // read data files
-  std::map<TString, sSample> mSample = read_data_mc_files();
+  std::map<TString, SampleList::sSample> mSample = SampleList::read_data_mc_files();
   //////////////////////////////////////////////////////////////////////////
   // compare training variables MC with DATA
   training_variables_compare_mc_data(mSample);
@@ -164,60 +148,6 @@ int main( int argc, char** argv )
 }
 //////////////////////////////////////////////////////////////////////////
 
-
-
-
-//////////////////////////////////////////////////////////////////////////
-std::map<TString, sSample> read_data_mc_files() {
-  TH1F * htmp;
-
-  sSample sPythia8;
-  sPythia8.isData = false;
-  sPythia8.xs = 71390.000000; // nb
-  sPythia8.file = TFile::Open("data/trackanddiffractive_sigDD_pythia8.root");
-  sPythia8.tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
-  htmp = (TH1F*)sPythia8.file->Get(sPythia8.tree_name + "/hNentries");
-  sPythia8.lumi = htmp->GetBinContent(1)/sPythia8.xs;
-
-
-  sSample sEPOS;
-  sEPOS.isData = false;
-  sEPOS.lumi = 0;
-  sEPOS.xs = 79948.200000; // nb
-  sEPOS.file = TFile::Open("data/trackanddiffractive_sigDD_epos.root");
-  sEPOS.tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
-  htmp = (TH1F*)sEPOS.file->Get(sEPOS.tree_name + "/hNentries");
-  sEPOS.lumi = htmp->GetBinContent(1)/sEPOS.xs;
-
-
-  sSample sXiEventSelectioncut;
-  sXiEventSelectioncut.isData = false;
-  sXiEventSelectioncut.lumi = 0;
-  sXiEventSelectioncut.xs = 79948.200000; // nb
-  sXiEventSelectioncut.file = TFile::Open("data/trackanddiffractive_sigDD_pythia8.root");
-  sXiEventSelectioncut.tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
-  htmp = (TH1F*)sXiEventSelectioncut.file->Get(sXiEventSelectioncut.tree_name + "/hNentries");
-  sXiEventSelectioncut.lumi = htmp->GetBinContent(1)/sXiEventSelectioncut.xs;
-
-
-
-  sSample sData;
-  sData.isData = true;
-  sData.lumi = 0.34; // 1/nb
-  sData.xs = 0;
-  sData.file = TFile::Open("data/trackanddiffractive_sigDD_data.root");
-  sData.tree_name = "data_ZeroBias1_CASTOR";
-
-  std::map<TString, sSample> mSample;
-
-  mSample["Pythia8"] =  sPythia8;
-  mSample["Pythia8XiEventselectioncut"] =  sXiEventSelectioncut;
-
-  mSample["EPOS"] = sEPOS;
-  mSample["Data"] = sData;
-
-  return mSample;
-}
 
 
 
@@ -490,7 +420,7 @@ void exampleCode() {
 
 
 //////////////////////////////////////////////////////////////////////////
-void training_variables_compare_mc_data(std::map<TString, sSample>& mSample) {
+void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& mSample) {
   
   std::vector<TString> vSuffix;
   vSuffix.push_back("_NONE");
@@ -518,7 +448,7 @@ void training_variables_compare_mc_data(std::map<TString, sSample>& mSample) {
   // vSuffix.push_back("_Barrel");
 }
 
-void single_sample_compare_mc_data(std::map<TString, sSample>& mSample,
+void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSample,
                                    std::vector<TString>& vSuffix,
                                    std::map<TString, sSingleVar>& mSingleTrainingVar,
                                    TString sample_name,
@@ -548,7 +478,7 @@ void single_sample_compare_mc_data(std::map<TString, sSample>& mSample,
 
 //////////////////////////////////////////////////////////////////////////
 void single_figure_compare_mc_data(CanvasHelper& ch,
-                                   std::map<TString, sSample>& mSample,
+                                   std::map<TString, SampleList::sSample>& mSample,
                                    std::vector<TString>& vSuffix,
                                    TString sample_name,
                                    TString hist_var_name,
