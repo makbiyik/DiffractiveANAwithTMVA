@@ -70,6 +70,37 @@ namespace SampleList {
 
     return mSample;
   }
+  //////////////////////////////////////////////////////////////////////////
+
+
+
+  struct sTMAOutput
+  {
+    TString method;
+    TString signal;
+
+    TString weight_name;
+    TString training_sample;
+    TString app_input_sample;
+    TString app_output_file_name;
+  };
+
+
+  //////////////////////////////////////////////////////////////////////////
+  std::map<TString, sTMAOutput> read_TMVAOutput() {
+    std::map<TString, sTMAOutput> mTMVAOutput;
+
+    mTMVAOutput["Pythia8_BDTG_Pythia8Trained"].method = "BDTG";
+    mTMVAOutput["Pythia8_BDTG_Pythia8Trained"].signal = "DD";
+    mTMVAOutput["Pythia8_BDTG_Pythia8Trained"].weight_name = "weights/TMVAClassification_BDTG.weights.xml";
+    mTMVAOutput["Pythia8_BDTG_Pythia8Trained"].training_sample = "Pythia8"; // correspond to sSample
+    mTMVAOutput["Pythia8_BDTG_Pythia8Trained"].app_input_sample = "Pythia8"; // correspond to sSample
+    mTMVAOutput["Pythia8_BDTG_Pythia8Trained"].app_output_file_name = "TMVApp_Pythia8_BDTG_training_Pythia8.root";
+
+    return mTMVAOutput;
+  }
+  //////////////////////////////////////////////////////////////////////////
+
 
 } // end of namespace
 

@@ -104,11 +104,18 @@ void Diffractive_TMVApplication()
    reader->AddVariable( "Pythia8processid" , &Pythia8processid );
    reader->AddVariable( "EventselectionXiprocessid" , &EventselectionXiprocessid );
    // reader->AddVariable("log10XiDD",&log10XiDD);
- 
+
+
+   ////////////////////////////////////////////////////////////////////////////
+   std::map<TString, SampleList::sSample> mSample = SampleList::read_data_mc_files();
+   std::map<TString, SampleList::sTMAOutput> mTMVAOuput = SampleList::read_TMVAOutput();
+   ////////////////////////////////////////////////////////////////////////////
+   TString sampleName = "Pythia8_BDTG_Pythia8Trained";
+   TString inputSample = mTMVAOuput[sampleName].app_input_sample; 
 
    // --- Book the MVA methods
-   TString weightfile = "weights/TMVAClassification_BDTG.weights.xml";
-   TString methodName = "BDTG method";
+   TString weightfile = mTMVAOuput[sampleName].weight_name;
+   TString methodName = mTMVAOuput[sampleName].method + " method";
    reader->BookMVA(methodName, weightfile ); 
 
    
@@ -179,16 +186,13 @@ void Diffractive_TMVApplication()
    // end loop over proccess ID
    ////////////////////////////////////////////////////////////////////////////
 
-   std::map<TString, SampleList::sSample> mSample = SampleList::read_data_mc_files();
-   ////////////////////////////////////////////////////////////////////////////
-   TString sampleName = "Pythia8";
-   ////////////////////////////////////////////////////////////////////////////
 
-   std::cout << "--- TMVAClassification       : Using input file: " << mSample[sampleName].file->GetName() << std::endl;
+   ////////////////////////////////////////////////////////////////////////////
+   std::cout << "--- TMVAClassification       : Using input file: " << mSample[inputSample].file->GetName() << std::endl;
  
    // --- Register the training and test trees   
    std::cout << "--- Select signal sample" << std::endl;
-   TTree* theTree = (TTree*)mSample[sampleName].file->Get(mSample[sampleName].tree_name + "/AllTree");
+   TTree* theTree = (TTree*)mSample[inputSample].file->Get(mSample[inputSample].tree_name + "/AllTree");
 
 
    Int_t HFminusNtowers_tree ,HFplusNtowers_tree ,CastorNtowers_tree,Ntracks_tree;
