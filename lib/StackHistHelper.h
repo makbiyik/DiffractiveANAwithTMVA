@@ -62,6 +62,10 @@ public:
     vHist.clear();
 
     for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+      if( file->Get(histname + vSuffix[iSuffix]) == NULL ) {
+        throw histname + vSuffix[iSuffix];
+      }
+
       TH1* h = (TH1*)file->Get(histname + vSuffix[iSuffix]);
       addHist(h,hist_suffix);
     }

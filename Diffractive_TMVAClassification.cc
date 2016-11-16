@@ -128,9 +128,6 @@ int Diffractive_TMVAClassification( TString myMethodList = "" )
    factory->AddVariable( "HFplusNtowers","HFplusNtowers", "units", 'I' );//Log->logdegistirdin
    factory->AddVariable( "CastorNtowers","CastorNtowers", "units", 'I' );
    factory->AddVariable( "Ntracks","Ntracks", "units", 'I' );
-   factory->AddVariable( "Pythia8processid","Pythia8processid", "units", 'I' );
-
-   // factory->AddVariable( "log10XiDD","log10XiDD", "units", 'F' );
 
    // TString fname = "/home/lxadmin/MyRoot/root/tutorials/tmva/MC_PYTHIA8/trackanddiffractive_mc_sigDD.root";
    TString fname = "/home/lxadmin/MyRoot/root/tutorials/tmva/DiffractiveANAwithTMVA/data/trackanddiffractive_sigDD_pythia8.root";
@@ -166,7 +163,7 @@ int Diffractive_TMVAClassification( TString myMethodList = "" )
    TCut mycutb = "deltazero>=0"; // for example: TCut mycutb = "abs(var1)<0.5";
    
    factory->PrepareTrainingAndTestTree( mycuts, mycutb,
-                                        "nTrain_Signal=80000:nTest_Signal=80000:nTrain_Background=80000:nTest_Background=80000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                        "nTrain_Signal=50000:nTest_Signal=50000:nTrain_Background=50000:nTest_Background=50000:SplitMode=Random:NormMode=NumEvents:!V" );
 
    
    
