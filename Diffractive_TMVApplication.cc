@@ -29,8 +29,9 @@
 #define UNUSED(x) (void)(x) // to avoid unused compiler warning
 
 using namespace TMVA;
-//////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 // global struct for ordering data info
 struct sSample
 {
@@ -44,8 +45,8 @@ struct sSample
 
 
 
-
-//Pythia8
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+// get string from integer value Pythia8processid
 TString get_Pythia_Process_ID(int Pythia8processid) {
 
    if(Pythia8processid == 101) {
@@ -66,8 +67,7 @@ TString get_Pythia_Process_ID(int Pythia8processid) {
 
 
 ////////////////////////////////////////////////////////////////////////
-
-void Diffractive_TMVApplication( TString myMethodList = "" ) 
+void Diffractive_TMVApplication() 
 {   
 
    //---------------------------------------------------------------
@@ -75,46 +75,11 @@ void Diffractive_TMVApplication( TString myMethodList = "" )
    // This loads the library
    TMVA::Tools::Instance();
 
-   // Default MVA methods to be trained + tested
-   std::map<TString,int> Use;
-   Use["Fisher"]          = 0;
-   Use["FisherG"]         = 0;
-   Use["BoostedFisher"]   = 0; // uses generalised MVA method boosting
-  
-
-   // --- Boosted Decision Trees
-   Use["BDT"]             = 0; // uses Adaptive Boost
-   Use["BDTG"]            = 1; // uses Gradient Boost
-
-  
    std::cout << std::endl;
    std::cout << "==> Start Diffractive_TMVApplication" << std::endl;
 
-   // Select methods (don't look at this code - not of interest)
-   if (myMethodList != "") {
-      for (std::map<TString,int>::iterator it = Use.begin(); it != Use.end(); it++) it->second = 0;
-
-      std::vector<TString> mlist = gTools().SplitString( myMethodList, ',' );
-      for (UInt_t i=0; i<mlist.size(); i++) {
-         TString regMethod(mlist[i]);
-
-         if (Use.find(regMethod) == Use.end()) {
-            std::cout << "Method \"" << regMethod 
-                      << "\" not known in TMVA under this name. Choose among the following:" << std::endl;
-            for (std::map<TString,int>::iterator it = Use.begin(); it != Use.end(); it++) {
-               std::cout << it->first << " ";
-            }
-            std::cout << std::endl;
-            return;
-         }
-         Use[regMethod] = 1;
-      }
-   }
-
    // --------------------------------------------------------------------------------------------------
-
    // --- Create the Reader object
-
    TMVA::Reader *reader = new TMVA::Reader( "!Color:!Silent" );    
 
    // Create a set of variables and declare them to the reader
@@ -125,36 +90,29 @@ void Diffractive_TMVApplication( TString myMethodList = "" )
    Float_t HFminusNtowers ,HFplusNtowers ,CastorNtowers,Ntracks,Pythia8processid,EventselectionXiprocessid;
 
    reader->AddVariable( "deltazero", &deltazero );
-   reader->AddVariable( "etamax", &etamax );
-   reader->AddVariable( "etamin", &etamin );
-   reader->AddVariable( "log10XixReco", &log10XixReco );
-   reader->AddVariable("log10XiyReco", &log10XiyReco);
-   reader->AddVariable("HFminusNtowers", &HFminusNtowers);
-   reader->AddVariable("HFplusNtowers", &HFplusNtowers);
-   reader->AddVariable("CastorNtowers", &CastorNtowers);
-   reader->AddVariable("Ntracks",&Ntracks);
+   reader->AddVariable( "etamax" , &etamax );
+   reader->AddVariable( "etamin" , &etamin );
+   reader->AddVariable( "log10XixReco" , &log10XixReco );
+   reader->AddVariable( "log10XiyReco" , &log10XiyReco );
+   reader->AddVariable( "HFminusNtowers" , &HFminusNtowers );
+   reader->AddVariable( "HFplusNtowers" , &HFplusNtowers );
+   reader->AddVariable( "CastorNtowers" , &CastorNtowers );
+   reader->AddVariable( "Ntracks" ,&Ntracks );
 
-   reader->AddVariable("Pythia8processid",&Pythia8processid);
-   reader->AddVariable("EventselectionXiprocessid",&EventselectionXiprocessid);
+   reader->AddVariable( "Pythia8processid" , &Pythia8processid );
+   reader->AddVariable( "EventselectionXiprocessid" , &EventselectionXiprocessid );
    // reader->AddVariable("log10XiDD",&log10XiDD);
  
 
    // --- Book the MVA methods
-   TString dir    = "weights/";
-   TString prefix = "TMVAClassification";
+   TString weightfile = "weights/TMVAClassification_BDTG.weights.xml";
+   TString methodName = "BDTG method";
+   reader->BookMVA(methodName, weightfile ); 
 
-
-   // Book method(s)
-   for (std::map<TString,int>::iterator it = Use.begin(); it != Use.end(); it++) {
-      if (it->second) {
-         TString methodName = TString(it->first) + TString(" method");
-         TString weightfile = dir + prefix + TString("_") + TString(it->first) + TString(".weights.xml");
-         reader->BookMVA(methodName, weightfile ); 
-      }
-   }
    
    // Book output histograms
-   // Int_t nbin = 100;
+   std::map<TString, TH1*> mHist;
+
    int NbrEtaBins = 50;
    double BinEtaMin = -5.5;
    double BinEtaMax = 4.5;
@@ -166,10 +124,6 @@ void Diffractive_TMVApplication( TString myMethodList = "" )
    double BinLogXiMin = -11.5;
    double BinLogXiMax =0.5;
 
-   std::map<TString, TH1*> mHist;
-   
-   // TH1F   *histFi(0), *histFiG(0), *histFiB(0);
-   // TH1F   *histBdt(0), *histBdtG(0);
    
    ////////////////////////////////////////////////////////////////////////////
    // loop over proccess ID
@@ -221,41 +175,15 @@ void Diffractive_TMVApplication( TString myMethodList = "" )
    }
    // end loop over proccess ID
    ////////////////////////////////////////////////////////////////////////////
-   
-   
-   // if (Use["Fisher"])        histFi      = new TH1F( "MVA_Fisher",        "MVA_Fisher",        nbin, -4, 4 );
-   // if (Use["FisherG"])       histFiG     = new TH1F( "MVA_FisherG",       "MVA_FisherG",       nbin, -1, 1 );
-   // if (Use["BoostedFisher"]) histFiB     = new TH1F( "MVA_BoostedFisher", "MVA_BoostedFisher", nbin, -2, 2 );
-   
-   // if (Use["BDT"])           histBdt     = new TH1F( "MVA_BDT",           "MVA_BDT",           nbin, -0.8, 0.8 );
-   // if (Use["BDTG"])          histBdtG    = new TH1F( "MVA_BDTG",          "MVA_BDTG",          nbin, -1.0, 1.0 );
-
-
-   // Book example histogram for probability (the other methods are done similarly)
-   // TH1F *probHistFi(0), *rarityHistFi(0);
-   // if (Use["Fisher"]) {
-   //    probHistFi   = new TH1F( "MVA_Fisher_Proba",  "MVA_Fisher_Proba",  nbin, 0, 1 );
-   //    rarityHistFi = new TH1F( "MVA_Fisher_Rarity", "MVA_Fisher_Rarity", nbin, 0, 1 );
-   // }
 
    
    TString fname = "/home/lxadmin/MyRoot/root/tutorials/tmva/DiffractiveANAwithTMVA/data/trackanddiffractive_sigDD_epos.root";
    TFile *input = TFile::Open( fname );
    std::cout << "--- TMVAClassification       : Using input file: " << input->GetName() << std::endl;
  
-   // --- Register the training and test trees
-   
+   // --- Register the training and test trees   
    std::cout << "--- Select signal sample" << std::endl;
-   // TTree* theTree = (TTree*)input->Get("MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise/sigTree");
-   //Data
-   // TTree* theTree = (TTree*)input->Get("data_ZeroBias1_CASTOR/AllTree");
-   //pythia8
-   // TTree* theTree = (TTree*)input->Get("MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise/AllTree");
-   // //EPOS
    TTree* theTree = (TTree*)input->Get("MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise/AllTree");
-   
-   
-
 
 
    Int_t HFminusNtowers_tree ,HFplusNtowers_tree ,CastorNtowers_tree,Ntracks_tree;
@@ -274,13 +202,9 @@ void Diffractive_TMVApplication( TString myMethodList = "" )
    theTree->SetBranchAddress("Pythia8processid",&Pythia8processid_tree);
    theTree->SetBranchAddress("EventselectionXiprocessid",&EventselectionXiprocessid_tree);
 
-
-   // Efficiency calculator for cut method
-   // Int_t    nSelCutsGA = 0;
-   // Double_t effS       = 0.7;
-
-   // std::vector<Float_t> vecVar(8); // vector for EvaluateMVA tests
-
+   ////////////////////////////////////////////////////////////////////////////
+   // loop over entries in InputTree
+   ////////////////////////////////////////////////////////////////////////////
    std::cout << "--- Processing: " << theTree->GetEntries() << " events" << std::endl;
    TStopwatch sw;
    sw.Start();
@@ -355,82 +279,19 @@ void Diffractive_TMVApplication( TString myMethodList = "" )
       mHist["hSignal_HFminusNtowers"]->Fill(HFminusNtowers);
       mHist["hSignal_HFplusNtowers"]->Fill(HFplusNtowers);
       mHist["hsignal_NTracks"]->Fill(Ntracks);
-   
-   
-
-      /////////////////////////////////////////////////////////////////////////
-
-     
-
-      // // --- Return the MVA outputs and fill into histograms
-
-      // if (Use["CutsGA"]) {
-      //    // Cuts is a special case: give the desired signal efficienciy
-      //    Bool_t passed = reader->EvaluateMVA( "CutsGA method", effS );
-      //    if (passed) nSelCutsGA++;
-      // }
-
-      // if (Use["Fisher"       ])   histFi     ->Fill( reader->EvaluateMVA( "Fisher method"        ) );
-      // if (Use["FisherG"      ])   histFiG    ->Fill( reader->EvaluateMVA( "FisherG method"       ) );
-      // if (Use["BoostedFisher"])   histFiB    ->Fill( reader->EvaluateMVA( "BoostedFisher method" ) );
-      // if (Use["BDT"          ])   histBdt    ->Fill( reader->EvaluateMVA( "BDT method"           ) );
-      // if (Use["BDTG"         ])   histBdtG   ->Fill( reader->EvaluateMVA( "BDTG method"          ) );
-
-      // // Retrieve probability instead of MVA output
-      // if (Use["Fisher"])   {
-      //    probHistFi  ->Fill( reader->GetProba ( "Fisher method" ) );
-      //    rarityHistFi->Fill( reader->GetRarity( "Fisher method" ) );
-      // }
    }
-
+   ////////////////////////////////////////////////////////////////////////////
+   // end of loop over tree entries
+   ////////////////////////////////////////////////////////////////////////////
    // Get elapsed time
    sw.Stop();
    std::cout << "--- End of event loop: "; sw.Print();
 
-   // Get efficiency for cuts classifier
-   // if (Use["CutsGA"]) std::cout << "--- Efficiency for CutsGA method: " << double(nSelCutsGA)/theTree->GetEntries()
-   //                              << " (for a required signal efficiency of " << effS << ")" << std::endl;
-
-   // if (Use["CutsGA"]) {
-
-   //    // test: retrieve cuts for particular signal efficiency
-   //    // CINT ignores dynamic_casts so we have to use a cuts-secific Reader function to acces the pointer  
-   //    TMVA::MethodCuts* mcuts = reader->FindCutsMVA( "CutsGA method" ) ;
-
-   //    if (mcuts) {      
-   //       std::vector<Double_t> cutsMin;
-   //       std::vector<Double_t> cutsMax;
-   //       mcuts->GetCuts( 0.7, cutsMin, cutsMax );
-   //       std::cout << "--- -------------------------------------------------------------" << std::endl;
-   //       std::cout << "--- Retrieve cut values for signal efficiency of 0.7 from Reader" << std::endl;
-   //       for (UInt_t ivar=0; ivar<cutsMin.size(); ivar++) {
-   //          std::cout << "... Cut: " 
-   //                    << cutsMin[ivar] 
-   //                    << " < \"" 
-   //                    << mcuts->GetInputVar(ivar)
-   //                    << "\" <= " 
-   //                    << cutsMax[ivar] << std::endl;
-   //       }
-   //       std::cout << "--- -------------------------------------------------------------" << std::endl;
-   //    }
-   // }
-
-
-
    // --- Write histograms
    TFile *target  = new TFile( "data/TMVApp_treesig_DD_training_pythi8_app_EOS.root","RECREATE" );
-   
-   // if (Use["Fisher"       ])   histFi     ->Write();
-   // if (Use["FisherG"      ])   histFiG    ->Write();
-   // if (Use["BoostedFisher"])   histFiB    ->Write();
-   // if (Use["BDT"          ])   histBdt    ->Write();
-   // if (Use["BDTG"         ])   histBdtG   ->Write(); 
-   
    for( std::map<TString, TH1*>::iterator it = mHist.begin(); it != mHist.end(); it++)
-      it->second->Write(); 
-  
-   // Write also probability hists
-   // if (Use["Fisher"]) { if (probHistFi != 0) probHistFi->Write(); if (rarityHistFi != 0) rarityHistFi->Write(); }
+      it->second->Write();
+   // close file
    target->Close();
 
    std::cout << "--- Created root file: signal DD \"" << target->GetName() << "\" containing the MVA output histograms" << std::endl;
@@ -445,14 +306,7 @@ int main( int argc, char** argv )
    UNUSED(argc);
    UNUSED(argv);
 
-   TString methodList = ""; 
-   // for (int i=1; i<argc; i++) {
-   //    TString regMethod(argv[i]);
-   //    if(regMethod=="-b" || regMethod=="--batch") continue;
-   //    if (!methodList.IsNull()) methodList += TString(","); 
-   //    methodList += regMethod;
-   // }
-   Diffractive_TMVApplication(methodList); 
+   Diffractive_TMVApplication(); 
    return 0; 
 }
   
