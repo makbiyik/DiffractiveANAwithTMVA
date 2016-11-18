@@ -134,11 +134,14 @@ int main( int argc, char** argv )
   //////////////////////////////////////////////////////////////////////////
   // read data files
   std::map<TString, SampleList::sSample> mSample = SampleList::read_data_mc_files();
+  std::map<TString, SampleList::sTMVAOutput> mTMVAOutput = SampleList::read_TMVAOutput();
+  
+
   //////////////////////////////////////////////////////////////////////////
   // compare training variables MC with DATA
   training_variables_compare_mc_data(mSample);
 
-
+  // training_discriminatevalue_compare(mTMVAOutput);
   /////////////////////////////////////////////////
   // freeze program
   app->Run();

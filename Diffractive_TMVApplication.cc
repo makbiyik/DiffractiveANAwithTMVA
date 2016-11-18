@@ -89,7 +89,7 @@ void Diffractive_TMVApplication()
    
    Float_t deltazero, etamax;
    Float_t etamin, log10XixReco, log10XiyReco;//log10XiDD;
-   Float_t HFminusNtowers ,HFplusNtowers ,CastorNtowers,Ntracks,Pythia8processid,EventselectionXiprocessid;
+   Float_t HFminusNtowers ,HFplusNtowers ,CastorNtowers,Ntracks;// ,Pythia8processid,EventselectionXiprocessid;
 
    reader->AddVariable( "deltazero", &deltazero );
    reader->AddVariable( "etamax" , &etamax );
@@ -101,14 +101,14 @@ void Diffractive_TMVApplication()
    reader->AddVariable( "CastorNtowers" , &CastorNtowers );
    reader->AddVariable( "Ntracks" ,&Ntracks );
 
-   reader->AddVariable( "Pythia8processid" , &Pythia8processid );
-   reader->AddVariable( "EventselectionXiprocessid" , &EventselectionXiprocessid );
+   /*reader->AddVariable( "Pythia8processid" , &Pythia8processid );
+   reader->AddVariable( "EventselectionXiprocessid" , &EventselectionXiprocessid );*/
    // reader->AddVariable("log10XiDD",&log10XiDD);
 
 
    ////////////////////////////////////////////////////////////////////////////
    std::map<TString, SampleList::sSample> mSample = SampleList::read_data_mc_files();
-   std::map<TString, SampleList::sTMAOutput> mTMVAOuput = SampleList::read_TMVAOutput();
+   std::map<TString, SampleList::sTMVAOutput> mTMVAOuput = SampleList::read_TMVAOutput();
    ////////////////////////////////////////////////////////////////////////////
    TString sampleName = "Pythia8_BDTG_Pythia8Trained";
    TString inputSample = mTMVAOuput[sampleName].app_input_sample; 
@@ -193,7 +193,7 @@ void Diffractive_TMVApplication()
    // --- Register the training and test trees   
    std::cout << "--- Select signal sample" << std::endl;
    TTree* theTree = (TTree*)mSample[inputSample].file->Get(mSample[inputSample].tree_name + "/AllTree");
-
+   
 
    Int_t HFminusNtowers_tree ,HFplusNtowers_tree ,CastorNtowers_tree,Ntracks_tree;
    Int_t Pythia8processid_tree, EventselectionXiprocessid_tree;
@@ -229,8 +229,8 @@ void Diffractive_TMVApplication()
       HFminusNtowers = (Float_t)HFminusNtowers_tree;
       CastorNtowers = (Float_t)CastorNtowers_tree;
       Ntracks =(Float_t)Ntracks_tree;
-      Pythia8processid=(Float_t)Pythia8processid_tree;
-      EventselectionXiprocessid=(Float_t)EventselectionXiprocessid_tree;
+      // Pythia8processid=(Float_t)Pythia8processid_tree;
+      // EventselectionXiprocessid=(Float_t)EventselectionXiprocessid_tree;
 
       double discriminant_value = reader->EvaluateMVA("BDTG method");
 
@@ -247,7 +247,11 @@ void Diffractive_TMVApplication()
       mHist["hsignal_NTracks_nodiscriminantcut"]->Fill(Ntracks);
 
       // Fill hist depending on proccess ID string
-      TString proccess = get_Pythia_Process_ID(Pythia8processid_tree);
+      TString proccess = "" ;
+     
+      if (mSample[inputSample].procesesID_pythia8) proccess = get_Pythia_Process_ID(Pythia8processid_tree);
+      else proccess = get_Pythia_Process_ID(EventselectionXiprocessid_tree);  
+      
       mHist[TString("hDisciminant") + proccess]->Fill(discriminant_value);
       mHist[TString("hSignal_etamax_nodiscriminantcut") + proccess]->Fill(etamax); 
       mHist[TString("hSignal_etamin_nodiscriminantcut") + proccess]->Fill(etamin); 
@@ -259,8 +263,7 @@ void Diffractive_TMVApplication()
       mHist[TString("hSignal_HFplusNtowers_nodiscriminantcut") + proccess]->Fill(HFplusNtowers);
       mHist[TString("hsignal_NTracks_nodiscriminantcut") + proccess]->Fill(Ntracks);
 
-
-
+     
       /////////////////////////////////////////////////////////////////////////
       // Start Own Code Example
       // I used Fisser method e.g.
@@ -301,7 +304,7 @@ void Diffractive_TMVApplication()
    std::cout << "--- End of event loop: "; sw.Print();
 
    // --- Write histograms
-   TFile *target  = new TFile( "data/TMVApp_treesig_DD_training_pythi8_app_EOS.root","RECREATE" );
+   TFile *target  = new TFile( "data/" + mTMVAOuput[sampleName].app_output_file_name, "RECREATE" );
    for( std::map<TString, TH1*>::iterator it = mHist.begin(); it != mHist.end(); it++)
       it->second->Write();
    // close file
