@@ -106,6 +106,12 @@ void single_figure_compare_mc_data(CanvasHelper& ch,
 
 
 //////////////////////////////////////////////////////////////////////////
+// plot discriminant value for different proccess
+void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mTMVAOutput,
+                                  std::map<TString, SampleList::sSample>& mSample);
+
+
+//////////////////////////////////////////////////////////////////////////
 // main function
 //////////////////////////////////////////////////////////////////////////
 int main( int argc, char** argv )
@@ -143,10 +149,11 @@ int main( int argc, char** argv )
 
   //////////////////////////////////////////////////////////////////////////
   // compare training variables MC with DATA
-  training_variables_compare_mc_data(mSample);
+  // training_variables_compare_mc_data(mSample);
+  discriminant_compare_mc_data(mTMVAOutput,mSample);
 
-  // training_discriminatevalue_compare(mTMVAOutput);
-  /////////////////////////////////////////////////s
+
+  /////////////////////////////////////////////////
   // freeze program
   app->Run();
   /////////////////////////////////////////////////
@@ -513,6 +520,9 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     throw;
   }
 
+  // std::map<TString, TLegend*> mLegend;
+
+
   for(std::map<TString, sSingleVar>::iterator it = mSingleTrainingVar.begin(); it != mSingleTrainingVar.end(); it++) {
     CanvasHelper ch(it->second.canvas_title + sample_name);
     ch.initRatioCanvas(it->second.xmin,it->second.xmax,
@@ -593,4 +603,114 @@ void single_figure_compare_mc_data(CanvasHelper& ch,
   // draw legend
   ch.getCanvas()->cd(1);
   leg->Draw("same");
+}
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
+void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mTMVAOutput,
+                                  std::map<TString, SampleList::sSample>& mSample)
+{
+  UNUSED(mSample);
+
+  std::vector<TString> vSuffix;
+  // vSuffix.push_back("_NONE");
+  vSuffix.push_back("_SD1");
+  vSuffix.push_back("_SD2");
+  vSuffix.push_back("_DD");
+  vSuffix.push_back("_Rest");
+
+
+  TString hist_name = "hDisciminant";
+
+  TString mc_sample_name = "Pythia8_BDTG_Pythia8Trained";
+  TString data_sample_name = "Data_BDTG_Pythia8Trained";
+
+  TString data_dir = "data";
+
+  TFile* mc_file = TFile::Open(data_dir + "/" + mTMVAOutput[mc_sample_name].app_output_file_name);
+  TFile* data_file = TFile::Open(data_dir + "/" + mTMVAOutput[data_sample_name].app_output_file_name);
+
+  TLegend * leg = new TLegend(0.5,0.7,0.9,0.9);
+
+  //////////////////////////////////////////////////////////////////////////
+  // stack the hists together
+  StackHistHelper shh;
+  try {
+    shh.addHistFromFileWithSuffix(mc_file,hist_name,vSuffix,
+                                  mc_sample_name + "_Stack");
+  } catch(TString err) {
+    std::cout << "In function discriminant_compare_mc_data:" << std::endl;
+    std::cout << "!!! Sample: " << mc_sample_name 
+              << " has no hist: " << err << std::endl;
+  }
+
+
+  /////////////////////////////////////////////////////////////
+  // init canvas helper
+  CanvasHelper ch("cDiscriminant" + mc_sample_name);
+  ch.initRatioCanvas(-1,1,
+                     // 0,1,
+                     5e-3,1e2,
+                     0,3,
+                     "Classifier X",
+                     "1/N_{evt} dN/dX [nb^{-1}]",
+                     "MC / Data");
+
+  /////////////////////////////////////////////////////////////
+  // get lumi for mc sample
+  // double lumi_mc = mSample[mTMVAOutput[mc_sample_name].app_input_sample].lumi;
+  double events_mc = ((TH1F*)mc_file->Get("hNentries"))->GetBinContent(1);
+
+  //////////////////////////////////////////////////////////////////////////
+  // color code for the different hists
+  Color_t col[5] = {29, kGreen -1, kGreen, kYellow, 24};
+
+  /////////////////////////////////////////////////////////////i/////////////
+  // access the stacked hists and add it to the canvas helper
+  for(unsigned int iHist=0; iHist<shh.getHistSize(); iHist++) {
+    shh.getHist(iHist)->Scale( 1/events_mc, "width" );
+    ch.addHist( shh.getHist(iHist), "HIST", col[iHist], kSolid, 20, 1001 );
+
+    // define legend text for stacked hist
+    TString leg_text = vSuffix[shh.getHistSize()-iHist-1];
+    leg_text.Remove(0,1);
+    // add legend entry
+    leg->AddEntry( shh.getHist(iHist), leg_text, "f" );
+  }
+
+  TH1F* hMC = (TH1F*)mc_file->Get(hist_name);
+  hMC->Scale( 1./events_mc, "width" );
+  ch.addHist( hMC, "HIST", kBlue+2 );
+
+  //////////////////////////////////////////////////////////////////////////
+  // access data hist
+  TH1F* hData = (TH1F*)data_file->Get(hist_name);
+
+  //////////////////////////////////////////////////////////////////////////
+  // get data lumi
+  // double lumi_data = mSample[mTMVAOutput[data_sample_name].app_input_sample].lumi;
+  double events_data = ((TH1F*)data_file->Get("hNentries"))->GetBinContent(1);
+  // as a hack
+  hData->Sumw2();
+  hData->Scale( 1./events_data , "width" );
+
+
+  ch.addDataHist( hData );
+  // add legend entry
+  leg->AddEntry( hData, "DATA", "lep" );
+
+  ch.addRatioHist( get_Ratio(hMC,hData), "HIST", kBlue );
+  ch.addRatioHist( get_Ratio(hData,hData), "EP", kBlack );
+
+  // draw stacked hists
+  ch.DrawHist();
+
+  // draw legend
+  ch.getCanvas()->cd(1);
+  leg->Draw("same");
+
+  ch.DrawCMSPreliminary(true,11,"0.34 nb^{-1} (13 TeV)");
 }
