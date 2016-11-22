@@ -128,12 +128,12 @@ namespace SampleList {
   
     
 
-    mTMVAOutput["Pythia8XiEventselectioncutTrained_BDTG_Pythia8Trained"].method = "BDTG";
-    mTMVAOutput["Pythia8XiEventselectioncutTrained_BDTG_Pythia8Trained"].signal = "DD";
-    mTMVAOutput["Pythia8XiEventselectioncutTrained_BDTG_Pythia8Trained"].weight_name = "weights/TMVAClassification_BDTG.weights.xml";
-    mTMVAOutput["Pythia8XiEventselectioncutTrained_BDTG_Pythia8Trained"].training_sample = "Pythia8"; // correspond to sSample
-    mTMVAOutput["Pythia8XiEventselectioncutTrained_BDTG_Pythia8Trained"].app_input_sample = "Pythia8XiEventselectioncut"; // correspond to sSample
-    mTMVAOutput["Pythia8XiEventselectioncutTrained_BDTG_Pythia8Trained"].app_output_file_name = "TMVApp_Pythia8_BDTG_Pythia8Trained.root";
+    mTMVAOutput["Pythia8XiEventselectioncut_BDTG_Pythia8Trained"].method = "BDTG";
+    mTMVAOutput["Pythia8XiEventselectioncut_BDTG_Pythia8Trained"].signal = "DD";
+    mTMVAOutput["Pythia8XiEventselectioncut_BDTG_Pythia8Trained"].weight_name = "weights/TMVAClassification_BDTG.weights.xml";
+    mTMVAOutput["Pythia8XiEventselectioncut_BDTG_Pythia8Trained"].training_sample = "Pythia8"; // correspond to sSample
+    mTMVAOutput["Pythia8XiEventselectioncut_BDTG_Pythia8Trained"].app_input_sample = "Pythia8XiEventselectioncut"; // correspond to sSample
+    mTMVAOutput["Pythia8XiEventselectioncut_BDTG_Pythia8Trained"].app_output_file_name = "TMVApp_Pythia8XiEventselectioncutTrained_BDTG_Pythia8Trained.root";
  
     
     

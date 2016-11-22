@@ -110,7 +110,7 @@ void Diffractive_TMVApplication()
    std::map<TString, SampleList::sSample> mSample = SampleList::read_data_mc_files();
    std::map<TString, SampleList::sTMVAOutput> mTMVAOuput = SampleList::read_TMVAOutput();
    ////////////////////////////////////////////////////////////////////////////
-   TString sampleName = "Pythia8_BDTG_Pythia8Trained";
+   TString sampleName = "Pythia8XiEventselectioncut_BDTG_Pythia8Trained";
    TString inputSample = mTMVAOuput[sampleName].app_input_sample; 
 
    // --- Book the MVA methods
@@ -142,45 +142,45 @@ void Diffractive_TMVApplication()
    TString proccesses[Nproc] = {"","_CD","_DD","_SD1","_SD2","_Rest","_NONE"};
    TString histname;
    for(int iproc=0; iproc<Nproc; iproc++) {
-      histname = TString("hSignal_etamin") + proccesses[iproc];
+      histname = TString("Hist_Eta_Min") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,NbrEtaBins, BinEtaMin, BinEtaMax);
-      histname = TString("hSignal_etamax") + proccesses[iproc];
+      histname = TString("Hist_Eta_Max") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,NbrEtaBins, BinEtaMin, BinEtaMax);
-      histname = TString("hSignal_deltazero") + proccesses[iproc];
+      histname = TString("Hist_Eta_DeltaZero") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,NbrDetaBins, BinDetaMin, BinDetaMax);
-      histname = TString("hSignal_XixReco") + proccesses[iproc];
+      histname = TString("Hist_log10XiX") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,NbrLogXiBins,BinLogXiMin,BinLogXiMax);
-      histname = TString("hSignal_XiyReco") + proccesses[iproc];
+      histname = TString("Hist_log10XiY") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,NbrLogXiBins,BinLogXiMin,BinLogXiMax);
-      histname = TString("hSignal_HFplusNtowers") + proccesses[iproc];
+      histname = TString("Hist_numberoftowerebovenoise_forwardplus") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,30, 0,300);
-      histname = TString("hSignal_HFminusNtowers") + proccesses[iproc];
+      histname = TString("Hist_numberoftowerebovenoise_forwardminus") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,30, 0,300);
-      histname = TString("hSignal_CastorNtowers") + proccesses[iproc];
+      histname = TString("Hist_numberoftowerebovenoise_castor") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,16, 0,16) ;
-      histname = TString("hsignal_NTracks") + proccesses[iproc];
+      histname = TString("Hist_NbrTracks") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,50, 0,50);
    
       histname = TString("hDisciminant") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,40,-1,1);
 
-      histname = TString("hSignal_etamin_nodiscriminantcut") + proccesses[iproc];
+      histname = TString("Hist_Eta_Min_nodiscriminantcut") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,NbrEtaBins, BinEtaMin, BinEtaMax);
-      histname = TString("hSignal_etamax_nodiscriminantcut") + proccesses[iproc];
+      histname = TString("Hist_Eta_Max_nodiscriminantcut") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,NbrEtaBins, BinEtaMin, BinEtaMax);
-      histname = TString("hSignal_deltazero_nodiscriminantcut") + proccesses[iproc];
+      histname = TString("Hist_Eta_DeltaZero_nodiscriminantcut") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,NbrDetaBins, BinDetaMin, BinDetaMax);
-      histname = TString("hSignal_XixReco_nodiscriminantcut") + proccesses[iproc];
+      histname = TString("Hist_log10XiX_nodiscriminantcut") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,NbrLogXiBins,BinLogXiMin,BinLogXiMax);
-      histname = TString("hSignal_XiyReco_nodiscriminantcut") + proccesses[iproc];
+      histname = TString("Hist_log10XiY_nodiscriminantcut") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,NbrLogXiBins,BinLogXiMin,BinLogXiMax);
-      histname = TString("hSignal_HFplusNtowers_nodiscriminantcut") + proccesses[iproc];
+      histname = TString("Hist_numberoftowerebovenoise_forwardplus_nodiscriminantcut") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,30, 0,300);
-      histname = TString("hSignal_HFminusNtowers_nodiscriminantcut") + proccesses[iproc];
+      histname = TString("Hist_numberoftowerebovenoise_forwardminus_nodiscriminantcut") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,30, 0,300);
-      histname = TString("hSignal_CastorNtowers_nodiscriminantcut") + proccesses[iproc];
+      histname = TString("Hist_numberoftowerebovenoise_castor_nodiscriminantcut") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,16, 0,16) ;
-      histname = TString("hsignal_NTracks_nodiscriminantcut") + proccesses[iproc];
+      histname = TString("Hist_NbrTracks_nodiscriminantcut") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,50, 0,50);
    }
    // end loop over proccess ID
@@ -236,15 +236,15 @@ void Diffractive_TMVApplication()
 
       // Fill general hists
       mHist["hDisciminant"]->Fill(discriminant_value);
-      mHist["hSignal_etamax_nodiscriminantcut"]->Fill(etamax); 
-      mHist["hSignal_etamin_nodiscriminantcut"]->Fill(etamin); 
-      mHist["hSignal_deltazero_nodiscriminantcut"]->Fill(deltazero); 
-      mHist["hSignal_XixReco_nodiscriminantcut"]->Fill(log10XixReco); 
-      mHist["hSignal_XiyReco_nodiscriminantcut"]->Fill(log10XiyReco); 
-      mHist["hSignal_CastorNtowers_nodiscriminantcut"]->Fill(CastorNtowers); 
-      mHist["hSignal_HFminusNtowers_nodiscriminantcut"]->Fill(HFminusNtowers);
-      mHist["hSignal_HFplusNtowers_nodiscriminantcut"]->Fill(HFplusNtowers);
-      mHist["hsignal_NTracks_nodiscriminantcut"]->Fill(Ntracks);
+      mHist["Hist_Eta_Max_nodiscriminantcut"]->Fill(etamax); 
+      mHist["Hist_Eta_Min_nodiscriminantcut"]->Fill(etamin); 
+      mHist["Hist_Eta_DeltaZero_nodiscriminantcut"]->Fill(deltazero); 
+      mHist["Hist_log10XiX_nodiscriminantcut"]->Fill(log10XixReco); 
+      mHist["Hist_log10XiY_nodiscriminantcut"]->Fill(log10XiyReco); 
+      mHist["Hist_numberoftowerebovenoise_castor_nodiscriminantcut"]->Fill(CastorNtowers); 
+      mHist["Hist_numberoftowerebovenoise_forwardminus_nodiscriminantcut"]->Fill(HFminusNtowers);
+      mHist["Hist_numberoftowerebovenoise_forwardplus_nodiscriminantcut"]->Fill(HFplusNtowers);
+      mHist["Hist_NbrTracks_nodiscriminantcut"]->Fill(Ntracks);
 
       // Fill hist depending on proccess ID string
       TString proccess = "" ;
@@ -253,15 +253,15 @@ void Diffractive_TMVApplication()
       else proccess = get_Pythia_Process_ID(EventselectionXiprocessid_tree);  
       
       mHist[TString("hDisciminant") + proccess]->Fill(discriminant_value);
-      mHist[TString("hSignal_etamax_nodiscriminantcut") + proccess]->Fill(etamax); 
-      mHist[TString("hSignal_etamin_nodiscriminantcut") + proccess]->Fill(etamin); 
-      mHist[TString("hSignal_deltazero_nodiscriminantcut") + proccess]->Fill(deltazero); 
-      mHist[TString("hSignal_XixReco_nodiscriminantcut") + proccess]->Fill(log10XixReco); 
-      mHist[TString("hSignal_XiyReco_nodiscriminantcut") + proccess]->Fill(log10XiyReco); 
-      mHist[TString("hSignal_CastorNtowers_nodiscriminantcut") + proccess]->Fill(CastorNtowers); 
-      mHist[TString("hSignal_HFminusNtowers_nodiscriminantcut") + proccess]->Fill(HFminusNtowers);
-      mHist[TString("hSignal_HFplusNtowers_nodiscriminantcut") + proccess]->Fill(HFplusNtowers);
-      mHist[TString("hsignal_NTracks_nodiscriminantcut") + proccess]->Fill(Ntracks);
+      mHist[TString("Hist_Eta_Max_nodiscriminantcut") + proccess]->Fill(etamax); 
+      mHist[TString("Hist_Eta_Min_nodiscriminantcut") + proccess]->Fill(etamin); 
+      mHist[TString("Hist_Eta_DeltaZero_nodiscriminantcut") + proccess]->Fill(deltazero); 
+      mHist[TString("Hist_log10XiX_nodiscriminantcut") + proccess]->Fill(log10XixReco); 
+      mHist[TString("Hist_log10XiY_nodiscriminantcut") + proccess]->Fill(log10XiyReco); 
+      mHist[TString("Hist_numberoftowerebovenoise_castor_nodiscriminantcut") + proccess]->Fill(CastorNtowers); 
+      mHist[TString("Hist_numberoftowerebovenoise_forwardminus_nodiscriminantcut") + proccess]->Fill(HFminusNtowers);
+      mHist[TString("Hist_numberoftowerebovenoise_forwardplus_nodiscriminantcut") + proccess]->Fill(HFplusNtowers);
+      mHist[TString("Hist_NbrTracks_nodiscriminantcut") + proccess]->Fill(Ntracks);
 
      
       /////////////////////////////////////////////////////////////////////////
@@ -276,25 +276,25 @@ void Diffractive_TMVApplication()
       mHist["hNentries"]->Fill("signal",1);
 
       // Start to fill my histograms with events selected as DoubleDiffractive
-      mHist[TString("hSignal_etamax") + proccess]->Fill(etamax); 
-      mHist[TString("hSignal_etamin") + proccess]->Fill(etamin); 
-      mHist[TString("hSignal_deltazero") + proccess]->Fill(deltazero); 
-      mHist[TString("hSignal_XixReco") + proccess]->Fill(log10XixReco); 
-      mHist[TString("hSignal_XiyReco") + proccess]->Fill(log10XiyReco); 
-      mHist[TString("hSignal_CastorNtowers") + proccess]->Fill(CastorNtowers); 
-      mHist[TString("hSignal_HFminusNtowers") + proccess]->Fill(HFminusNtowers);
-      mHist[TString("hSignal_HFplusNtowers") + proccess]->Fill(HFplusNtowers);
-      mHist[TString("hsignal_NTracks") + proccess]->Fill(Ntracks);
+      mHist[TString("Hist_Eta_Max") + proccess]->Fill(etamax); 
+      mHist[TString("Hist_Eta_Min") + proccess]->Fill(etamin); 
+      mHist[TString("Hist_Eta_DeltaZero") + proccess]->Fill(deltazero); 
+      mHist[TString("Hist_log10XiX") + proccess]->Fill(log10XixReco); 
+      mHist[TString("Hist_log10XiY") + proccess]->Fill(log10XiyReco); 
+      mHist[TString("Hist_numberoftowerebovenoise_castor") + proccess]->Fill(CastorNtowers); 
+      mHist[TString("Hist_numberoftowerebovenoise_forwardminus") + proccess]->Fill(HFminusNtowers);
+      mHist[TString("Hist_numberoftowerebovenoise_forwardplus") + proccess]->Fill(HFplusNtowers);
+      mHist[TString("Hist_NbrTracks") + proccess]->Fill(Ntracks);
     
-      mHist["hSignal_etamax"]->Fill(etamax); 
-      mHist["hSignal_etamin"]->Fill(etamin); 
-      mHist["hSignal_deltazero"]->Fill(deltazero); 
-      mHist["hSignal_XixReco"]->Fill(log10XixReco); 
-      mHist["hSignal_XiyReco"]->Fill(log10XiyReco); 
-      mHist["hSignal_CastorNtowers"]->Fill(CastorNtowers); 
-      mHist["hSignal_HFminusNtowers"]->Fill(HFminusNtowers);
-      mHist["hSignal_HFplusNtowers"]->Fill(HFplusNtowers);
-      mHist["hsignal_NTracks"]->Fill(Ntracks);
+      mHist["Hist_Eta_Max"]->Fill(etamax); 
+      mHist["Hist_Eta_Min"]->Fill(etamin); 
+      mHist["Hist_Eta_DeltaZero"]->Fill(deltazero); 
+      mHist["Hist_log10XiX"]->Fill(log10XixReco); 
+      mHist["Hist_log10XiY"]->Fill(log10XiyReco); 
+      mHist["Hist_numberoftowerebovenoise_castor"]->Fill(CastorNtowers); 
+      mHist["Hist_numberoftowerebovenoise_forwardminus"]->Fill(HFminusNtowers);
+      mHist["Hist_numberoftowerebovenoise_forwardplus"]->Fill(HFplusNtowers);
+      mHist["Hist_NbrTracks"]->Fill(Ntracks);
    }
    ////////////////////////////////////////////////////////////////////////////
    // end of loop over tree entries
