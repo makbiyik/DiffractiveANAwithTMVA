@@ -129,7 +129,8 @@ public:
   // do basic style adjustments to the hist
   // like thicker lines and markers
   // col is set line, marker and fill color 
-  void SetUpHist(TH1* h, Color_t col=kBlue, Style_t stl=kSolid, int mkstyle=20, int fillstyle=0);
+  void SetUpHist(TH1* h, Color_t col=kBlue, Style_t stl=kSolid, int mkstyle=20, int fillstyle=0);  
+  void SetUpLegend(TLegend* leg);
 
   //////////////////////////////////////////////////////////////////////////
   // plot the histograms add before by addHist or addRatioHist
@@ -381,6 +382,19 @@ CanvasHelper::SetUpHist(TH1* h, Color_t col, Style_t stl, int mkstyle, int fills
   h->SetFillStyle(fillstyle);
 }
 //////////////////////////////////////////////////////////////////////////
+void
+CanvasHelper::SetUpLegend(TLegend* leg)
+{
+  leg->SetFillColor(0);
+  leg->SetBorderSize(0);
+  leg->SetFillStyle(0);
+  leg->SetTextFont(23);
+  leg->SetTextSize(21);
+}
+//////////////////////////////////////////////////////////////////////////
+
+
+
 
 
 //////////////////////////////////////////////////////////////////////////
