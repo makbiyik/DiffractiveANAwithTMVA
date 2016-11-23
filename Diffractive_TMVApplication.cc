@@ -232,7 +232,7 @@ void Diffractive_TMVApplication()
    std::cout << "--- Processing: " << theTree->GetEntries() << " events" << std::endl;
    TStopwatch sw;
    sw.Start();
-   for (Long64_t ievt=0; ievt<theTree->GetEntries() && ievt<2000000; ievt++) {
+   for (Long64_t ievt=0; ievt<theTree->GetEntries() /*&& ievt<2000000*/; ievt++) {
 
       if (ievt%1000 == 0) std::cout << "--- ... Processing event: " << ievt << std::endl;
 

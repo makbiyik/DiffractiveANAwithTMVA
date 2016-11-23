@@ -30,6 +30,8 @@
 #include "TEfficiency.h"
 
 
+#define UNUSED(x) (void)(x) // to avoid unused compiler warning
+
 //////////////////////////////////////////////////////////////////////////
 // class defenition
 //////////////////////////////////////////////////////////////////////////
@@ -90,6 +92,7 @@ void
 SystErrHelper::addSyst(const TString& syst_name, TH1* hData, std::vector<TH1*>& vHist)
 {
   initEmptySyst(syst_name,hData);
+  UNUSED(vHist);
 }
 
 #endif
