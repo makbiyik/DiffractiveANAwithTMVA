@@ -110,7 +110,9 @@ void Diffractive_TMVApplication()
    std::map<TString, SampleList::sSample> mSample = SampleList::read_data_mc_files();
    std::map<TString, SampleList::sTMVAOutput> mTMVAOuput = SampleList::read_TMVAOutput();
    ////////////////////////////////////////////////////////////////////////////
-   TString sampleName = "Pythia8XiEventselectioncut_BDTG_Pythia8Trained";
+
+   //Pythia8_BDTG_Pythia8Trained, EPOS_BDTG_Pythia8Trained, Pythia8XiEventselectioncut_BDTG_Pythia8Trained,Data_BDTG_Pythia8Trained 
+   TString sampleName = "Data_BDTG_Pythia8Trained";
    TString inputSample = mTMVAOuput[sampleName].app_input_sample; 
 
    // --- Book the MVA methods
@@ -230,7 +232,7 @@ void Diffractive_TMVApplication()
    std::cout << "--- Processing: " << theTree->GetEntries() << " events" << std::endl;
    TStopwatch sw;
    sw.Start();
-   for (Long64_t ievt=0; ievt<theTree->GetEntries() && ievt<100000; ievt++) {
+   for (Long64_t ievt=0; ievt<theTree->GetEntries() && ievt<2000000; ievt++) {
 
       if (ievt%1000 == 0) std::cout << "--- ... Processing event: " << ievt << std::endl;
 

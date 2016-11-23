@@ -53,9 +53,6 @@ struct sSingleVar
   double rmin, rmax;
 
   int cms_alignment;
-
-  double leg_xmin, leg_xmax;
-  double leg_ymin, leg_ymax;
 };
 
 
@@ -96,13 +93,13 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
                                    std::map<TString, sSingleVar>& mSingleTrainingVar,
                                    TString sample_name,
                                    bool scale_data = true);
-void single_figure_compare_mc_data(CanvasHelper& ch,
-                                   std::map<TString, SampleList::sSample>& mSample,
-                                   std::vector<TString>& vSuffix,
-                                   TString sample_name,
-                                   TString hist_var_name,
-                                   TLegend* leg,
-                                   bool scale_data = true);
+std::map<TString, TH1*> single_figure_compare_mc_data(CanvasHelper& ch,
+                                                      std::map<TString, SampleList::sSample>& mSample,
+                                                      std::vector<TString>& vSuffix,
+                                                      TString sample_name,
+                                                      TString hist_var_name,
+                                                      // TLegend* leg,
+                                                      bool scale_data = true);
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -149,7 +146,7 @@ int main( int argc, char** argv )
 
   //////////////////////////////////////////////////////////////////////////
   // compare training variables MC with DATA
-  // training_variables_compare_mc_data(mSample);
+  training_variables_compare_mc_data(mSample);
   discriminant_compare_mc_data(mTMVAOutput,mSample);
 
 
@@ -180,15 +177,13 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["EtaDeltaZero"].xmin = 0;
   mSingleTrainingVar["EtaDeltaZero"].xmax = 6;
   mSingleTrainingVar["EtaDeltaZero"].ymin = 1;
-  mSingleTrainingVar["EtaDeltaZero"].ymax = 1e7;
+  mSingleTrainingVar["EtaDeltaZero"].ymax = 1e9;
   mSingleTrainingVar["EtaDeltaZero"].rmin = 0;
   mSingleTrainingVar["EtaDeltaZero"].rmax = 3;
   mSingleTrainingVar["EtaDeltaZero"].cms_alignment = 33;
-  mSingleTrainingVar["EtaDeltaZero"].leg_xmin = 0.5;
-  mSingleTrainingVar["EtaDeltaZero"].leg_xmax = 0.9;
-  mSingleTrainingVar["EtaDeltaZero"].leg_ymin = 0.5;
-  mSingleTrainingVar["EtaDeltaZero"].leg_ymax = 0.9;
 
+
+  
 
   mSingleTrainingVar["EtaMin"].hist_name = "Hist_Eta_Min";
   mSingleTrainingVar["EtaMin"].xaxis_title = "#eta_{min}";
@@ -198,14 +193,10 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["EtaMin"].xmin = -4;
   mSingleTrainingVar["EtaMin"].xmax = 4;
   mSingleTrainingVar["EtaMin"].ymin = 1;
-  mSingleTrainingVar["EtaMin"].ymax = 1e6;
+  mSingleTrainingVar["EtaMin"].ymax = 1e8;
   mSingleTrainingVar["EtaMin"].rmin = 0;
   mSingleTrainingVar["EtaMin"].rmax = 3;
   mSingleTrainingVar["EtaMin"].cms_alignment = 33;
-  mSingleTrainingVar["EtaMin"].leg_xmin = 0.5;
-  mSingleTrainingVar["EtaMin"].leg_xmax = 0.9;
-  mSingleTrainingVar["EtaMin"].leg_ymin = 0.5;
-  mSingleTrainingVar["EtaMin"].leg_ymax = 0.9;
 
 
   mSingleTrainingVar["EtaMax"].hist_name = "Hist_Eta_Max";
@@ -216,14 +207,10 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["EtaMax"].xmin = -4;
   mSingleTrainingVar["EtaMax"].xmax = 4;
   mSingleTrainingVar["EtaMax"].ymin = 1;
-  mSingleTrainingVar["EtaMax"].ymax = 1e6;
+  mSingleTrainingVar["EtaMax"].ymax = 1e8;
   mSingleTrainingVar["EtaMax"].rmin = 0;
   mSingleTrainingVar["EtaMax"].rmax = 3;
   mSingleTrainingVar["EtaMax"].cms_alignment = 33;
-  mSingleTrainingVar["EtaMax"].leg_xmin = 0.5;
-  mSingleTrainingVar["EtaMax"].leg_xmax = 0.9;
-  mSingleTrainingVar["EtaMax"].leg_ymin = 0.5;
-  mSingleTrainingVar["EtaMax"].leg_ymax = 0.9;
 
   
   mSingleTrainingVar["NTowHF_plus"].hist_name = "Hist_numberoftowerebovenoise_forwardplus";
@@ -234,14 +221,10 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["NTowHF_plus"].xmin = 0;
   mSingleTrainingVar["NTowHF_plus"].xmax = 200;
   mSingleTrainingVar["NTowHF_plus"].ymin = 1;
-  mSingleTrainingVar["NTowHF_plus"].ymax = 1e6;
+  mSingleTrainingVar["NTowHF_plus"].ymax = 1e7;
   mSingleTrainingVar["NTowHF_plus"].rmin = 0;
   mSingleTrainingVar["NTowHF_plus"].rmax = 3;
   mSingleTrainingVar["NTowHF_plus"].cms_alignment = 33;
-  mSingleTrainingVar["NTowHF_plus"].leg_xmin = 0.5;
-  mSingleTrainingVar["NTowHF_plus"].leg_xmax = 0.9;
-  mSingleTrainingVar["NTowHF_plus"].leg_ymin = 0.5;
-  mSingleTrainingVar["NTowHF_plus"].leg_ymax = 0.9;
 
 
 
@@ -253,14 +236,10 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["NTowHF_minus"].xmin = 0;
   mSingleTrainingVar["NTowHF_minus"].xmax = 200;
   mSingleTrainingVar["NTowHF_minus"].ymin = 1;
-  mSingleTrainingVar["NTowHF_minus"].ymax = 1e6;
+  mSingleTrainingVar["NTowHF_minus"].ymax = 1e7;
   mSingleTrainingVar["NTowHF_minus"].rmin = 0;
   mSingleTrainingVar["NTowHF_minus"].rmax = 3;
   mSingleTrainingVar["NTowHF_minus"].cms_alignment = 33;
-  mSingleTrainingVar["NTowHF_minus"].leg_xmin = 0.5;
-  mSingleTrainingVar["NTowHF_minus"].leg_xmax = 0.9;
-  mSingleTrainingVar["NTowHF_minus"].leg_ymin = 0.5;
-  mSingleTrainingVar["NTowHF_minus"].leg_ymax = 0.9;
 
 
   mSingleTrainingVar["NTowCastor"].hist_name = "Hist_numberoftowerebovenoise_castor";
@@ -271,14 +250,10 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["NTowCastor"].xmin = 0;
   mSingleTrainingVar["NTowCastor"].xmax = 16;
   mSingleTrainingVar["NTowCastor"].ymin = 1;
-  mSingleTrainingVar["NTowCastor"].ymax = 1e6;
+  mSingleTrainingVar["NTowCastor"].ymax = 1e7;
   mSingleTrainingVar["NTowCastor"].rmin = 0;
   mSingleTrainingVar["NTowCastor"].rmax = 3;
   mSingleTrainingVar["NTowCastor"].cms_alignment = 33;
-  mSingleTrainingVar["NTowCastor"].leg_xmin = 0.5;
-  mSingleTrainingVar["NTowCastor"].leg_xmax = 0.9;
-  mSingleTrainingVar["NTowCastor"].leg_ymin = 0.5;
-  mSingleTrainingVar["NTowCastor"].leg_ymax = 0.9;
 
 
 
@@ -292,14 +267,10 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["NTracks"].xmin = 0;
   mSingleTrainingVar["NTracks"].xmax = 50;
   mSingleTrainingVar["NTracks"].ymin = 1;
-  mSingleTrainingVar["NTracks"].ymax = 1e6;
+  mSingleTrainingVar["NTracks"].ymax = 1e7;
   mSingleTrainingVar["NTracks"].rmin = 0;
   mSingleTrainingVar["NTracks"].rmax = 3;
   mSingleTrainingVar["NTracks"].cms_alignment = 33;
-  mSingleTrainingVar["NTracks"].leg_xmin = 0.5;
-  mSingleTrainingVar["NTracks"].leg_xmax = 0.9;
-  mSingleTrainingVar["NTracks"].leg_ymin = 0.5;
-  mSingleTrainingVar["NTracks"].leg_ymax = 0.9;
 
 
 
@@ -311,14 +282,10 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["recoXix"].xmin = -11.5;
   mSingleTrainingVar["recoXix"].xmax = 0.5;
   mSingleTrainingVar["recoXix"].ymin = 1;
-  mSingleTrainingVar["recoXix"].ymax = 1e6;
+  mSingleTrainingVar["recoXix"].ymax = 1e7;
   mSingleTrainingVar["recoXix"].rmin = 0;
   mSingleTrainingVar["recoXix"].rmax = 3;
   mSingleTrainingVar["recoXix"].cms_alignment = 33;
-  mSingleTrainingVar["recoXix"].leg_xmin = 0.5;
-  mSingleTrainingVar["recoXix"].leg_xmax = 0.9;
-  mSingleTrainingVar["recoXix"].leg_ymin = 0.5;
-  mSingleTrainingVar["recoXix"].leg_ymax = 0.9;
 
 
   mSingleTrainingVar["recoXiy"].hist_name = "Hist_log10XiY";
@@ -329,14 +296,10 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["recoXiy"].xmin = -11.5;
   mSingleTrainingVar["recoXiy"].xmax = 0.5;
   mSingleTrainingVar["recoXiy"].ymin = 1;
-  mSingleTrainingVar["recoXiy"].ymax = 1e6;
+  mSingleTrainingVar["recoXiy"].ymax = 1e7;
   mSingleTrainingVar["recoXiy"].rmin = 0;
   mSingleTrainingVar["recoXiy"].rmax = 3;
   mSingleTrainingVar["recoXiy"].cms_alignment = 33;
-  mSingleTrainingVar["recoXiy"].leg_xmin = 0.5;
-  mSingleTrainingVar["recoXiy"].leg_xmax = 0.9;
-  mSingleTrainingVar["recoXiy"].leg_ymin = 0.5;
-  mSingleTrainingVar["recoXiy"].leg_ymax = 0.9;
 
 
 
@@ -501,7 +464,7 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
   vSuff_XiEventSel.push_back("_SD2");
   vSuff_XiEventSel.push_back("_DD");
   vSuff_XiEventSel.push_back("_Rest");
-  mSingleTrainingVar["EtaDeltaZero"].hist_name = "Hist_eventEtaID_DeltaZero"; 
+  mSingleTrainingVar["EtaDeltaZero"].hist_name = "Hist_eventXiID_DeltaZero"; 
   single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"Pythia8XiEventselectioncut",false);
 
   // vSuffix.clear(); burasi detector icin
@@ -520,36 +483,55 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     throw;
   }
 
-  // std::map<TString, TLegend*> mLegend;
-
+  
+  std::map<TString, TCanvas*> mCanvas;
+  std::map<TString, std::map<TString, TH1*> > mDrawHists;
+  std::map<TString, TLegend*> mLegend;
 
   for(std::map<TString, sSingleVar>::iterator it = mSingleTrainingVar.begin(); it != mSingleTrainingVar.end(); it++) {
     CanvasHelper ch(it->second.canvas_title + sample_name);
-    ch.initRatioCanvas(it->second.xmin,it->second.xmax,
-                       it->second.ymin,it->second.ymax,
-                       it->second.rmin,it->second.rmax,
-                       it->second.xaxis_title,
-                       it->second.yaxis_title,
-                       it->second.ratio_title);
+    mCanvas[it->first] = ch.initRatioCanvas(it->second.xmin,it->second.xmax,
+                                            it->second.ymin,it->second.ymax,
+                                            it->second.rmin,it->second.rmax,
+                                            it->second.xaxis_title,
+                                            it->second.yaxis_title,
+                                            it->second.ratio_title);
 
-    TLegend * leg = new TLegend(it->second.leg_xmin,it->second.leg_ymin,it->second.leg_xmax,it->second.leg_ymax);
-
-    single_figure_compare_mc_data(ch,mSample,vSuffix,sample_name,it->second.hist_name,leg,scale_data);
+    mDrawHists[it->first] = single_figure_compare_mc_data(ch,mSample,vSuffix,sample_name,it->second.hist_name,scale_data);
     ch.DrawCMSPreliminary(true,it->second.cms_alignment,"0.34 nb^{-1} (13 TeV)");
   }
 
-
+  //////////////////////////////////////////////////////////////////////////
+  // Draw Legends for different Hists
+  mCanvas["EtaDeltaZero"]->cd(1);
+  mLegend["EtaDeltaZero"] = new TLegend(0.3,0.5,0.6,0.87);
+  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+    // define legend text for stacked hist
+    TString leg_text = vSuffix[iSuffix];
+    leg_text.Remove(0,1);
+    // add legend entry
+    mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"][ vSuffix[iSuffix] ], leg_text, "f" );
+  }
+  mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"][sample_name], sample_name, "l" );
+  mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"]["Data"], "Data", "lep" );
+  mLegend["EtaDeltaZero"]->Draw("same");
 }
 
 
 //////////////////////////////////////////////////////////////////////////
-void single_figure_compare_mc_data(CanvasHelper& ch,
-                                   std::map<TString, SampleList::sSample>& mSample,
-                                   std::vector<TString>& vSuffix,
-                                   TString sample_name,
-                                   TString hist_var_name,
-                                   TLegend* leg,
-                                   bool scale_data) {
+std::map<TString, TH1*>
+single_figure_compare_mc_data(CanvasHelper& ch,
+                              std::map<TString, SampleList::sSample>& mSample,
+                              std::vector<TString>& vSuffix,
+                              TString sample_name,
+                              TString hist_var_name,
+                              // TLegend* leg,
+                              bool scale_data) 
+{
+  //////////////////////////////////////////////////////////////////////////
+  // hist pointer container to return pointer to drawn hists
+  std::map<TString, TH1*> mDrawHists;
+
 
   //////////////////////////////////////////////////////////////////////////
   // stack the hists together
@@ -575,24 +557,21 @@ void single_figure_compare_mc_data(CanvasHelper& ch,
     shh.getHist(iHist)->Scale( 1/mSample[sample_name].lumi, "width" );
     ch.addHist( shh.getHist(iHist), "HIST", col[iHist], kSolid, 20, 1001 );
 
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[shh.getHistSize()-iHist-1];
-    leg_text.Remove(0,1);
-    // add legend entry
-    leg->AddEntry( shh.getHist(iHist), leg_text, "f" );
+    TString hist_text = vSuffix[shh.getHistSize()-iHist-1];
+    mDrawHists[hist_text] = shh.getHist(iHist);
   }
 
   TH1F* hMC = (TH1F*)mSample[sample_name].file->Get(mSample[sample_name].tree_name + "/" + hist_var_name);
   hMC->Scale( 1/mSample[sample_name].lumi, "width" );
   ch.addHist( hMC, "HIST", kBlue+2 );
+  mDrawHists[sample_name] = hMC;
 
   //////////////////////////////////////////////////////////////////////////
   // access data hist
   TH1F* hData = (TH1F*)mSample["Data"].file->Get(mSample["Data"].tree_name + "/" + hist_var_name);
   if(scale_data) hData->Scale( 1/mSample["Data"].lumi , "width" );
   ch.addDataHist( hData );
-  // add legend entry
-  leg->AddEntry( hData, "DATA", "lep" );
+  mDrawHists["Data"] = hData;
 
   ch.addRatioHist( get_Ratio(hMC,hData), "HIST", kBlue );
   ch.addRatioHist( get_Ratio(hData,hData), "EP", kBlack );
@@ -601,8 +580,10 @@ void single_figure_compare_mc_data(CanvasHelper& ch,
   ch.DrawHist();
 
   // draw legend
-  ch.getCanvas()->cd(1);
-  leg->Draw("same");
+  // ch.getCanvas()->cd(1);
+  // leg->Draw("same");
+
+  return mDrawHists;
 }
 
 
@@ -633,8 +614,8 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
   TFile* mc_file = TFile::Open(data_dir + "/" + mTMVAOutput[mc_sample_name].app_output_file_name);
   TFile* data_file = TFile::Open(data_dir + "/" + mTMVAOutput[data_sample_name].app_output_file_name);
 
-  TLegend * leg = new TLegend(0.5,0.7,0.9,0.9);
 
+  TLegend * leg = new TLegend(0.5,0.7,0.9,0.9);
   //////////////////////////////////////////////////////////////////////////
   // stack the hists together
   StackHistHelper shh;
@@ -653,7 +634,7 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
   CanvasHelper ch("cDiscriminant" + mc_sample_name);
   ch.initRatioCanvas(-1,1,
                      // 0,1,
-                     5e-3,1e2,
+                     5e-3,1e3,
                      0,3,
                      "Classifier X",
                      "1/N_{evt} dN/dX [nb^{-1}]",
@@ -684,6 +665,7 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
   TH1F* hMC = (TH1F*)mc_file->Get(hist_name);
   hMC->Scale( 1./events_mc, "width" );
   ch.addHist( hMC, "HIST", kBlue+2 );
+  leg->AddEntry( hMC, mc_sample_name, "l");
 
   //////////////////////////////////////////////////////////////////////////
   // access data hist
