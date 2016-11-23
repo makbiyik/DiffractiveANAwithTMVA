@@ -106,17 +106,19 @@ void Diffractive_TMVApplication()
    // reader->AddVariable("log10XiDD",&log10XiDD);
 
 
+
    ////////////////////////////////////////////////////////////////////////////
    std::map<TString, SampleList::sSample> mSample = SampleList::read_data_mc_files();
    std::map<TString, SampleList::sTMVAOutput> mTMVAOuput = SampleList::read_TMVAOutput();
    ////////////////////////////////////////////////////////////////////////////
 
    //Pythia8_BDTG_Pythia8Trained, EPOS_BDTG_Pythia8Trained, Pythia8XiEventselectioncut_BDTG_Pythia8Trained,Data_BDTG_Pythia8Trained 
-   TString sampleName = "Data_BDTG_Pythia8Trained";
+   TString sampleName = "EPOS_BDTG_EPOSTrained";
    TString inputSample = mTMVAOuput[sampleName].app_input_sample; 
+   TString trainingSample = mTMVAOuput[sampleName].training_sample;
 
    // --- Book the MVA methods
-   TString weightfile = mTMVAOuput[sampleName].weight_name;
+   TString weightfile = "TMVAClassification_" + mTMVAOuput[sampleName].method +"." + mSample[trainingSample].weight_name + ".xml";
    TString methodName = mTMVAOuput[sampleName].method + " method";
    reader->BookMVA(methodName, "weights/" + weightfile ); 
 
@@ -232,7 +234,7 @@ void Diffractive_TMVApplication()
    std::cout << "--- Processing: " << theTree->GetEntries() << " events" << std::endl;
    TStopwatch sw;
    sw.Start();
-   for (Long64_t ievt=0; ievt<theTree->GetEntries() /*&& ievt<2000000*/; ievt++) {
+   for (Long64_t ievt=0; ievt<theTree->GetEntries(); ievt++) {
 
       if (ievt%1000 == 0) std::cout << "--- ... Processing event: " << ievt << std::endl;
 

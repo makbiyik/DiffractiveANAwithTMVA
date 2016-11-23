@@ -60,6 +60,7 @@
 #include "TMVA/Factory.h"
 #include "TMVA/Tools.h"
 // #include "TMVA/TMVAGui.h"
+#include "TMVA/Config.h"
 
 #include "SampleList.h"
 
@@ -78,7 +79,6 @@ int Diffractive_TMVAClassification()
 
    ////////////////////////////////////////////////////////////////////////////
    std::map<TString, SampleList::sSample> mSample = SampleList::read_data_mc_files();
-   std::map<TString, SampleList::sTMVAOutput> mTMVAOuput = SampleList::read_TMVAOutput();
    ////////////////////////////////////////////////////////////////////////////
 
 
@@ -87,7 +87,6 @@ int Diffractive_TMVAClassification()
    TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
    TMVA::Factory *factory = new TMVA::Factory( "TMVAClassification", outputFile,
                                                "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification" );
-
    
    factory->AddVariable( "deltazero","deltazero", "units", 'F' );
    factory->AddVariable( "etamax","etamax", "units", 'F' );
@@ -109,7 +108,8 @@ int Diffractive_TMVAClassification()
    TTree *signal = (TTree*)input->Get( mSample[sample_name].tree_name + "/sigTree");
    TTree *background = (TTree*)input->Get( mSample[sample_name].tree_name + "/bkgTree");   
 
-
+   // change weight file extension
+   (TMVA::gConfig().GetIONames()).fWeightFileExtension = mSample[sample_name].weight_name;
 
 
    // global event weights per tree (see below for setting event-wise weights)
@@ -125,7 +125,7 @@ int Diffractive_TMVAClassification()
    TCut mycutb = "deltazero>=0"; // for example: TCut mycutb = "abs(var1)<0.5";
    
    factory->PrepareTrainingAndTestTree( mycuts, mycutb,
-                                        "nTrain_Signal=50000:nTest_Signal=50000:nTrain_Background=50000:nTest_Background=50000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                        "nTrain_Signal=500:nTest_Signal=500:nTrain_Background=500:nTest_Background=500:SplitMode=Random:NormMode=NumEvents:!V" );
 
    
    
