@@ -177,7 +177,7 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["EtaDeltaZero"].xmin = 0;
   mSingleTrainingVar["EtaDeltaZero"].xmax = 6;
   mSingleTrainingVar["EtaDeltaZero"].ymin = 1;
-  mSingleTrainingVar["EtaDeltaZero"].ymax = 1e9;
+  mSingleTrainingVar["EtaDeltaZero"].ymax = 1e10;
   mSingleTrainingVar["EtaDeltaZero"].rmin = 0;
   mSingleTrainingVar["EtaDeltaZero"].rmax = 3;
   mSingleTrainingVar["EtaDeltaZero"].cms_alignment = 33;
@@ -193,7 +193,7 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["EtaMin"].xmin = -4;
   mSingleTrainingVar["EtaMin"].xmax = 4;
   mSingleTrainingVar["EtaMin"].ymin = 1;
-  mSingleTrainingVar["EtaMin"].ymax = 1e8;
+  mSingleTrainingVar["EtaMin"].ymax = 1e11;
   mSingleTrainingVar["EtaMin"].rmin = 0;
   mSingleTrainingVar["EtaMin"].rmax = 3;
   mSingleTrainingVar["EtaMin"].cms_alignment = 33;
@@ -207,7 +207,7 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["EtaMax"].xmin = -4;
   mSingleTrainingVar["EtaMax"].xmax = 4;
   mSingleTrainingVar["EtaMax"].ymin = 1;
-  mSingleTrainingVar["EtaMax"].ymax = 1e8;
+  mSingleTrainingVar["EtaMax"].ymax = 1e11;
   mSingleTrainingVar["EtaMax"].rmin = 0;
   mSingleTrainingVar["EtaMax"].rmax = 3;
   mSingleTrainingVar["EtaMax"].cms_alignment = 33;
@@ -221,7 +221,7 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["NTowHF_plus"].xmin = 0;
   mSingleTrainingVar["NTowHF_plus"].xmax = 200;
   mSingleTrainingVar["NTowHF_plus"].ymin = 1;
-  mSingleTrainingVar["NTowHF_plus"].ymax = 1e7;
+  mSingleTrainingVar["NTowHF_plus"].ymax = 1e8;
   mSingleTrainingVar["NTowHF_plus"].rmin = 0;
   mSingleTrainingVar["NTowHF_plus"].rmax = 3;
   mSingleTrainingVar["NTowHF_plus"].cms_alignment = 33;
@@ -236,7 +236,7 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["NTowHF_minus"].xmin = 0;
   mSingleTrainingVar["NTowHF_minus"].xmax = 200;
   mSingleTrainingVar["NTowHF_minus"].ymin = 1;
-  mSingleTrainingVar["NTowHF_minus"].ymax = 1e7;
+  mSingleTrainingVar["NTowHF_minus"].ymax = 1e8;
   mSingleTrainingVar["NTowHF_minus"].rmin = 0;
   mSingleTrainingVar["NTowHF_minus"].rmax = 3;
   mSingleTrainingVar["NTowHF_minus"].cms_alignment = 33;
@@ -250,7 +250,7 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["NTowCastor"].xmin = 0;
   mSingleTrainingVar["NTowCastor"].xmax = 16;
   mSingleTrainingVar["NTowCastor"].ymin = 1;
-  mSingleTrainingVar["NTowCastor"].ymax = 1e7;
+  mSingleTrainingVar["NTowCastor"].ymax = 1e8;
   mSingleTrainingVar["NTowCastor"].rmin = 0;
   mSingleTrainingVar["NTowCastor"].rmax = 3;
   mSingleTrainingVar["NTowCastor"].cms_alignment = 33;
@@ -267,7 +267,7 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["NTracks"].xmin = 0;
   mSingleTrainingVar["NTracks"].xmax = 50;
   mSingleTrainingVar["NTracks"].ymin = 1;
-  mSingleTrainingVar["NTracks"].ymax = 1e7;
+  mSingleTrainingVar["NTracks"].ymax = 1e8;
   mSingleTrainingVar["NTracks"].rmin = 0;
   mSingleTrainingVar["NTracks"].rmax = 3;
   mSingleTrainingVar["NTracks"].cms_alignment = 33;
@@ -282,7 +282,7 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["recoXix"].xmin = -11.5;
   mSingleTrainingVar["recoXix"].xmax = 0.5;
   mSingleTrainingVar["recoXix"].ymin = 1;
-  mSingleTrainingVar["recoXix"].ymax = 1e7;
+  mSingleTrainingVar["recoXix"].ymax = 1e10;
   mSingleTrainingVar["recoXix"].rmin = 0;
   mSingleTrainingVar["recoXix"].rmax = 3;
   mSingleTrainingVar["recoXix"].cms_alignment = 33;
@@ -296,7 +296,7 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["recoXiy"].xmin = -11.5;
   mSingleTrainingVar["recoXiy"].xmax = 0.5;
   mSingleTrainingVar["recoXiy"].ymin = 1;
-  mSingleTrainingVar["recoXiy"].ymax = 1e7;
+  mSingleTrainingVar["recoXiy"].ymax = 1e10;
   mSingleTrainingVar["recoXiy"].rmin = 0;
   mSingleTrainingVar["recoXiy"].rmax = 3;
   mSingleTrainingVar["recoXiy"].cms_alignment = 33;
@@ -504,7 +504,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
   //////////////////////////////////////////////////////////////////////////
   // Draw Legends for different Hists
   mCanvas["EtaDeltaZero"]->cd(1);
-  mLegend["EtaDeltaZero"] = new TLegend(0.3,0.5,0.6,0.87);
+  mLegend["EtaDeltaZero"] = new TLegend(0.37,0.50,0.72,0.87);
   for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
     // define legend text for stacked hist
     TString leg_text = vSuffix[iSuffix];
@@ -515,7 +515,125 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
   mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"][sample_name], sample_name, "l" );
   mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"]["Data"], "Data", "lep" );
   mLegend["EtaDeltaZero"]->Draw("same");
+  
+
+  mCanvas["EtaMin"]->cd(1);
+  mLegend["EtaMin"] = new TLegend(0.19,0.47,0.59,0.87);
+  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+    // define legend text for stacked hist
+    TString leg_text = vSuffix[iSuffix];
+    leg_text.Remove(0,1);
+    // add legend entry
+    mLegend["EtaMin"]->AddEntry( mDrawHists["EtaMin"][ vSuffix[iSuffix] ], leg_text, "f" );
+  }
+  mLegend["EtaMin"]->AddEntry( mDrawHists["EtaMin"][sample_name], sample_name, "l" );
+  mLegend["EtaMin"]->AddEntry( mDrawHists["EtaMin"]["Data"], "Data", "lep" );
+  mLegend["EtaMin"]->Draw("same");
+
+  
+  mCanvas["EtaMax"]->cd(1);
+  mLegend["EtaMax"] = new TLegend(0.19,0.47,0.59,0.87);
+  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+    // define legend text for stacked hist
+    TString leg_text = vSuffix[iSuffix];
+    leg_text.Remove(0,1);
+    // add legend entry
+    mLegend["EtaMax"]->AddEntry( mDrawHists["EtaMax"][ vSuffix[iSuffix] ], leg_text, "f" );
+  }
+  mLegend["EtaMax"]->AddEntry( mDrawHists["EtaMax"][sample_name], sample_name, "l" );
+  mLegend["EtaMax"]->AddEntry( mDrawHists["EtaMax"]["Data"], "Data", "lep" );
+  mLegend["EtaMax"]->Draw("same");
+
+
+  mCanvas["NTowHF_plus"]->cd(1);
+  mLegend["NTowHF_plus"] = new TLegend(0.19,0.47,0.59,0.87);
+  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+    // define legend text for stacked hist
+    TString leg_text = vSuffix[iSuffix];
+    leg_text.Remove(0,1);
+    // add legend entry
+    mLegend["NTowHF_plus"]->AddEntry( mDrawHists["NTowHF_plus"][ vSuffix[iSuffix] ], leg_text, "f" );
+  }
+  mLegend["NTowHF_plus"]->AddEntry( mDrawHists["NTowHF_plus"][sample_name], sample_name, "l" );
+  mLegend["NTowHF_plus"]->AddEntry( mDrawHists["NTowHF_plus"]["Data"], "Data", "lep" );
+  mLegend["NTowHF_plus"]->Draw("same");
+
+  mCanvas["NTowHF_minus"]->cd(1);
+  mLegend["NTowHF_minus"] = new TLegend(0.19,0.47,0.59,0.87);
+  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+    // define legend text for stacked hist
+    TString leg_text = vSuffix[iSuffix];
+    leg_text.Remove(0,1);
+    // add legend entry
+    mLegend["NTowHF_minus"]->AddEntry( mDrawHists["NTowHF_minus"][ vSuffix[iSuffix] ], leg_text, "f" );
+  }
+  mLegend["NTowHF_minus"]->AddEntry( mDrawHists["NTowHF_minus"][sample_name], sample_name, "l" );
+  mLegend["NTowHF_minus"]->AddEntry( mDrawHists["NTowHF_minus"]["Data"], "Data", "lep" );
+  mLegend["NTowHF_minus"]->Draw("same");
+
+
+  mCanvas["NTowCastor"]->cd(1);
+  mLegend["NTowCastor"] = new TLegend(0.19,0.47,0.59,0.87);
+  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+    // define legend text for stacked hist
+    TString leg_text = vSuffix[iSuffix];
+    leg_text.Remove(0,1);
+    // add legend entry
+    mLegend["NTowCastor"]->AddEntry( mDrawHists["NTowCastor"][ vSuffix[iSuffix] ], leg_text, "f" );
+  }
+  mLegend["NTowCastor"]->AddEntry( mDrawHists["NTowCastor"][sample_name], sample_name, "l" );
+  mLegend["NTowCastor"]->AddEntry( mDrawHists["NTowCastor"]["Data"], "Data", "lep" );
+  mLegend["NTowCastor"]->Draw("same");
+
+
+  mCanvas["NTracks"]->cd(1);
+  mLegend["NTracks"] = new TLegend(0.19,0.47,0.59,0.87);
+  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+    // define legend text for stacked hist
+    TString leg_text = vSuffix[iSuffix];
+    leg_text.Remove(0,1);
+    // add legend entry
+    mLegend["NTracks"]->AddEntry( mDrawHists["NTracks"][ vSuffix[iSuffix] ], leg_text, "f" );
+  }
+  mLegend["NTracks"]->AddEntry( mDrawHists["NTracks"][sample_name], sample_name, "l" );
+  mLegend["NTracks"]->AddEntry( mDrawHists["NTracks"]["Data"], "Data", "lep" );
+  mLegend["NTracks"]->Draw("same");
+
+  
+  mCanvas["recoXix"]->cd(1);
+  mLegend["recoXix"] = new TLegend(0.19,0.47,0.59,0.87);
+  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+    // define legend text for stacked hist
+    TString leg_text = vSuffix[iSuffix];
+    leg_text.Remove(0,1);
+    // add legend entry
+    mLegend["recoXix"]->AddEntry( mDrawHists["recoXix"][ vSuffix[iSuffix] ], leg_text, "f" );
+  }
+  mLegend["recoXix"]->AddEntry( mDrawHists["recoXix"][sample_name], sample_name, "l" );
+  mLegend["recoXix"]->AddEntry( mDrawHists["recoXix"]["Data"], "Data", "lep" );
+  mLegend["recoXix"]->Draw("same");
+  
+
+  mCanvas["recoXiy"]->cd(1);
+  mLegend["recoXiy"] = new TLegend(0.19,0.47,0.59,0.87);
+  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+    // define legend text for stacked hist
+    TString leg_text = vSuffix[iSuffix];
+    leg_text.Remove(0,1);
+    // add legend entry
+    mLegend["recoXiy"]->AddEntry( mDrawHists["recoXiy"][ vSuffix[iSuffix] ], leg_text, "f" );
+  }
+  mLegend["recoXiy"]->AddEntry( mDrawHists["recoXiy"][sample_name], sample_name, "l" );
+  mLegend["recoXiy"]->AddEntry( mDrawHists["recoXiy"]["Data"], "Data", "lep" );
+  mLegend["recoXiy"]->Draw("same");
+
+
+
+
 }
+
+
+
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -606,7 +724,7 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
 
   TString hist_name = "hDisciminant";
 
-  TString mc_sample_name = "Pythia8_BDTG_Pythia8Trained";
+  TString mc_sample_name = "Pythia8XiEventselectioncut_BDTG_Pythia8Trained";
   TString data_sample_name = "Data_BDTG_Pythia8Trained";
 
   TString data_dir = "data";
@@ -676,7 +794,7 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
   // double lumi_data = mSample[mTMVAOutput[data_sample_name].app_input_sample].lumi;
   double events_data = ((TH1F*)data_file->Get("hNentries"))->GetBinContent(1);
   // as a hack
-  hData->Sumw2();
+  // hData->Sumw2();
   hData->Scale( 1./events_data , "width" );
 
 

@@ -113,7 +113,7 @@ void Diffractive_TMVApplication()
    ////////////////////////////////////////////////////////////////////////////
 
    //Pythia8_BDTG_Pythia8Trained, EPOS_BDTG_Pythia8Trained, Pythia8XiEventselectioncut_BDTG_Pythia8Trained,Data_BDTG_Pythia8Trained 
-   TString sampleName = "EPOS_BDTG_EPOSTrained";
+   TString sampleName = "EPOS_BDTG_Pythia8XiEventselectioncutTrained";
    TString inputSample = mTMVAOuput[sampleName].app_input_sample; 
    TString trainingSample = mTMVAOuput[sampleName].training_sample;
 
