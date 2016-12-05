@@ -66,6 +66,20 @@ namespace SampleList {
     sXiEventSelectioncut.lumi = htmp->GetBinContent(1)/sXiEventSelectioncut.xs;
 
 
+    sSample sXicutEPOs;
+    sXicutEPOs.isData = false;
+    sXicutEPOs.procesesID_pythia8 = false;
+    sXicutEPOs.lumi = 0;
+    sXicutEPOs.xs = 79948.200000; // nb
+    sXicutEPOs.file = TFile::Open("data/trackanddiffractive_sigDD_epos.root");
+    sXicutEPOs.tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
+    sXicutEPOs.weight_name = "EPOS_weights";
+    sXicutEPOs.signal = "DD";
+    htmp = (TH1F*)sXicutEPOs.file->Get(sXicutEPOs.tree_name + "/hNentries");
+    sXicutEPOs.lumi = htmp->GetBinContent(1)/sXicutEPOs.xs;
+    
+
+
 
     sSample sData;
     sData.isData = true;
@@ -80,7 +94,7 @@ namespace SampleList {
 
     mSample["Pythia8"] =  sPythia8;
     mSample["Pythia8XiEventselectioncut"] =  sXiEventSelectioncut;
-   
+    mSample["XicutEPOS"] =  sXicutEPOs;
     mSample["EPOS"] = sEPOS;
     mSample["Data"] = sData;
 
@@ -128,12 +142,12 @@ namespace SampleList {
 
     mTMVAOutput["Pythia8_BDTG_EPOSTrained"].method = "BDTG";
     mTMVAOutput["Pythia8_BDTG_EPOSTrained"].training_sample = "EPOS"; // correspond to sSample
-    mTMVAOutput["Pythia8_BDTG_EPOSTrained"].app_input_sample = "EPOS"; // correspond to sSample
+    mTMVAOutput["Pythia8_BDTG_EPOSTrained"].app_input_sample = "Pythia8"; // correspond to sSample
     mTMVAOutput["Pythia8_BDTG_EPOSTrained"].app_output_file_name = "TMVApp_Pythia8_BDTG_training_EPOS.root";
     
     mTMVAOutput["Pythia8XiEventselectioncut_BDTG_EPOSTrained"].method = "BDTG";
     mTMVAOutput["Pythia8XiEventselectioncut_BDTG_EPOSTrained"].training_sample = "EPOS"; // correspond to sSample
-    mTMVAOutput["Pythia8XiEventselectioncut_BDTG_EPOSTrained"].app_input_sample = "EPOS"; // correspond to sSample
+    mTMVAOutput["Pythia8XiEventselectioncut_BDTG_EPOSTrained"].app_input_sample = "Pythia8XiEventselectioncut"; // correspond to sSample
     mTMVAOutput["Pythia8XiEventselectioncut_BDTG_EPOSTrained"].app_output_file_name = "TMVApp_Pythia8XiEventselectioncut_BDTG_training_EPOS.root";
 
 
@@ -141,12 +155,12 @@ namespace SampleList {
 
     mTMVAOutput["EPOS_BDTG_Pythia8XiEventselectioncutTrained"].method = "BDTG";
     mTMVAOutput["EPOS_BDTG_Pythia8XiEventselectioncutTrained"].training_sample = "Pythia8XiEventselectioncut"; // correspond to sSample
-    mTMVAOutput["EPOS_BDTG_Pythia8XiEventselectioncutTrained"].app_input_sample = "Pythia8XiEventselectioncut"; // correspond to sSample
+    mTMVAOutput["EPOS_BDTG_Pythia8XiEventselectioncutTrained"].app_input_sample = "EPOS"; // correspond to sSample
     mTMVAOutput["EPOS_BDTG_Pythia8XiEventselectioncutTrained"].app_output_file_name = "TMVApp_EPOS_BDTG_training_Pythia8XiEventselectioncut.root";
 
     mTMVAOutput["Pythia8_BDTG_Pythia8XiEventselectioncutTrained"].method = "BDTG";
     mTMVAOutput["Pythia8_BDTG_Pythia8XiEventselectioncutTrained"].training_sample = "Pythia8XiEventselectioncut"; // correspond to sSample
-    mTMVAOutput["Pythia8_BDTG_Pythia8XiEventselectioncutTrained"].app_input_sample = "Pythia8XiEventselectioncut"; // correspond to sSample
+    mTMVAOutput["Pythia8_BDTG_Pythia8XiEventselectioncutTrained"].app_input_sample = "Pythia8"; // correspond to sSample
     mTMVAOutput["Pythia8_BDTG_Pythia8XiEventselectioncutTrained"].app_output_file_name = "TMVApp_Pythia8_BDTG_training_Pythia8XiEventselectioncut.root";
     
     mTMVAOutput["Pythia8XiEventselectioncut_BDTG_Pythia8XiEventselectioncutTrained"].method = "BDTG";

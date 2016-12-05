@@ -147,6 +147,8 @@ int main( int argc, char** argv )
   //////////////////////////////////////////////////////////////////////////
   // compare training variables MC with DATA
   training_variables_compare_mc_data(mSample);
+
+
   discriminant_compare_mc_data(mTMVAOutput,mSample);
 
 
@@ -200,7 +202,7 @@ std::map<TString, sSingleVar> build_hist_parameters() {
 
 
   mSingleTrainingVar["EtaMax"].hist_name = "Hist_Eta_Max";
-  mSingleTrainingVar["EtaMax"].xaxis_title = "#eta_{min}";
+  mSingleTrainingVar["EtaMax"].xaxis_title = "#eta_{max}";
   mSingleTrainingVar["EtaMax"].yaxis_title = "1/L dN/d#eta [nb^{1}]";
   mSingleTrainingVar["EtaMax"].ratio_title = "MC / Data";
   mSingleTrainingVar["EtaMax"].canvas_title = "cEtaMax_";
@@ -260,7 +262,7 @@ std::map<TString, sSingleVar> build_hist_parameters() {
 
 
   mSingleTrainingVar["NTracks"].hist_name = "Hist_NbrTracks";
-  mSingleTrainingVar["NTracks"].xaxis_title = "N_{tow}";
+  mSingleTrainingVar["NTracks"].xaxis_title = "N_{trk}";
   mSingleTrainingVar["NTracks"].yaxis_title = "1/L dN/dN_{trk} [nb^{1}]";
   mSingleTrainingVar["NTracks"].ratio_title = "MC / Data";
   mSingleTrainingVar["NTracks"].canvas_title = "cNTracks_";
@@ -276,7 +278,7 @@ std::map<TString, sSingleVar> build_hist_parameters() {
 
   mSingleTrainingVar["recoXix"].hist_name = "Hist_log10XiX";
   mSingleTrainingVar["recoXix"].xaxis_title = "log_{10}#xi_{x}";
-  mSingleTrainingVar["recoXix"].yaxis_title = "1/L dN/d#xi [nb^{1}]";
+  mSingleTrainingVar["recoXix"].yaxis_title = "1/L dN/d(log_{10}#xi_{x}) [nb^{1}]";
   mSingleTrainingVar["recoXix"].ratio_title = "MC / Data";
   mSingleTrainingVar["recoXix"].canvas_title = "crecoXix_";
   mSingleTrainingVar["recoXix"].xmin = -11.5;
@@ -290,7 +292,7 @@ std::map<TString, sSingleVar> build_hist_parameters() {
 
   mSingleTrainingVar["recoXiy"].hist_name = "Hist_log10XiY";
   mSingleTrainingVar["recoXiy"].xaxis_title = "log_{10}#xi_{y}";
-  mSingleTrainingVar["recoXiy"].yaxis_title = "1/L dN/d#xi [nb^{1}]";
+  mSingleTrainingVar["recoXiy"].yaxis_title = "1/L dN/d(log_{10}#xi_{y}) [nb^{1}]";
   mSingleTrainingVar["recoXiy"].ratio_title = "MC / Data";
   mSingleTrainingVar["recoXiy"].canvas_title = "crecoXiy_";
   mSingleTrainingVar["recoXiy"].xmin = -11.5;
@@ -464,9 +466,17 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
   vSuff_XiEventSel.push_back("_SD2");
   vSuff_XiEventSel.push_back("_DD");
   vSuff_XiEventSel.push_back("_Rest");
-  mSingleTrainingVar["EtaDeltaZero"].hist_name = "Hist_eventXiID_DeltaZero"; 
-  single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"Pythia8XiEventselectioncut",false);
-
+  mSingleTrainingVar["EtaDeltaZero"].hist_name = "Hist_eventXiID_DeltaZero";
+  mSingleTrainingVar["EtaMin"].hist_name = "Hist_eventXiID_Min";
+  mSingleTrainingVar["EtaMax"].hist_name = "Hist_eventXiID_Max";
+  mSingleTrainingVar["NTowHF_plus"].hist_name = "Hist_eventXiID_numberoftowerebovenoise_forwardplus";
+  mSingleTrainingVar["NTowHF_minus"].hist_name = "Hist_eventXiID_numberoftowerebovenoise_forwardminus";
+  mSingleTrainingVar["NTowCastor"].hist_name = "Hist_eventXiID_numberoftowerebovenoise_castor";
+  mSingleTrainingVar["NTracks"].hist_name = "Hist_eventXiID_NbrTracks";
+  mSingleTrainingVar["recoXix"].hist_name = "Hist_eventXiID_log10XiX";
+  mSingleTrainingVar["recoXiy"].hist_name = "Hist_eventXiID_log10XiY";
+  single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"Pythia8XiEventselectioncut",true);
+  single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XicutEPOS",false);
   // vSuffix.clear(); burasi detector icin
   // vSuffix.push_back("_Barrel");
 }
@@ -724,8 +734,8 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
 
   TString hist_name = "hDisciminant";
 
-  TString mc_sample_name = "Pythia8XiEventselectioncut_BDTG_Pythia8Trained";
-  TString data_sample_name = "Data_BDTG_Pythia8Trained";
+  TString mc_sample_name = "EPOS_BDTG_EPOSTrained";
+  TString data_sample_name = "Data_BDTG_EPOSTrained";
 
   TString data_dir = "data";
 
@@ -755,7 +765,7 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
                      5e-3,1e3,
                      0,3,
                      "Classifier X",
-                     "1/N_{evt} dN/dX [nb^{-1}]",
+                     "1/N_{evt} dN/dX",
                      "MC / Data");
 
   /////////////////////////////////////////////////////////////
