@@ -78,7 +78,7 @@ int Diffractive_TMVAClassification()
    std::map<TString, SampleList::sSample> mSample = SampleList::read_data_mc_files();
    ////////////////////////////////////////////////////////////////////////////
    // Create a ROOT output file where TMVA will store ntuples, histograms, etc.
-   TString outfileName( "data/TMVA_Pythia8XiEventselectioncut.root" );
+   TString outfileName( "data/TMVA.root" );
    TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
    TMVA::Factory *factory = new TMVA::Factory( "TMVAClassification", outputFile,
                                                "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification" );
@@ -93,7 +93,7 @@ int Diffractive_TMVAClassification()
    factory->AddVariable( "Ntracks","Ntracks", "units", 'I' );
    
    
-   TString sample_name = "Pythia8XiEventselectioncut";
+   TString sample_name = "XiCutEPOS";
    TFile *input = mSample[sample_name].file;
    std::cout << "--- TMVAClassification       : Using input file: " << input->GetName() << std::endl;
 
@@ -112,7 +112,7 @@ int Diffractive_TMVAClassification()
    TCut mycuts = "deltazero>=0"; // for example: TCut mycuts = "abs(var1)<0.5 && abs(var2-0.5)<1";
    TCut mycutb = "deltazero>=0"; // for example: TCut mycutb = "abs(var1)<0.5";
    factory->PrepareTrainingAndTestTree( mycuts, mycutb,
-                                        "nTrain_Signal=500000:nTest_Signal=500000:nTrain_Background=500000:nTest_Background=500000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                        "nTrain_Signal=5000:nTest_Signal=5000:nTrain_Background=5000:nTest_Background=10000:SplitMode=Random:NormMode=NumEvents:!V" );
 
 
 

@@ -475,8 +475,8 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
   mSingleTrainingVar["NTracks"].hist_name = "Hist_eventXiID_NbrTracks";
   mSingleTrainingVar["recoXix"].hist_name = "Hist_eventXiID_log10XiX";
   mSingleTrainingVar["recoXiy"].hist_name = "Hist_eventXiID_log10XiY";
-  single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"Pythia8XiEventselectioncut",true);
-  single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XicutEPOS",false);
+  single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8",true);
+  single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOS",false);
   // vSuffix.clear(); burasi detector icin
   // vSuffix.push_back("_Barrel");
 }
