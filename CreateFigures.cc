@@ -37,6 +37,9 @@
 
 #define UNUSED(x) (void)(x) // to avoid unused compiler warning
 
+const TString figure_dir = "AN_figures";
+const TString figure_type = "pdf";
+const bool draw_figure = false;
 
 
 // temporary struct for training variables directly compared to data
@@ -529,7 +532,8 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
   mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"][sample_name], sample_name, "l" );
   mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"]["Data"], "Data", "lep" );
   mLegend["EtaDeltaZero"]->Draw("same");
-  
+  if(draw_figure) mCanvas["EtaDeltaZero"]->Print( figure_dir + "/EtaDeltaZero_" + sample_name + "." + figure_type );
+
 
   mCanvas["EtaMin"]->cd(1);
   mLegend["EtaMin"] = new TLegend(0.19,0.47,0.59,0.87);
