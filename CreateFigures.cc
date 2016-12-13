@@ -149,7 +149,7 @@ int main( int argc, char** argv )
   training_variables_compare_mc_data(mSample);
 
 
-  discriminant_compare_mc_data(mTMVAOutput,mSample);
+  // discriminant_compare_mc_data(mTMVAOutput,mSample);
 
 
   /////////////////////////////////////////////////
@@ -257,10 +257,6 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["NTowCastor"].rmax = 3;
   mSingleTrainingVar["NTowCastor"].cms_alignment = 33;
 
-
-
-
-
   mSingleTrainingVar["NTracks"].hist_name = "Hist_NbrTracks";
   mSingleTrainingVar["NTracks"].xaxis_title = "N_{trk}";
   mSingleTrainingVar["NTracks"].yaxis_title = "1/L dN/dN_{trk} [nb^{1}]";
@@ -273,7 +269,6 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["NTracks"].rmin = 0;
   mSingleTrainingVar["NTracks"].rmax = 3;
   mSingleTrainingVar["NTracks"].cms_alignment = 33;
-
 
 
   mSingleTrainingVar["recoXix"].hist_name = "Hist_log10XiX";
@@ -290,6 +285,7 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["recoXix"].cms_alignment = 33;
 
 
+
   mSingleTrainingVar["recoXiy"].hist_name = "Hist_log10XiY";
   mSingleTrainingVar["recoXiy"].xaxis_title = "log_{10}#xi_{y}";
   mSingleTrainingVar["recoXiy"].yaxis_title = "1/L dN/d(log_{10}#xi_{y}) [nb^{1}]";
@@ -302,6 +298,10 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["recoXiy"].rmin = 0;
   mSingleTrainingVar["recoXiy"].rmax = 3;
   mSingleTrainingVar["recoXiy"].cms_alignment = 33;
+
+
+
+
 
 
 
@@ -459,6 +459,10 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
 
   single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8");
   single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS",false);
+  
+  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1",false);
+  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1",false);
+
 
 
   std::vector<TString> vSuff_XiEventSel;
@@ -734,8 +738,8 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
 
   TString hist_name = "hDisciminant";
 
-  TString mc_sample_name = "EPOS_BDTG_EPOSTrained";
-  TString data_sample_name = "Data_BDTG_EPOSTrained";
+  TString mc_sample_name = "XiCutPythia8_BDTG_XiCutPythia8Trained";
+  TString data_sample_name = "Data_BDTG_XiCutPythia8Trained";
 
   TString data_dir = "data";
 
