@@ -111,6 +111,9 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
                                   std::map<TString, SampleList::sSample>& mSample);
 
 
+
+void discriminant_results(std::map<TString, SampleList::sTMVAOutput>& mTMVAOutput,
+                                  std::map<TString, SampleList::sSample>& mSample);
 //////////////////////////////////////////////////////////////////////////
 // main function
 //////////////////////////////////////////////////////////////////////////
@@ -152,9 +155,9 @@ int main( int argc, char** argv )
   training_variables_compare_mc_data(mSample);
 
 
-  // discriminant_compare_mc_data(mTMVAOutput,mSample);
+  discriminant_compare_mc_data(mTMVAOutput,mSample);
 
-
+  discriminant_results(mTMVAOutput,mSample);
   /////////////////////////////////////////////////
   // freeze program
   app->Run();
@@ -170,7 +173,8 @@ int main( int argc, char** argv )
 
 
 //////////////////////////////////////////////////////////////////////////
-std::map<TString, sSingleVar> build_hist_parameters() {
+std::map<TString, sSingleVar> build_hist_parameters() 
+{
 
   std::map<TString, sSingleVar> mSingleTrainingVar;
 
@@ -187,9 +191,6 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["EtaDeltaZero"].rmax = 3;
   mSingleTrainingVar["EtaDeltaZero"].cms_alignment = 33;
 
-
-  
-
   mSingleTrainingVar["EtaMin"].hist_name = "Hist_Eta_Min";
   mSingleTrainingVar["EtaMin"].xaxis_title = "#eta_{min}";
   mSingleTrainingVar["EtaMin"].yaxis_title = "1/L dN/d#eta [nb^{1}]";
@@ -202,6 +203,9 @@ std::map<TString, sSingleVar> build_hist_parameters() {
   mSingleTrainingVar["EtaMin"].rmin = 0;
   mSingleTrainingVar["EtaMin"].rmax = 3;
   mSingleTrainingVar["EtaMin"].cms_alignment = 33;
+
+  
+
 
 
   mSingleTrainingVar["EtaMax"].hist_name = "Hist_Eta_Max";
@@ -331,7 +335,8 @@ std::map<TString, sSingleVar> build_hist_parameters() {
 
 
 //////////////////////////////////////////////////////////////////////////
-void exampleCode() {
+void exampleCode() 
+{
 
   TH1* htest = new TH1F("htest","",100,-3,3);
   htest->FillRandom("gaus",10000);
@@ -448,7 +453,8 @@ void exampleCode() {
 
 
 //////////////////////////////////////////////////////////////////////////
-void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& mSample) {
+void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& mSample) 
+{
   
   std::vector<TString> vSuffix;
   vSuffix.push_back("_NONE");
@@ -461,11 +467,13 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
   std::map<TString, sSingleVar> mSingleTrainingVar = build_hist_parameters();
 
   single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8");
-  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS",false);
-  
-  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1",false);
-  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1",false);
-
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD2",false); 
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8Rest",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSRest",false); 
 
 
   std::vector<TString> vSuff_XiEventSel;
@@ -482,8 +490,20 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
   mSingleTrainingVar["NTracks"].hist_name = "Hist_eventXiID_NbrTracks";
   mSingleTrainingVar["recoXix"].hist_name = "Hist_eventXiID_log10XiX";
   mSingleTrainingVar["recoXiy"].hist_name = "Hist_eventXiID_log10XiY";
-  single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8",true);
-  single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOS",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8",true);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOS",false);
+  
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD1",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD1",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD2",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD2",false); 
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"Pythia8Rest",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"EPOSRest",false); 
+
+
+
+
+
   // vSuffix.clear(); burasi detector icin
   // vSuffix.push_back("_Barrel");
 }
@@ -492,7 +512,8 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
                                    std::vector<TString>& vSuffix,
                                    std::map<TString, sSingleVar>& mSingleTrainingVar,
                                    TString sample_name,
-                                   bool scale_data) {
+                                   bool scale_data) 
+{
 
   if( mSample.find(sample_name) == mSample.end() ) {
     std::cout << "In single_sample_compare_mc_data(): map mSample has no Sample with name: "
@@ -547,7 +568,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
   mLegend["EtaMin"]->AddEntry( mDrawHists["EtaMin"][sample_name], sample_name, "l" );
   mLegend["EtaMin"]->AddEntry( mDrawHists["EtaMin"]["Data"], "Data", "lep" );
   mLegend["EtaMin"]->Draw("same");
-
+  if(draw_figure) mCanvas["EtaMin"]->Print( figure_dir + "/EtaMin_" + sample_name + "." + figure_type );
   
   mCanvas["EtaMax"]->cd(1);
   mLegend["EtaMax"] = new TLegend(0.19,0.47,0.59,0.87);
@@ -561,7 +582,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
   mLegend["EtaMax"]->AddEntry( mDrawHists["EtaMax"][sample_name], sample_name, "l" );
   mLegend["EtaMax"]->AddEntry( mDrawHists["EtaMax"]["Data"], "Data", "lep" );
   mLegend["EtaMax"]->Draw("same");
-
+  if(draw_figure) mCanvas["EtaMax"]->Print( figure_dir + "/EtaMax_" + sample_name + "." + figure_type );
 
   mCanvas["NTowHF_plus"]->cd(1);
   mLegend["NTowHF_plus"] = new TLegend(0.19,0.47,0.59,0.87);
@@ -575,7 +596,8 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
   mLegend["NTowHF_plus"]->AddEntry( mDrawHists["NTowHF_plus"][sample_name], sample_name, "l" );
   mLegend["NTowHF_plus"]->AddEntry( mDrawHists["NTowHF_plus"]["Data"], "Data", "lep" );
   mLegend["NTowHF_plus"]->Draw("same");
-
+  if(draw_figure) mCanvas["NTowHF_plus"]->Print( figure_dir + "/NTowHF_plus_" + sample_name + "." + figure_type );
+  
   mCanvas["NTowHF_minus"]->cd(1);
   mLegend["NTowHF_minus"] = new TLegend(0.19,0.47,0.59,0.87);
   for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
@@ -588,7 +610,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
   mLegend["NTowHF_minus"]->AddEntry( mDrawHists["NTowHF_minus"][sample_name], sample_name, "l" );
   mLegend["NTowHF_minus"]->AddEntry( mDrawHists["NTowHF_minus"]["Data"], "Data", "lep" );
   mLegend["NTowHF_minus"]->Draw("same");
-
+  if(draw_figure) mCanvas["NTowHF_minus"]->Print( figure_dir + "/NTowHF_minus_" + sample_name + "." + figure_type );
 
   mCanvas["NTowCastor"]->cd(1);
   mLegend["NTowCastor"] = new TLegend(0.19,0.47,0.59,0.87);
@@ -602,7 +624,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
   mLegend["NTowCastor"]->AddEntry( mDrawHists["NTowCastor"][sample_name], sample_name, "l" );
   mLegend["NTowCastor"]->AddEntry( mDrawHists["NTowCastor"]["Data"], "Data", "lep" );
   mLegend["NTowCastor"]->Draw("same");
-
+  if(draw_figure) mCanvas["NTowCastor"]->Print( figure_dir + "/NTowCastor_" + sample_name + "." + figure_type );
 
   mCanvas["NTracks"]->cd(1);
   mLegend["NTracks"] = new TLegend(0.19,0.47,0.59,0.87);
@@ -616,7 +638,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
   mLegend["NTracks"]->AddEntry( mDrawHists["NTracks"][sample_name], sample_name, "l" );
   mLegend["NTracks"]->AddEntry( mDrawHists["NTracks"]["Data"], "Data", "lep" );
   mLegend["NTracks"]->Draw("same");
-
+  if(draw_figure) mCanvas["NTracks"]->Print( figure_dir + "/NTracks_" + sample_name + "." + figure_type );
   
   mCanvas["recoXix"]->cd(1);
   mLegend["recoXix"] = new TLegend(0.19,0.47,0.59,0.87);
@@ -630,7 +652,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
   mLegend["recoXix"]->AddEntry( mDrawHists["recoXix"][sample_name], sample_name, "l" );
   mLegend["recoXix"]->AddEntry( mDrawHists["recoXix"]["Data"], "Data", "lep" );
   mLegend["recoXix"]->Draw("same");
-  
+  if(draw_figure) mCanvas["recoXix"]->Print( figure_dir + "/recoXix_" + sample_name + "." + figure_type );
 
   mCanvas["recoXiy"]->cd(1);
   mLegend["recoXiy"] = new TLegend(0.19,0.47,0.59,0.87);
@@ -644,10 +666,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
   mLegend["recoXiy"]->AddEntry( mDrawHists["recoXiy"][sample_name], sample_name, "l" );
   mLegend["recoXiy"]->AddEntry( mDrawHists["recoXiy"]["Data"], "Data", "lep" );
   mLegend["recoXiy"]->Draw("same");
-
-
-
-
+  if(draw_figure) mCanvas["recoXiy"]->Print( figure_dir + "/recoXiy_" + sample_name + "." + figure_type );
 }
 
 
@@ -742,8 +761,8 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
 
   TString hist_name = "hDisciminant";
 
-  TString mc_sample_name = "XiCutPythia8_BDTG_XiCutPythia8Trained";
-  TString data_sample_name = "Data_BDTG_XiCutPythia8Trained";
+  TString mc_sample_name = "Pythia8_BDTG_Pythia8Trained";
+  TString data_sample_name = "Data_BDTG_Pythia8Trained";
 
   TString data_dir = "data";
 
@@ -831,4 +850,44 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
   leg->Draw("same");
 
   ch.DrawCMSPreliminary(true,11,"0.34 nb^{-1} (13 TeV)");
+}
+
+void discriminant_results(std::map<TString, SampleList::sTMVAOutput>& mTMVAOutput,
+                                  std::map<TString, SampleList::sSample>& mSample)
+{
+
+UNUSED(mSample);
+
+  std::vector<TString> vSuffix;
+  // vSuffix.push_back("_NONE");
+  vSuffix.push_back("_SD1");
+  vSuffix.push_back("_SD2");
+  vSuffix.push_back("_DD");
+  vSuffix.push_back("_Rest");
+
+  TString hist_name = "hDisciminant_DD";
+  TString mc_sample_name = "Pythia8_BDTG_Pythia8Trained";
+  TString data_dir = "data";
+  TFile* mc_file = TFile::Open(data_dir + "/" + mTMVAOutput[mc_sample_name].app_output_file_name);
+
+  TString histnameNtot= "hDisciminantClassifier_X";
+  TH1F* hMC = (TH1F*)mc_file->Get(hist_name);
+
+  // std::map<TString, TH1*> mHist;
+  // mHist[histnameNtot] = new TH1F(histnameNtot,histnameNtot,40,-1,1);
+  double sum_mc =0 ;
+  for (Int_t i =40; i>=0;i--) {
+  sum_mc += hMC->GetBinContent(i);  
+  
+  //   mHist[histnameNtot]->SetBinContent(i,sum_mc);
+  if (hMC->GetBinLowEdge(i)> 0.5) std::cout << "--- ..event: " << sum_mc << std::endl;
+   
+       
+
+
+
+  }
+ 
+
+  
 }

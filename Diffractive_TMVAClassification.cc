@@ -93,7 +93,7 @@ int Diffractive_TMVAClassification()
    factory->AddVariable( "Ntracks","Ntracks", "units", 'I' );
    
    
-   TString sample_name = "XiCutEPOSSD2";
+   TString sample_name = "EPOS";
    TFile *input = mSample[sample_name].file;
    std::cout << "--- TMVAClassification       : Using input file: " << input->GetName() << std::endl;
 

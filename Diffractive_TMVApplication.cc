@@ -113,7 +113,7 @@ void Diffractive_TMVApplication()
    ////////////////////////////////////////////////////////////////////////////
 
    //Pythia8_BDTG_Pythia8Trained, EPOS_BDTG_Pythia8Trained, Pythia8XiEventselectioncut_BDTG_Pythia8Trained,Data_BDTG_Pythia8Trained 
-   TString sampleName = "XiCutEPOSSD2_BDTG_XiCutEPOSSD2Trained";
+   TString sampleName = "Data_BDTG_XiCutEPOSTrained";
    TString inputSample = mTMVAOuput[sampleName].app_input_sample; 
    TString trainingSample = mTMVAOuput[sampleName].training_sample;
 
@@ -286,9 +286,15 @@ void Diffractive_TMVApplication()
       // I used Fisser method e.g.
       double discriminant_cut = 0.;
       if( discriminant_value < discriminant_cut) {
+
+
+
+
+
          // Reject event
          continue;
       }
+
 
       mHist["hNentries"]->Fill("signal",1);
 
