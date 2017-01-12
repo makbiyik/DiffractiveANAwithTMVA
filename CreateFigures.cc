@@ -765,7 +765,6 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
   TString data_sample_name = "Data_BDTG_Pythia8Trained";
 
   TString data_dir = "data";
-
   TFile* mc_file = TFile::Open(data_dir + "/" + mTMVAOutput[mc_sample_name].app_output_file_name);
   TFile* data_file = TFile::Open(data_dir + "/" + mTMVAOutput[data_sample_name].app_output_file_name);
 
@@ -852,6 +851,8 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
   ch.DrawCMSPreliminary(true,11,"0.34 nb^{-1} (13 TeV)");
 }
 
+
+
 void discriminant_results(std::map<TString, SampleList::sTMVAOutput>& mTMVAOutput,
                                   std::map<TString, SampleList::sSample>& mSample)
 {
@@ -860,34 +861,135 @@ UNUSED(mSample);
 
   std::vector<TString> vSuffix;
   // vSuffix.push_back("_NONE");
+
   vSuffix.push_back("_SD1");
   vSuffix.push_back("_SD2");
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
   TString hist_name = "hDisciminant_DD";
+  TString hist_bkg1 = "hDisciminant_SD1";
+  TString hist_bkg2 = "hDisciminant_SD2"; 
+  TString hist_bkg3 = "hDisciminant_Rest"; 
+  
   TString mc_sample_name = "Pythia8_BDTG_Pythia8Trained";
   TString data_dir = "data";
   TFile* mc_file = TFile::Open(data_dir + "/" + mTMVAOutput[mc_sample_name].app_output_file_name);
-
-  TString histnameNtot= "hDisciminantClassifier_X";
   TH1F* hMC = (TH1F*)mc_file->Get(hist_name);
-
-  // std::map<TString, TH1*> mHist;
-  // mHist[histnameNtot] = new TH1F(histnameNtot,histnameNtot,40,-1,1);
-  double sum_mc =0 ;
-  for (Int_t i =40; i>=0;i--) {
-  sum_mc += hMC->GetBinContent(i);  
+  TH1F* hbkg1 = (TH1F*)mc_file->Get(hist_bkg1);
+  TH1F* hbkg2 = (TH1F*)mc_file->Get(hist_bkg2);
+  TH1F* hbkg3 = (TH1F*)mc_file->Get(hist_bkg3);
   
-  //   mHist[histnameNtot]->SetBinContent(i,sum_mc);
-  if (hMC->GetBinLowEdge(i)> 0.5) std::cout << "--- ..event: " << sum_mc << std::endl;
-   
-       
+  
+  TCanvas *c1 = new TCanvas("c1"," Example");
+  // c1->SetFillColor(42);
+  c1->SetGrid();
+
+  const Int_t n = 40;
+  TGraph *gr = new TGraph(n);
+  TGraph *gr_dist_aim_point = new TGraph(n);
+
+  // TEfficiency* pEff = new TEfficiency("eff",";efficiency;purityXout",40,0,2);
+  TCanvas* c2 = new TCanvas("example","",600,400);
+  // c2->SetFillStyle(1001);
+  // c2->SetFillColor(kWhite);
 
 
+  // define my ''point closest to'' in the ROC curve
+  double aim_eff = 1;
+  double aim_bkg = 0;
+  double dist_aim_minimum = 1e99;
+  int iCutVal_minimum = -1;
 
-  }
+  // loop over discrimant cut values
+  for( int iCutVal = 40; iCutVal>=0; iCutVal-- ) {
+  
+    double discriminant_cut_value = hMC->GetBinLowEdge(iCutVal);
+
+    double Entry_sig= 0; 
+    double Entry_sig_all = 0;
+    double Entry_bkg = 0;
+    double Entry_bkg_all = 0;
+    double efficiencyXout=0; 
+    double purityXout=0; 
+
+
+    for ( int iBin = 40; iBin>=0; iBin-- ) {
+      
+      Entry_sig_all += hMC->GetBinContent(iBin);
+      Entry_bkg_all += hbkg1->GetBinContent(iBin)+ hbkg2->GetBinContent(iBin)+ hbkg3->GetBinContent(iBin);
+
+      if (hMC->GetBinLowEdge(iBin) > discriminant_cut_value) {
+        Entry_sig += hMC->GetBinContent(iBin);
+        Entry_bkg += hbkg1->GetBinContent(iBin)+ hbkg2->GetBinContent(iBin)+ hbkg3->GetBinContent(iBin);
+      }
+    }
+
+    efficiencyXout = Entry_sig / Entry_sig_all;
+    purityXout = Entry_bkg / Entry_bkg_all;
+
+    // std::cout << "Discriminat Cut Value = " << discriminant_cut_value << std::endl;
+    // std::cout << "--- Signal Eff = " << efficiencyXout << std::endl;
+    // std::cout << "--- Bkg Eff    = " << purityXout << std::endl;
+
+    gr->SetPoint(iCutVal,efficiencyXout,purityXout);
+
+    // distance to my ''point closest to'' in the ROC curve
+    double dist_aim_point = sqrt( 
+                                  (efficiencyXout-aim_eff)*(efficiencyXout-aim_eff) +
+                                  (purityXout-aim_bkg)*(purityXout-aim_bkg)
+                                );
+
+    if( dist_aim_point < dist_aim_minimum ) {
+      dist_aim_minimum = dist_aim_point;
+      iCutVal_minimum = iCutVal;
+    }
+
+    gr_dist_aim_point->SetPoint(iCutVal,discriminant_cut_value,dist_aim_point);
+  } // loop over discrimant cut values
+
+  std::cout << "!!! Best Cut is at Discriminant Value = " << gr_dist_aim_point->GetX()[iCutVal_minimum] << std::endl;
+  std::cout << "!!! --- with an efficiency of           = " << gr->GetX()[iCutVal_minimum] << std::endl;
+  std::cout << "!!! --- and background contamination of = " << gr->GetY()[iCutVal_minimum] << std::endl;
+  
+
+  c1->cd();
+  gr->SetLineColor(2);
+  gr->SetLineWidth(4);
+  gr->SetMarkerColor(2);
+  gr->SetMarkerStyle(21);
+  gr->SetTitle("a simple graph");
+  gr->GetXaxis()->SetTitle("Eff sig DD");
+  gr->GetYaxis()->SetTitle("purity bkg ");
+  gr->Draw("ALP");
+
+  c2->cd();
+  gr_dist_aim_point->SetLineColor(4);
+  gr_dist_aim_point->SetLineWidth(4);
+  gr_dist_aim_point->SetMarkerColor(4);
+  gr_dist_aim_point->SetMarkerStyle(21);
+  gr_dist_aim_point->GetXaxis()->SetTitle("discriminant_cut_value");
+  gr_dist_aim_point->GetYaxis()->SetTitle("distance to eff=1;bkg=0");
+  gr_dist_aim_point->Draw("ALP");
+
+   // TCanvas::Update() draws the frame, after which one can change it
+  
+    //only for this documentation
+  // c2->cd ();
+  // pEff->Draw("AP");
+  
+
+   // c1->GetFrame()->SetFillColor(21);
+   // c1->GetFrame()->SetBorderSize(12);
+   // c1->Modified();
+
+
+ 
  
 
+
+
+ }  
   
-}
+
+
