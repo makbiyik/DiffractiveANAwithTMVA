@@ -129,7 +129,7 @@ public:
   // do basic style adjustments to the hist
   // like thicker lines and markers
   // col is set line, marker and fill color 
-  void SetUpHist(TH1* h, Color_t col=kBlue, Style_t stl=kSolid, int mkstyle=20, int fillstyle=0);  
+  static void SetUpHist(TH1* h, Color_t col=kBlue, Style_t stl=kSolid, int mkstyle=20, int fillstyle=0);  
   void SetUpLegend(TLegend* leg);
 
   //////////////////////////////////////////////////////////////////////////

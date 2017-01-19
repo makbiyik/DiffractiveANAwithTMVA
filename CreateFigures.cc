@@ -111,9 +111,15 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
                                   std::map<TString, SampleList::sSample>& mSample);
 
 
-
+//////////////////////////////////////////////////////////////////////////
+// find optimal cut value on discriminant distribution
 void discriminant_results(std::map<TString, SampleList::sTMVAOutput>& mTMVAOutput,
-                                  std::map<TString, SampleList::sSample>& mSample);
+                          std::map<TString, SampleList::sSample>& mSample);
+
+
+void calc_signal_cross_section(std::map<TString, SampleList::sTMVAOutput>& mTMVAOutput,
+                              std::map<TString, SampleList::sSample>& mSample);
+
 //////////////////////////////////////////////////////////////////////////
 // main function
 //////////////////////////////////////////////////////////////////////////
@@ -152,12 +158,14 @@ int main( int argc, char** argv )
 
   //////////////////////////////////////////////////////////////////////////
   // compare training variables MC with DATA
-  training_variables_compare_mc_data(mSample);
+  // training_variables_compare_mc_data(mSample);
 
 
   discriminant_compare_mc_data(mTMVAOutput,mSample);
+  // discriminant_results(mTMVAOutput,mSample);
 
-  discriminant_results(mTMVAOutput,mSample);
+  // calc_signal_cross_section(mTMVAOutput,mSample);
+
   /////////////////////////////////////////////////
   // freeze program
   app->Run();
@@ -180,7 +188,7 @@ std::map<TString, sSingleVar> build_hist_parameters()
 
   mSingleTrainingVar["EtaDeltaZero"].hist_name = "Hist_Eta_DeltaZero";
   mSingleTrainingVar["EtaDeltaZero"].xaxis_title = "#Delta#eta_{0}";
-  mSingleTrainingVar["EtaDeltaZero"].yaxis_title = "1/L dN/d#eta [nb^{1}]";
+  mSingleTrainingVar["EtaDeltaZero"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
   mSingleTrainingVar["EtaDeltaZero"].ratio_title = "MC / Data";
   mSingleTrainingVar["EtaDeltaZero"].canvas_title = "cDeltaEtaZero_";
   mSingleTrainingVar["EtaDeltaZero"].xmin = 0;
@@ -193,7 +201,7 @@ std::map<TString, sSingleVar> build_hist_parameters()
 
   mSingleTrainingVar["EtaMin"].hist_name = "Hist_Eta_Min";
   mSingleTrainingVar["EtaMin"].xaxis_title = "#eta_{min}";
-  mSingleTrainingVar["EtaMin"].yaxis_title = "1/L dN/d#eta [nb^{1}]";
+  mSingleTrainingVar["EtaMin"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
   mSingleTrainingVar["EtaMin"].ratio_title = "MC / Data";
   mSingleTrainingVar["EtaMin"].canvas_title = "cEtaMin_";
   mSingleTrainingVar["EtaMin"].xmin = -4;
@@ -210,7 +218,7 @@ std::map<TString, sSingleVar> build_hist_parameters()
 
   mSingleTrainingVar["EtaMax"].hist_name = "Hist_Eta_Max";
   mSingleTrainingVar["EtaMax"].xaxis_title = "#eta_{max}";
-  mSingleTrainingVar["EtaMax"].yaxis_title = "1/L dN/d#eta [nb^{1}]";
+  mSingleTrainingVar["EtaMax"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
   mSingleTrainingVar["EtaMax"].ratio_title = "MC / Data";
   mSingleTrainingVar["EtaMax"].canvas_title = "cEtaMax_";
   mSingleTrainingVar["EtaMax"].xmin = -4;
@@ -224,7 +232,7 @@ std::map<TString, sSingleVar> build_hist_parameters()
   
   mSingleTrainingVar["NTowHF_plus"].hist_name = "Hist_numberoftowerebovenoise_forwardplus";
   mSingleTrainingVar["NTowHF_plus"].xaxis_title = "N_{tow}";
-  mSingleTrainingVar["NTowHF_plus"].yaxis_title = "1/L dN/dN_{tow} [nb^{1}]";
+  mSingleTrainingVar["NTowHF_plus"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
   mSingleTrainingVar["NTowHF_plus"].ratio_title = "MC / Data";
   mSingleTrainingVar["NTowHF_plus"].canvas_title = "cNTowHF_plus_";
   mSingleTrainingVar["NTowHF_plus"].xmin = 0;
@@ -239,7 +247,7 @@ std::map<TString, sSingleVar> build_hist_parameters()
 
   mSingleTrainingVar["NTowHF_minus"].hist_name = "Hist_numberoftowerebovenoise_forwardminus";
   mSingleTrainingVar["NTowHF_minus"].xaxis_title = "N_{tow}";
-  mSingleTrainingVar["NTowHF_minus"].yaxis_title = "1/L dN/dN_{tow} [nb^{1}]";
+  mSingleTrainingVar["NTowHF_minus"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
   mSingleTrainingVar["NTowHF_minus"].ratio_title = "MC / Data";
   mSingleTrainingVar["NTowHF_minus"].canvas_title = "cNTowHF_minus_";
   mSingleTrainingVar["NTowHF_minus"].xmin = 0;
@@ -253,7 +261,7 @@ std::map<TString, sSingleVar> build_hist_parameters()
 
   mSingleTrainingVar["NTowCastor"].hist_name = "Hist_numberoftowerebovenoise_castor";
   mSingleTrainingVar["NTowCastor"].xaxis_title = "N_{tow}";
-  mSingleTrainingVar["NTowCastor"].yaxis_title = "1/L dN/dN_{tow} [nb^{1}]";
+  mSingleTrainingVar["NTowCastor"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
   mSingleTrainingVar["NTowCastor"].ratio_title = "MC / Data";
   mSingleTrainingVar["NTowCastor"].canvas_title = "cNTowCastor_";
   mSingleTrainingVar["NTowCastor"].xmin = 0;
@@ -266,7 +274,7 @@ std::map<TString, sSingleVar> build_hist_parameters()
 
   mSingleTrainingVar["NTracks"].hist_name = "Hist_NbrTracks";
   mSingleTrainingVar["NTracks"].xaxis_title = "N_{trk}";
-  mSingleTrainingVar["NTracks"].yaxis_title = "1/L dN/dN_{trk} [nb^{1}]";
+  mSingleTrainingVar["NTracks"].yaxis_title = "1/L dN/dN_{trk} [#mub^{-1}]";
   mSingleTrainingVar["NTracks"].ratio_title = "MC / Data";
   mSingleTrainingVar["NTracks"].canvas_title = "cNTracks_";
   mSingleTrainingVar["NTracks"].xmin = 0;
@@ -280,7 +288,7 @@ std::map<TString, sSingleVar> build_hist_parameters()
 
   mSingleTrainingVar["recoXix"].hist_name = "Hist_log10XiX";
   mSingleTrainingVar["recoXix"].xaxis_title = "log_{10}#xi_{x}";
-  mSingleTrainingVar["recoXix"].yaxis_title = "1/L dN/d(log_{10}#xi_{x}) [nb^{1}]";
+  mSingleTrainingVar["recoXix"].yaxis_title = "1/L dN/d(log_{10}#xi_{x}) [#mub^{-1}]";
   mSingleTrainingVar["recoXix"].ratio_title = "MC / Data";
   mSingleTrainingVar["recoXix"].canvas_title = "crecoXix_";
   mSingleTrainingVar["recoXix"].xmin = -11.5;
@@ -295,7 +303,7 @@ std::map<TString, sSingleVar> build_hist_parameters()
 
   mSingleTrainingVar["recoXiy"].hist_name = "Hist_log10XiY";
   mSingleTrainingVar["recoXiy"].xaxis_title = "log_{10}#xi_{y}";
-  mSingleTrainingVar["recoXiy"].yaxis_title = "1/L dN/d(log_{10}#xi_{y}) [nb^{1}]";
+  mSingleTrainingVar["recoXiy"].yaxis_title = "1/L dN/d(log_{10}#xi_{y}) [#mub^{-1}]";
   mSingleTrainingVar["recoXiy"].ratio_title = "MC / Data";
   mSingleTrainingVar["recoXiy"].canvas_title = "crecoXiy_";
   mSingleTrainingVar["recoXiy"].xmin = -11.5;
@@ -314,7 +322,7 @@ std::map<TString, sSingleVar> build_hist_parameters()
 
   // mSingleTrainingVar["XiDD"].hist_name = "Hist_Reco_log10XiDD";
   // mSingleTrainingVar["XiDD"].xaxis_title = "log_{10}#xi_{DD}";
-  // mSingleTrainingVar["XiDD"].yaxis_title = "1/L dN/d#xi [nb^{1}]";
+  // mSingleTrainingVar["XiDD"].yaxis_title = "1/L dN/d#xi [#mub^{-1}]";
   // mSingleTrainingVar["XiDD"].ratio_title = "MC / Data";
   // mSingleTrainingVar["XiDD"].canvas_title = "cXiDD_";
   // mSingleTrainingVar["XiDD"].xmin = -11.5;
@@ -414,7 +422,7 @@ void exampleCode()
   // draw stacked hists
   ch2.DrawHist();
   // plot CMS Preliminary
-  ch2.DrawCMSPreliminary(true,33,"0.34 nb^{-1} (13 TeV)");
+  ch2.DrawCMSPreliminary(true,33,"0.34 #mub^{-1} (13 TeV)");
   // or CMS Simulation 
   // ch2.DrawCMSSimulation(true,11);
   // or CMS Own Work
@@ -467,13 +475,13 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
   std::map<TString, sSingleVar> mSingleTrainingVar = build_hist_parameters();
 
   single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8");
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD2",false); 
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8Rest",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSRest",false); 
+  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS",false);
+  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1",false);
+  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1",false);
+  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2",false);
+  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD2",false); 
+  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8Rest",false);
+  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSRest",false); 
 
 
   std::vector<TString> vSuff_XiEventSel;
@@ -490,15 +498,15 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
   mSingleTrainingVar["NTracks"].hist_name = "Hist_eventXiID_NbrTracks";
   mSingleTrainingVar["recoXix"].hist_name = "Hist_eventXiID_log10XiX";
   mSingleTrainingVar["recoXiy"].hist_name = "Hist_eventXiID_log10XiY";
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8",true);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOS",false);
+  single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8",true);
+  single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOS",false);
   
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD1",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD1",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD2",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD2",false); 
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"Pythia8Rest",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"EPOSRest",false); 
+  single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD1",false);
+  single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD1",false);
+  single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD2",false);
+  single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD2",false); 
+  single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8Rest",false);
+  single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSRest",false); 
 
 
 
@@ -536,7 +544,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
                                             it->second.ratio_title);
 
     mDrawHists[it->first] = single_figure_compare_mc_data(ch,mSample,vSuffix,sample_name,it->second.hist_name,scale_data);
-    ch.DrawCMSPreliminary(true,it->second.cms_alignment,"0.34 nb^{-1} (13 TeV)");
+    ch.DrawCMSPreliminary(true,it->second.cms_alignment,"0.34 #mub^{-1} (13 TeV)");
   }
 
   //////////////////////////////////////////////////////////////////////////
@@ -761,8 +769,11 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
 
   TString hist_name = "hDisciminant";
 
-  TString mc_sample_name = "Pythia8_BDTG_Pythia8Trained";
-  TString data_sample_name = "Data_BDTG_Pythia8Trained";
+  // TString mc_sample_name = "Pythia8_BDTG_Pythia8Trained";
+  // TString data_sample_name = "Data_BDTG_Pythia8Trained";
+
+  TString mc_sample_name = "EPOSSD1_BDTG_EPOSSD1Trained";
+  TString data_sample_name = "DataSD1_BDTG_EPOSSD1Trained";
 
   TString data_dir = "data";
   TFile* mc_file = TFile::Open(data_dir + "/" + mTMVAOutput[mc_sample_name].app_output_file_name);
@@ -848,7 +859,7 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
   ch.getCanvas()->cd(1);
   leg->Draw("same");
 
-  ch.DrawCMSPreliminary(true,11,"0.34 nb^{-1} (13 TeV)");
+  ch.DrawCMSPreliminary(true,11,"0.34 #mub^{-1} (13 TeV)");
 }
 
 
@@ -867,27 +878,40 @@ UNUSED(mSample);
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
-  TString hist_name = "hDisciminant_DD";
-  TString hist_bkg1 = "hDisciminant_SD1";
-  TString hist_bkg2 = "hDisciminant_SD2"; 
-  TString hist_bkg3 = "hDisciminant_Rest"; 
-  
+  TString hist_name = "hDisciminant";
+
   TString mc_sample_name = "Pythia8_BDTG_Pythia8Trained";
+  // TString mc_sample_name = "Pythia8SD1_BDTG_Pythia8TrainedSD1";
+
   TString data_dir = "data";
   TFile* mc_file = TFile::Open(data_dir + "/" + mTMVAOutput[mc_sample_name].app_output_file_name);
-  TH1F* hMC = (TH1F*)mc_file->Get(hist_name);
-  TH1F* hbkg1 = (TH1F*)mc_file->Get(hist_bkg1);
-  TH1F* hbkg2 = (TH1F*)mc_file->Get(hist_bkg2);
-  TH1F* hbkg3 = (TH1F*)mc_file->Get(hist_bkg3);
+
+  TH1F* hMC   = (TH1F*)mc_file->Get(hist_name);
+
+  TString sSignal = "DD";
+  TH1F* hsig = (TH1F*)mc_file->Get(hist_name+"_"+sSignal);
+
+  std::map<TString,TH1F*> hbkg;
+  for(unsigned int idx=0; idx<vSuffix.size(); idx++) {
+    if( vSuffix[idx].Copy().Remove(0,1) == sSignal ) continue;
+    hbkg[ vSuffix[idx].Copy().Remove(0,1) ] = (TH1F*)mc_file->Get(hist_name+vSuffix[idx]);
+  }
   
-  
-  TCanvas *c1 = new TCanvas("c1"," Example");
-  // c1->SetFillColor(42);
-  c1->SetGrid();
+  CanvasHelper chROCurve("ROC");
+  TCanvas * cROC = chROCurve.initNormalCanvas(0,1.2,0,1.4,"signal efficiency","background rejection",510,510);
+  cROC->SetGrid();
 
   const Int_t n = 40;
   TGraph *gr = new TGraph(n);
+  TGraph *gr_mark_point = new TGraph(1);
   TGraph *gr_dist_aim_point = new TGraph(n);
+
+  TGraph *gr_prob_sig = new TGraph(n);
+  TGraph *gr_prob_bkg = new TGraph(n);
+  TGraph *gr_prob_sig_bkg = new TGraph(n);
+
+  TGraph *gr_SdivSqrtSplusB = new TGraph(n);
+  TGraph *gr_sig_purity_tims_eff = new TGraph(n);
 
   // TEfficiency* pEff = new TEfficiency("eff",";efficiency;purityXout",40,0,2);
   TCanvas* c2 = new TCanvas("example","",600,400);
@@ -895,11 +919,19 @@ UNUSED(mSample);
   // c2->SetFillColor(kWhite);
 
 
+  CanvasHelper chSdivSqrtSplusB("SdivSqrtSplusB");
+  TCanvas * cSdivSqrtSplusB = chSdivSqrtSplusB.initNormalCanvas(-1,1,0,1,"classifier X","sig. purtiy times sig. eff.");
+  // cSdivSqrtSplusB->SetLogy();
+  cSdivSqrtSplusB->SetGrid();
+
   // define my ''point closest to'' in the ROC curve
   double aim_eff = 1;
-  double aim_bkg = 0;
+  double aim_bkg = 1;
   double dist_aim_minimum = 1e99;
   int iCutVal_minimum = -1;
+
+  double SdivSqrtSplusB_maximum = -1000;
+  int iCutVal_SdivSqrtSplusB_maximum = -1;
 
   // loop over discrimant cut values
   for( int iCutVal = 40; iCutVal>=0; iCutVal-- ) {
@@ -911,28 +943,38 @@ UNUSED(mSample);
     double Entry_bkg = 0;
     double Entry_bkg_all = 0;
     double efficiencyXout=0; 
-    double purityXout=0; 
+    double purityXout=0;
+    double prob_sig=0;
+    double prob_bkg=0;
+    double SdivSqrtSplusB=0;
 
 
-    for ( int iBin = 40; iBin>=0; iBin-- ) {
+    for ( int iBin = 41; iBin>=0; iBin-- ) {
       
-      Entry_sig_all += hMC->GetBinContent(iBin);
-      Entry_bkg_all += hbkg1->GetBinContent(iBin)+ hbkg2->GetBinContent(iBin)+ hbkg3->GetBinContent(iBin);
+      Entry_sig_all += hsig->GetBinContent(iBin);
+      for(std::map<TString,TH1F*>::iterator it=hbkg.begin(); it!=hbkg.end(); it++)
+        Entry_bkg_all += it->second->GetBinContent(iBin);
 
-      if (hMC->GetBinLowEdge(iBin) > discriminant_cut_value) {
-        Entry_sig += hMC->GetBinContent(iBin);
-        Entry_bkg += hbkg1->GetBinContent(iBin)+ hbkg2->GetBinContent(iBin)+ hbkg3->GetBinContent(iBin);
+      if (hsig->GetBinCenter(iBin) > discriminant_cut_value) {
+        Entry_sig += hsig->GetBinContent(iBin);
+        for(std::map<TString,TH1F*>::iterator it=hbkg.begin(); it!=hbkg.end(); it++)
+          Entry_bkg += it->second->GetBinContent(iBin);        
       }
     }
 
     efficiencyXout = Entry_sig / Entry_sig_all;
-    purityXout = Entry_bkg / Entry_bkg_all;
+    purityXout = 1 - Entry_bkg / Entry_bkg_all;
+    prob_sig = Entry_sig / (Entry_bkg + Entry_sig);
+    prob_bkg = Entry_bkg / (Entry_bkg + Entry_sig);
+
+    SdivSqrtSplusB = Entry_sig / sqrt( Entry_sig + Entry_bkg);
 
     // std::cout << "Discriminat Cut Value = " << discriminant_cut_value << std::endl;
     // std::cout << "--- Signal Eff = " << efficiencyXout << std::endl;
     // std::cout << "--- Bkg Eff    = " << purityXout << std::endl;
 
     gr->SetPoint(iCutVal,efficiencyXout,purityXout);
+    gr_prob_sig_bkg->SetPoint(iCutVal,prob_sig,prob_bkg);
 
     // distance to my ''point closest to'' in the ROC curve
     double dist_aim_point = sqrt( 
@@ -946,22 +988,52 @@ UNUSED(mSample);
     }
 
     gr_dist_aim_point->SetPoint(iCutVal,discriminant_cut_value,dist_aim_point);
+    gr_prob_sig->SetPoint(iCutVal,discriminant_cut_value,prob_sig);
+    gr_prob_bkg->SetPoint(iCutVal,discriminant_cut_value,prob_bkg);
+
+    gr_mark_point->SetPoint(0,gr->GetX()[iCutVal_minimum],gr->GetY()[iCutVal_minimum]);
+
+    gr_SdivSqrtSplusB->SetPoint(iCutVal,discriminant_cut_value,SdivSqrtSplusB);
+    gr_sig_purity_tims_eff->SetPoint(iCutVal,discriminant_cut_value,prob_sig*efficiencyXout);
+
+
+    if(SdivSqrtSplusB >= SdivSqrtSplusB_maximum) {
+      SdivSqrtSplusB_maximum = SdivSqrtSplusB;
+      iCutVal_SdivSqrtSplusB_maximum = iCutVal;
+    }
+
   } // loop over discrimant cut values
 
   std::cout << "!!! Best Cut is at Discriminant Value = " << gr_dist_aim_point->GetX()[iCutVal_minimum] << std::endl;
-  std::cout << "!!! --- with an efficiency of           = " << gr->GetX()[iCutVal_minimum] << std::endl;
-  std::cout << "!!! --- and background contamination of = " << gr->GetY()[iCutVal_minimum] << std::endl;
-  
+  std::cout << "!!!                          hist bin = " << iCutVal_minimum << std::endl;
+  std::cout << "!!! --- with an efficiency of       = " << gr->GetX()[iCutVal_minimum] << std::endl;
+  std::cout << "!!! --- and background rejection of = " << gr->GetY()[iCutVal_minimum] << std::endl;
+  std::cout << "!!! --- signal probability in selected reagion = " << gr_prob_sig->GetY()[iCutVal_minimum] << std::endl;
 
-  c1->cd();
-  gr->SetLineColor(2);
-  gr->SetLineWidth(4);
-  gr->SetMarkerColor(2);
-  gr->SetMarkerStyle(21);
-  gr->SetTitle("a simple graph");
-  gr->GetXaxis()->SetTitle("Eff sig DD");
-  gr->GetYaxis()->SetTitle("purity bkg ");
-  gr->Draw("ALP");
+  std::cout << "=================================================================" << std::endl;
+  std::cout << "!!! Best Cut by SdivSqrtSplusB at Discriminant Value = " << gr_SdivSqrtSplusB->GetX()[iCutVal_SdivSqrtSplusB_maximum] << std::endl;
+  std::cout << "!!! --- with an efficiency of       = " << gr->GetX()[iCutVal_SdivSqrtSplusB_maximum] << std::endl;
+  std::cout << "!!! --- and background rejection of = " << gr->GetY()[iCutVal_SdivSqrtSplusB_maximum] << std::endl;
+  std::cout << "!!! --- signal probability in selected reagion = " << gr_prob_sig->GetY()[iCutVal_SdivSqrtSplusB_maximum] << std::endl;
+
+  chROCurve.SetUpHist((TH1*)gr,kRed);
+  chROCurve.SetUpHist((TH1*)gr_mark_point,kBlack);
+  gr_mark_point->SetMarkerSize(1.7);
+  cROC->cd();
+  // gr_mark_point->Draw("P same");
+  gr->Draw("PL same");
+  chROCurve.DrawCMSSimulation();
+
+  TLatex tl;
+  char buf[128];
+  sprintf(buf,"sig. eff = %3.1f",gr->GetX()[iCutVal_minimum]*100);
+  tl.DrawLatex(0.5,0.5,buf);
+  sprintf(buf,"bckg rejection = %3.1f",gr->GetY()[iCutVal_minimum]*100);
+  tl.DrawLatex(0.5,0.45,buf);
+
+
+  CanvasHelper::SetUpHist((TH1*)gr_prob_sig_bkg,kBlue);
+  // gr_prob_sig_bkg->Draw("P same");
 
   c2->cd();
   gr_dist_aim_point->SetLineColor(4);
@@ -972,24 +1044,122 @@ UNUSED(mSample);
   gr_dist_aim_point->GetYaxis()->SetTitle("distance to eff=1;bkg=0");
   gr_dist_aim_point->Draw("ALP");
 
-   // TCanvas::Update() draws the frame, after which one can change it
-  
-    //only for this documentation
-  // c2->cd ();
-  // pEff->Draw("AP");
+  CanvasHelper::SetUpHist((TH1*)gr_prob_sig,kRed);
+  CanvasHelper::SetUpHist((TH1*)gr_prob_bkg,kMagenta);
   
 
-   // c1->GetFrame()->SetFillColor(21);
-   // c1->GetFrame()->SetBorderSize(12);
-   // c1->Modified();
-
-
- 
- 
-
-
-
- }  
   
+  gr_prob_sig->Draw("P same");
+  gr_prob_bkg->Draw("P same");
+  
+  TLegend * leg = new TLegend(0.3,0.7,0.7,0.9);
+  leg->SetFillColor(0);
+  leg->SetBorderSize(0);
+  leg->SetFillStyle(0);
+  leg->SetTextFont(23);
+  leg->SetTextSize(20);
+  leg->AddEntry("gr_dist_aim_point","discriminant_cut_value","l");
+  leg->AddEntry("gr_prob_sig","Sig probability","l");
+  leg->AddEntry("gr_prob_bkg","background probability","l");
+  leg->Draw("same");
+
+  cSdivSqrtSplusB->cd();
+  chSdivSqrtSplusB.SetUpHist((TH1*)gr_SdivSqrtSplusB,kGreen+2);
+  chSdivSqrtSplusB.SetUpHist((TH1*)gr_sig_purity_tims_eff,kBlue);
+  
+  // gr_SdivSqrtSplusB->Draw("PL same");
+  gr_sig_purity_tims_eff->Draw("PL same");
+  // gr_mark_point->Draw("P same");
+  chSdivSqrtSplusB.DrawCMSSimulation();
+
+}  
+  
+
+void calc_signal_cross_section(std::map<TString, SampleList::sTMVAOutput>& mTMVAOutput,
+                               std::map<TString, SampleList::sSample>& mSample)
+{
+  std::vector<TString> vSuffix;
+  // vSuffix.push_back("_NONE");
+
+  vSuffix.push_back("_SD1");
+  vSuffix.push_back("_SD2");
+  vSuffix.push_back("_DD");
+  vSuffix.push_back("_Rest");
+
+  TString hist_name = "hDisciminant";
+
+  TString mc_sample_name = "Pythia8_BDTG_Pythia8Trained";
+  TString data_sample_name = "Data_BDTG_Pythia8Trained";
+
+  //////////////////////////////////////////////////////////////////////////
+  // get data lumi
+  double lumi_data = mSample[mTMVAOutput[data_sample_name].app_input_sample].lumi;
+
+  TString data_dir = "data";
+  TFile* mc_file = TFile::Open(data_dir + "/" + mTMVAOutput[mc_sample_name].app_output_file_name);
+  TFile* data_file = TFile::Open(data_dir + "/" + mTMVAOutput[data_sample_name].app_output_file_name);
+
+  // TH1F* hMC   = (TH1F*)mc_file->Get(hist_name);
+  TH1F* hData = (TH1F*)data_file->Get(hist_name);
+
+  TString sSignal = "DD";
+  TH1F* hsig = (TH1F*)mc_file->Get(hist_name+"_"+sSignal);
+
+  std::map<TString,TH1F*> hbkg;
+  for(unsigned int idx=0; idx<vSuffix.size(); idx++) {
+    if( vSuffix[idx].Copy().Remove(0,1) == sSignal ) continue;
+    hbkg[ vSuffix[idx].Copy().Remove(0,1) ] = (TH1F*)mc_file->Get(hist_name+vSuffix[idx]);
+  }
+
+  //////////////////////////////////////////////////////////////////////////
+  // value to cut in classifier/discriminant output distribution
+  double classifier_cut = 0.25;
+
+  double Entry_sig= 0; 
+  double Entry_sig_all = 0;
+  double Entry_bkg = 0;
+  double Entry_bkg_all = 0;
+  double Entry_data = 0;
+
+  // loop over discrimant cut values
+  for( int iBin = 41; iBin>=0; iBin-- ) {
+    double classifier_value = hData->GetBinCenter(iBin);
+
+    Entry_sig_all += hsig->GetBinContent(iBin);
+    for(std::map<TString,TH1F*>::iterator it=hbkg.begin(); it!=hbkg.end(); it++)
+      Entry_bkg_all += it->second->GetBinContent(iBin);
+
+    if(classifier_value > classifier_cut) {
+      Entry_sig += hsig->GetBinContent(iBin);
+      for(std::map<TString,TH1F*>::iterator it=hbkg.begin(); it!=hbkg.end(); it++)
+        Entry_bkg += it->second->GetBinContent(iBin);
+
+      Entry_data += hData->GetBinContent(iBin);
+    }
+  }
+
+  double prob_sig = Entry_sig / (Entry_bkg + Entry_sig);
+  double eff_sig = Entry_sig / Entry_sig_all;
+
+  double eff_number_of_signal_events_in_data = (Entry_data * prob_sig)/eff_sig;
+
+  std::cout << std::endl;
+  std::cout << std::endl;
+  std::cout << "======================================================================" << std::endl;
+  std::cout << "======================================================================" << std::endl;
+  std::cout << "Took data sampe: " << data_sample_name << std::endl; 
+  std::cout << " with   LUMI = " << lumi_data << " 1/#mub" <<std::endl;
+  std::cout << " with SIGNAL = " << sSignal << std::endl;
+  std::cout << "======================================================================" << std::endl;
+  std::cout << "cut at classifier value = " << classifier_cut << std::endl;
+  std::cout << "--- signal efficiency = " << eff_sig << std::endl;
+  std::cout << "--- signal probability = " << prob_sig << std::endl;
+  std::cout << "--- number of selected data events = " << Entry_data << std::endl;
+  std::cout << "--- !!! Effective Number of Signal Events in Data = " << eff_number_of_signal_events_in_data << " !!! ---" << std::endl;
+  std::cout << "--- !!! Effective Signal CROSS SECTION = " << eff_number_of_signal_events_in_data/lumi_data << " ub !!! ---" << std::endl;
+  std::cout << "======================================================================" << std::endl;
+  std::cout << std::endl;
+  std::cout << std::endl;
+}
 
 

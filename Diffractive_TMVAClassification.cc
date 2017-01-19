@@ -85,15 +85,15 @@ int Diffractive_TMVAClassification()
    factory->AddVariable( "deltazero","deltazero", "units", 'F' );
    factory->AddVariable( "etamax","etamax", "units", 'F' );
    factory->AddVariable( "etamin","etamin", "units", 'F' );
-   factory->AddVariable( "log10XixReco","log10XixReco", "units", 'F' );
-   factory->AddVariable( "log10XiyReco","log10XiyReco", "units", 'F' );//Log->logdegistirdin
+   // factory->AddVariable( "log10XixReco","log10XixReco", "units", 'F' );
+   // factory->AddVariable( "log10XiyReco","log10XiyReco", "units", 'F' );//Log->logdegistirdin
    factory->AddVariable( "HFminusNtowers","HFminusNtowers", "units", 'I' );
    factory->AddVariable( "HFplusNtowers","HFplusNtowers", "units", 'I' );//Log->logdegistirdin
    factory->AddVariable( "CastorNtowers","CastorNtowers", "units", 'I' );
    factory->AddVariable( "Ntracks","Ntracks", "units", 'I' );
    
    
-   TString sample_name = "EPOS";
+   TString sample_name = "EPOSRest";
    TFile *input = mSample[sample_name].file;
    std::cout << "--- TMVAClassification       : Using input file: " << input->GetName() << std::endl;
 

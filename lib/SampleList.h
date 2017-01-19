@@ -14,7 +14,7 @@ namespace SampleList {
     bool isData;
     bool procesesID_pythia8;
     double lumi;
-    double xs; // in nb
+    double xs; // in ub
     
 
     TFile* file;
@@ -31,7 +31,7 @@ namespace SampleList {
     sSample sPythia8DD;
     sPythia8DD.isData = false;
     sPythia8DD.procesesID_pythia8 = true;
-    sPythia8DD.xs = 71390.000000; // nb
+    sPythia8DD.xs = 71390.000000; // ub
     sPythia8DD.file = TFile::Open("data/trackanddiffractive_sigDD_pythia8.root");
     sPythia8DD.tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
     sPythia8DD.weight_name = "Pythia8_DD_weights";
@@ -44,7 +44,7 @@ namespace SampleList {
     sXiEventSelectioncutDD.isData = false;
     sXiEventSelectioncutDD.procesesID_pythia8 = false;
     sXiEventSelectioncutDD.lumi = 0;
-    sXiEventSelectioncutDD.xs = 79948.200000; // nb
+    sXiEventSelectioncutDD.xs = 79948.200000; // ub
     sXiEventSelectioncutDD.file = TFile::Open("data/trackanddiffractive_sigDD_XiCutpythia8.root");
     sXiEventSelectioncutDD.tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
     sXiEventSelectioncutDD.weight_name = "Pythia8_XiEvtSel_DD_weights";
@@ -56,7 +56,7 @@ namespace SampleList {
     sEPOSDD.isData = false;
     sEPOSDD.procesesID_pythia8 = true;
     sEPOSDD.lumi = 0;
-    sEPOSDD.xs = 79948.200000; // nb
+    sEPOSDD.xs = 79948.200000; // ub
     sEPOSDD.file = TFile::Open("data/trackanddiffractive_sigDD_epos.root");
     sEPOSDD.tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
     sEPOSDD.weight_name = "EPOS_DD_weights";
@@ -68,7 +68,7 @@ namespace SampleList {
     sXicutEPOsDD.isData = false;
     sXicutEPOsDD.procesesID_pythia8 = false;
     sXicutEPOsDD.lumi = 0;
-    sXicutEPOsDD.xs = 79948.200000; // nb
+    sXicutEPOsDD.xs = 79948.200000; // ub
     sXicutEPOsDD.file = TFile::Open("data/trackanddiffractive_sigDD_XiCutepos.root");
     sXicutEPOsDD.tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
     sXicutEPOsDD.weight_name = "XiCutEPOS_DD_weights";
@@ -92,7 +92,7 @@ namespace SampleList {
     sSample sPythia8SD1;
     sPythia8SD1.isData = false;
     sPythia8SD1.procesesID_pythia8 = true;
-    sPythia8SD1.xs = 71390.000000; // nb
+    sPythia8SD1.xs = 71390.000000; // ub
     sPythia8SD1.file = TFile::Open("data/trackanddiffractive_sigSD1_pythia8.root");
     sPythia8SD1.tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
     sPythia8SD1.weight_name = "Pythia8_SD1_weights";
@@ -105,7 +105,7 @@ namespace SampleList {
     sXiEventSelectioncutSD1.isData = false;
     sXiEventSelectioncutSD1.procesesID_pythia8 = false;
     sXiEventSelectioncutSD1.lumi = 0;
-    sXiEventSelectioncutSD1.xs = 79948.200000; // nb
+    sXiEventSelectioncutSD1.xs = 79948.200000; // ub
     sXiEventSelectioncutSD1.file = TFile::Open("data/trackanddiffractive_sigSD1_XiCutpythia8.root");
     sXiEventSelectioncutSD1.tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
     sXiEventSelectioncutSD1.weight_name = "Pythia8_XiEvtSel_SD1_weights";
@@ -117,7 +117,7 @@ namespace SampleList {
     sEPOSSD1.isData = false;
     sEPOSSD1.procesesID_pythia8 = true;
     sEPOSSD1.lumi = 0;
-    sEPOSSD1.xs = 79948.200000; // nb
+    sEPOSSD1.xs = 79948.200000; // ub
     sEPOSSD1.file = TFile::Open("data/trackanddiffractive_sigSD1_epos.root");
     sEPOSSD1.tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
     sEPOSSD1.weight_name = "EPOS_SD1_weights";
@@ -129,7 +129,7 @@ namespace SampleList {
     sXicutEPOsSD1.isData = false;
     sXicutEPOsSD1.procesesID_pythia8 = false;
     sXicutEPOsSD1.lumi = 0;
-    sXicutEPOsSD1.xs = 79948.200000; // nb
+    sXicutEPOsSD1.xs = 79948.200000; // ub
     sXicutEPOsSD1.file = TFile::Open("data/trackanddiffractive_sigSD1_XiCutepos.root");
     sXicutEPOsSD1.tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
     sXicutEPOsSD1.weight_name = "XiCutEPOS_SD1_weights";
@@ -143,7 +143,7 @@ namespace SampleList {
     sSample sPythia8SD2;
     sPythia8SD2.isData = false;
     sPythia8SD2.procesesID_pythia8 = true;
-    sPythia8SD2.xs = 71390.000000; // nb
+    sPythia8SD2.xs = 71390.000000; // ub
     sPythia8SD2.file = TFile::Open("data/trackanddiffractive_sigSD2_pythia8.root");
     sPythia8SD2.tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
     sPythia8SD2.weight_name = "Pythia8_SD2_weights";
@@ -156,7 +156,7 @@ namespace SampleList {
     sXiEventSelectioncutSD2.isData = false;
     sXiEventSelectioncutSD2.procesesID_pythia8 = false;
     sXiEventSelectioncutSD2.lumi = 0;
-    sXiEventSelectioncutSD2.xs = 79948.200000; // nb
+    sXiEventSelectioncutSD2.xs = 79948.200000; // ub
     sXiEventSelectioncutSD2.file = TFile::Open("data/trackanddiffractive_sigSD2_XiCutpythia8.root");
     sXiEventSelectioncutSD2.tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
     sXiEventSelectioncutSD2.weight_name = "Pythia8_XiEvtSel_SD2_weights";
@@ -168,7 +168,7 @@ namespace SampleList {
     sEPOSSD2.isData = false;
     sEPOSSD2.procesesID_pythia8 = true;
     sEPOSSD2.lumi = 0;
-    sEPOSSD2.xs = 79948.200000; // nb
+    sEPOSSD2.xs = 79948.200000; // ub
     sEPOSSD2.file = TFile::Open("data/trackanddiffractive_sigSD2_epos.root");
     sEPOSSD2.tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
     sEPOSSD2.weight_name = "EPOS_SD2_weights";
@@ -180,7 +180,7 @@ namespace SampleList {
     sXicutEPOsSD2.isData = false;
     sXicutEPOsSD2.procesesID_pythia8 = false;
     sXicutEPOsSD2.lumi = 0;
-    sXicutEPOsSD2.xs = 79948.200000; // nb
+    sXicutEPOsSD2.xs = 79948.200000; // ub
     sXicutEPOsSD2.file = TFile::Open("data/trackanddiffractive_sigSD2_XiCutepos.root");
     sXicutEPOsSD2.tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
     sXicutEPOsSD2.weight_name = "XiCutEPOS_SD2_weights";
@@ -193,53 +193,53 @@ namespace SampleList {
 
      //////////////////////////REST//////////////////////////////////
 
-    // sSample sPythia8Rest;
-    // sPythia8Rest.isData = false;
-    // sPythia8Rest.procesesID_pythia8 = true;
-    // sPythia8Rest.xs = 71390.000000; // nb
-    // sPythia8Rest.file = TFile::Open("data/trackanddiffractive_sigRest_pythia8.root");
-    // sPythia8Rest.tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
-    // sPythia8Rest.weight_name = "Pythia8_Rest_weights";
-    // sPythia8Rest.signal = "Rest";
-    // htmp = (TH1F*)sPythia8Rest.file->Get(sPythia8Rest.tree_name + "/hNentries");
-    // sPythia8Rest.lumi = htmp->GetBinContent(1)/sPythia8Rest.xs;
+    sSample sPythia8Rest;
+    sPythia8Rest.isData = false;
+    sPythia8Rest.procesesID_pythia8 = true;
+    sPythia8Rest.xs = 71390.000000; // ub
+    sPythia8Rest.file = TFile::Open("data/trackanddiffractive_sigRest_pythia8.root");
+    sPythia8Rest.tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
+    sPythia8Rest.weight_name = "Pythia8_Rest_weights";
+    sPythia8Rest.signal = "Rest";
+    htmp = (TH1F*)sPythia8Rest.file->Get(sPythia8Rest.tree_name + "/hNentries");
+    sPythia8Rest.lumi = htmp->GetBinContent(1)/sPythia8Rest.xs;
 
 
-    // sSample sXiEventSelectioncutRest;
-    // sXiEventSelectioncutRest.isData = false;
-    // sXiEventSelectioncutRest.procesesID_pythia8 = false;
-    // sXiEventSelectioncutRest.lumi = 0;
-    // sXiEventSelectioncutRest.xs = 79948.200000; // nb
-    // sXiEventSelectioncutRest.file = TFile::Open("data/trackanddiffractive_sigRest_XiCutpythia8.root");
-    // sXiEventSelectioncutRest.tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
-    // sXiEventSelectioncutRest.weight_name = "Pythia8_XiEvtSel_Rest_weights";
-    // sXiEventSelectioncutRest.signal = "Rest";
-    // htmp = (TH1F*)sXiEventSelectioncutRest.file->Get(sXiEventSelectioncutRest.tree_name + "/hNentries");
-    // sXiEventSelectioncutRest.lumi = htmp->GetBinContent(1)/sXiEventSelectioncutRest.xs;
+    sSample sXiEventSelectioncutRest;
+    sXiEventSelectioncutRest.isData = false;
+    sXiEventSelectioncutRest.procesesID_pythia8 = false;
+    sXiEventSelectioncutRest.lumi = 0;
+    sXiEventSelectioncutRest.xs = 79948.200000; // ub
+    sXiEventSelectioncutRest.file = TFile::Open("data/trackanddiffractive_sigRest_XiCutpythia8.root");
+    sXiEventSelectioncutRest.tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
+    sXiEventSelectioncutRest.weight_name = "Pythia8_XiEvtSel_Rest_weights";
+    sXiEventSelectioncutRest.signal = "Rest";
+    htmp = (TH1F*)sXiEventSelectioncutRest.file->Get(sXiEventSelectioncutRest.tree_name + "/hNentries");
+    sXiEventSelectioncutRest.lumi = htmp->GetBinContent(1)/sXiEventSelectioncutRest.xs;
 
-    // sSample sEPOSRest;
-    // sEPOSRest.isData = false;
-    // sEPOSRest.procesesID_pythia8 = true;
-    // sEPOSRest.lumi = 0;
-    // sEPOSRest.xs = 79948.200000; // nb
-    // sEPOSRest.file = TFile::Open("data/trackanddiffractive_sigRest_epos.root");
-    // sEPOSRest.tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
-    // sEPOSRest.weight_name = "EPOS_Rest_weights";
-    // sEPOSRest.signal = "Rest";
-    // htmp = (TH1F*)sEPOSRest.file->Get(sEPOSRest.tree_name + "/hNentries");
-    // sEPOSRest.lumi = htmp->GetBinContent(1)/sEPOSRest.xs;
+    sSample sEPOSRest;
+    sEPOSRest.isData = false;
+    sEPOSRest.procesesID_pythia8 = true;
+    sEPOSRest.lumi = 0;
+    sEPOSRest.xs = 79948.200000; // ub
+    sEPOSRest.file = TFile::Open("data/trackanddiffractive_sigRest_epos.root");
+    sEPOSRest.tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
+    sEPOSRest.weight_name = "EPOS_Rest_weights";
+    sEPOSRest.signal = "Rest";
+    htmp = (TH1F*)sEPOSRest.file->Get(sEPOSRest.tree_name + "/hNentries");
+    sEPOSRest.lumi = htmp->GetBinContent(1)/sEPOSRest.xs;
 
-    // sSample sXicutEPOsRest;
-    // sXicutEPOsRest.isData = false;
-    // sXicutEPOsRest.procesesID_pythia8 = false;
-    // sXicutEPOsRest.lumi = 0;
-    // sXicutEPOsRest.xs = 79948.200000; // nb
-    // sXicutEPOsRest.file = TFile::Open("data/trackanddiffractive_sigRest_XiCutepos.root");
-    // sXicutEPOsRest.tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
-    // sXicutEPOsRest.weight_name = "XiCutEPOS_Rest_weights";
-    // sXicutEPOsRest.signal = "Rest";
-    // htmp = (TH1F*)sXicutEPOsRest.file->Get(sXicutEPOsRest.tree_name + "/hNentries");
-    // sXicutEPOsRest.lumi = htmp->GetBinContent(1)/sXicutEPOsRest.xs;
+    sSample sXicutEPOsRest;
+    sXicutEPOsRest.isData = false;
+    sXicutEPOsRest.procesesID_pythia8 = false;
+    sXicutEPOsRest.lumi = 0;
+    sXicutEPOsRest.xs = 79948.200000; // ub
+    sXicutEPOsRest.file = TFile::Open("data/trackanddiffractive_sigRest_XiCutepos.root");
+    sXicutEPOsRest.tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
+    sXicutEPOsRest.weight_name = "XiCutEPOS_Rest_weights";
+    sXicutEPOsRest.signal = "Rest";
+    htmp = (TH1F*)sXicutEPOsRest.file->Get(sXicutEPOsRest.tree_name + "/hNentries");
+    sXicutEPOsRest.lumi = htmp->GetBinContent(1)/sXicutEPOsRest.xs;
     
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -259,11 +259,14 @@ namespace SampleList {
     mSample["XiCutPythia8SD2"] =  sXiEventSelectioncutSD2;
     mSample["XiCutEPOSSD2"] =  sXicutEPOsSD2;
     mSample["EPOSSD2"] = sEPOSSD2;
+    
 
-    // mSample["Pythia8Rest"] =  sPythia8Rest;
-    // mSample["XiCutPythia8Rest"] =  sXiEventSelectioncutRest;
-    // mSample["XiCutEPOSRest"] =  sXicutEPOsRest;
-    // mSample["EPOSRest"] = sEPOSRest;
+    mSample["Pythia8Rest"] =  sPythia8Rest;
+    mSample["XiCutPythia8Rest"] =  sXiEventSelectioncutRest;
+    mSample["XiCutEPOSRest"] =  sXicutEPOsRest;
+    mSample["EPOSRest"] = sEPOSRest;
+
+
 
 
 
@@ -393,7 +396,7 @@ namespace SampleList {
     mTMVAOutput["EPOSRest_BDTG_EPOSRestTrained"].method = "BDTG";
     mTMVAOutput["EPOSRest_BDTG_EPOSRestTrained"].training_sample = "EPOSRest"; // correspond to sSample
     mTMVAOutput["EPOSRest_BDTG_EPOSRestTrained"].app_input_sample = "EPOSRest"; // correspond to sSample
-    mTMVAOutput["EPOSRest_BDTG_EPOSRestTrained"].app_output_file_name = "TMVApp_EPOSRest_BDTG_training_EPOSSD1.root";
+    mTMVAOutput["EPOSRest_BDTG_EPOSRestTrained"].app_output_file_name = "TMVApp_EPOSRest_BDTG_training_EPOSRest.root";
 
 
     mTMVAOutput["XiCutEPOSRest_BDTG_XiCutEPOSRestTrained"].method = "BDTG";

@@ -94,8 +94,8 @@ void Diffractive_TMVApplication()
    reader->AddVariable( "deltazero", &deltazero );
    reader->AddVariable( "etamax" , &etamax );
    reader->AddVariable( "etamin" , &etamin );
-   reader->AddVariable( "log10XixReco" , &log10XixReco );
-   reader->AddVariable( "log10XiyReco" , &log10XiyReco );
+   // reader->AddVariable( "log10XixReco" , &log10XixReco );
+   // reader->AddVariable( "log10XiyReco" , &log10XiyReco );
    reader->AddVariable( "HFminusNtowers" , &HFminusNtowers );
    reader->AddVariable( "HFplusNtowers" , &HFplusNtowers );
    reader->AddVariable( "CastorNtowers" , &CastorNtowers );
@@ -113,7 +113,7 @@ void Diffractive_TMVApplication()
    ////////////////////////////////////////////////////////////////////////////
 
    //Pythia8_BDTG_Pythia8Trained, EPOS_BDTG_Pythia8Trained, Pythia8XiEventselectioncut_BDTG_Pythia8Trained,Data_BDTG_Pythia8Trained 
-   TString sampleName = "Data_BDTG_XiCutEPOSTrained";
+   TString sampleName = "Data_BDTG_XiCutPythia8Trained";
    TString inputSample = mTMVAOuput[sampleName].app_input_sample; 
    TString trainingSample = mTMVAOuput[sampleName].training_sample;
 
@@ -170,6 +170,7 @@ void Diffractive_TMVApplication()
    
       histname = TString("hDisciminant") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,40,-1,1);
+     
 
       histname = TString("Hist_Eta_Min_nodiscriminantcut") + proccesses[iproc];
       mHist[histname] = new TH1F(histname,histname,NbrEtaBins, BinEtaMin, BinEtaMax);
@@ -284,20 +285,20 @@ void Diffractive_TMVApplication()
       /////////////////////////////////////////////////////////////////////////
       // Start Own Code Example
       // I used Fisser method e.g.
-      double discriminant_cut = 0.;
+      double discriminant_cut = 0.15;
       if( discriminant_value < discriminant_cut) {
 
+     
 
 
-
-
+      
          // Reject event
          continue;
       }
 
 
       mHist["hNentries"]->Fill("signal",1);
-
+      
       // Start to fill my histograms with events selected as DoubleDiffractive
       mHist[TString("Hist_Eta_Max") + proccess]->Fill(etamax); 
       mHist[TString("Hist_Eta_Min") + proccess]->Fill(etamin); 
@@ -333,7 +334,7 @@ void Diffractive_TMVApplication()
    // close file
    target->Close();
 
-   std::cout << "--- Created root file: signal DD \"" << target->GetName() << "\" containing the MVA output histograms" << std::endl;
+   // std::cout << "--- Created root file: signal DD \"" << target->GetName() << "\" containing the MVA output histograms" << std::endl;
   
    delete reader;
     
