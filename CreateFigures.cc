@@ -107,18 +107,16 @@ std::map<TString, TH1*> single_figure_compare_mc_data(CanvasHelper& ch,
 
 //////////////////////////////////////////////////////////////////////////
 // plot discriminant value for different proccess
-void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mTMVAOutput,
-                                  std::map<TString, SampleList::sSample>& mSample);
+void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSample,
+                                  std::map<TString, SampleList::sWeightFiles>& mWeightFiles);
 
 
 //////////////////////////////////////////////////////////////////////////
 // find optimal cut value on discriminant distribution
-void discriminant_results(std::map<TString, SampleList::sTMVAOutput>& mTMVAOutput,
-                          std::map<TString, SampleList::sSample>& mSample);
+void discriminant_results(std::map<TString, SampleList::sSample>& mSample);
 
 
-void calc_signal_cross_section(std::map<TString, SampleList::sTMVAOutput>& mTMVAOutput,
-                              std::map<TString, SampleList::sSample>& mSample);
+void calc_signal_cross_section(std::map<TString, SampleList::sSample>& mSample);
 
 //////////////////////////////////////////////////////////////////////////
 // main function
@@ -153,7 +151,7 @@ int main( int argc, char** argv )
   //////////////////////////////////////////////////////////////////////////
   // read data files
   std::map<TString, SampleList::sSample> mSample = SampleList::read_data_mc_files();
-  std::map<TString, SampleList::sTMVAOutput> mTMVAOutput = SampleList::read_TMVAOutput();
+  std::map<TString, SampleList::sWeightFiles> mWeightFiles = SampleList::read_WeightFiles();
   
 
   //////////////////////////////////////////////////////////////////////////
@@ -161,10 +159,10 @@ int main( int argc, char** argv )
   // training_variables_compare_mc_data(mSample);
 
 
-  discriminant_compare_mc_data(mTMVAOutput,mSample);
-  // discriminant_results(mTMVAOutput,mSample);
+  // discriminant_compare_mc_data(mSample,mWeightFiles);
+  // discriminant_results(mSample);
 
-  // calc_signal_cross_section(mTMVAOutput,mSample);
+  calc_signal_cross_section(mSample);
 
   /////////////////////////////////////////////////
   // freeze program
@@ -754,10 +752,10 @@ single_figure_compare_mc_data(CanvasHelper& ch,
 
 
 //////////////////////////////////////////////////////////////////////////
-void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mTMVAOutput,
-                                  std::map<TString, SampleList::sSample>& mSample)
+void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSample,
+                                  std::map<TString, SampleList::sWeightFiles>& mWeightFiles)
 {
-  UNUSED(mSample);
+  UNUSED(mWeightFiles);
 
   std::vector<TString> vSuffix;
   // vSuffix.push_back("_NONE");
@@ -766,18 +764,20 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
+  TString mc_sample_name = "Pythia8";
+  TString data_sample_name = "Data";
 
-  TString hist_name = "hDisciminant";
+  TString training_sample_name = "EPOSSD1";
+  TString training_method = "BDTG";
 
-  TString mc_sample_name = "Pythia8_BDTG_Pythia8Trained";
-  TString data_sample_name = "Data_BDTG_Pythia8Trained";
+  TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
 
   // TString mc_sample_name = "EPOSSD1_BDTG_EPOSSD1Trained";
   // TString data_sample_name = "DataSD1_BDTG_EPOSSD1Trained";
 
   TString data_dir = "data";
-  TFile* mc_file = TFile::Open(data_dir + "/" + mTMVAOutput[mc_sample_name].app_output_file_name);
-  TFile* data_file = TFile::Open(data_dir + "/" + mTMVAOutput[data_sample_name].app_output_file_name);
+  TFile* mc_file = TFile::Open(data_dir + "/" + mSample[mc_sample_name].app_output_file_name);
+  TFile* data_file = TFile::Open(data_dir + "/" + mSample[data_sample_name].app_output_file_name);
 
 
   TLegend * leg = new TLegend(0.5,0.7,0.9,0.9);
@@ -796,7 +796,7 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
 
   /////////////////////////////////////////////////////////////
   // init canvas helper
-  CanvasHelper ch("cDiscriminant" + mc_sample_name);
+  CanvasHelper ch("cDiscriminant" + mc_sample_name + training_method);
   ch.initRatioCanvas(-1,1,
                      // 0,1,
                      5e-3,1e3,
@@ -807,7 +807,7 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
 
   /////////////////////////////////////////////////////////////
   // get lumi for mc sample
-  // double lumi_mc = mSample[mTMVAOutput[mc_sample_name].app_input_sample].lumi;
+  // double lumi_mc = mSample[mc_sample_name].lumi;
   double events_mc = ((TH1F*)mc_file->Get("hNentries"))->GetBinContent(1);
 
   //////////////////////////////////////////////////////////////////////////
@@ -838,7 +838,7 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
 
   //////////////////////////////////////////////////////////////////////////
   // get data lumi
-  // double lumi_data = mSample[mTMVAOutput[data_sample_name].app_input_sample].lumi;
+  // double lumi_data = mSample[data_sample_name].lumi;
   double events_data = ((TH1F*)data_file->Get("hNentries"))->GetBinContent(1);
   // as a hack
   // hData->Sumw2();
@@ -864,11 +864,8 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
 
 
 
-void discriminant_results(std::map<TString, SampleList::sTMVAOutput>& mTMVAOutput,
-                                  std::map<TString, SampleList::sSample>& mSample)
+void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
 {
-
-UNUSED(mSample);
 
   std::vector<TString> vSuffix;
   // vSuffix.push_back("_NONE");
@@ -878,13 +875,17 @@ UNUSED(mSample);
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
-  TString hist_name = "hDisciminant";
+  TString mc_sample_name = "Pythia8";
+  TString data_sample_name = "Data";
 
-  TString mc_sample_name = "Pythia8_BDTG_Pythia8Trained";
-  // TString mc_sample_name = "Pythia8SD1_BDTG_Pythia8TrainedSD1";
+  TString training_sample_name = "Pythia8";
+  TString training_method = "BDTG";
+
+  TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
+
 
   TString data_dir = "data";
-  TFile* mc_file = TFile::Open(data_dir + "/" + mTMVAOutput[mc_sample_name].app_output_file_name);
+  TFile* mc_file = TFile::Open(data_dir + "/" + mSample[mc_sample_name].app_output_file_name);
 
   TH1F* hMC   = (TH1F*)mc_file->Get(hist_name);
 
@@ -1075,8 +1076,7 @@ UNUSED(mSample);
 }  
   
 
-void calc_signal_cross_section(std::map<TString, SampleList::sTMVAOutput>& mTMVAOutput,
-                               std::map<TString, SampleList::sSample>& mSample)
+void calc_signal_cross_section(std::map<TString, SampleList::sSample>& mSample)
 {
   std::vector<TString> vSuffix;
   // vSuffix.push_back("_NONE");
@@ -1086,18 +1086,21 @@ void calc_signal_cross_section(std::map<TString, SampleList::sTMVAOutput>& mTMVA
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
-  TString hist_name = "hDisciminant";
+  TString mc_sample_name = "Pythia8";
+  TString data_sample_name = "Data";
 
-  TString mc_sample_name = "Pythia8_BDTG_Pythia8Trained";
-  TString data_sample_name = "Data_BDTG_Pythia8Trained";
+  TString training_sample_name = "Pythia8";
+  TString training_method = "BDTG";
+
+  TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
 
   //////////////////////////////////////////////////////////////////////////
   // get data lumi
-  double lumi_data = mSample[mTMVAOutput[data_sample_name].app_input_sample].lumi;
+  double lumi_data = mSample[data_sample_name].lumi;
 
   TString data_dir = "data";
-  TFile* mc_file = TFile::Open(data_dir + "/" + mTMVAOutput[mc_sample_name].app_output_file_name);
-  TFile* data_file = TFile::Open(data_dir + "/" + mTMVAOutput[data_sample_name].app_output_file_name);
+  TFile* mc_file = TFile::Open(data_dir + "/" + mSample[mc_sample_name].app_output_file_name);
+  TFile* data_file = TFile::Open(data_dir + "/" + mSample[data_sample_name].app_output_file_name);
 
   // TH1F* hMC   = (TH1F*)mc_file->Get(hist_name);
   TH1F* hData = (TH1F*)data_file->Get(hist_name);

@@ -22,6 +22,8 @@ namespace SampleList {
 
     TString weight_name;
     TString signal;
+
+    TString app_output_file_name;
   };
 
   //////////////////////////////////////////////////////////////////////////
@@ -36,6 +38,7 @@ namespace SampleList {
     sPythia8DD.tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
     sPythia8DD.weight_name = "Pythia8_DD_weights";
     sPythia8DD.signal = "DD";
+    sPythia8DD.app_output_file_name = "TMVApp_Pythia8.root";
     htmp = (TH1F*)sPythia8DD.file->Get(sPythia8DD.tree_name + "/hNentries");
     sPythia8DD.lumi = htmp->GetBinContent(1)/sPythia8DD.xs;
 
@@ -84,6 +87,7 @@ namespace SampleList {
     sData.tree_name = "data_ZeroBias1_CASTOR";
     sData.weight_name = "";
     sData.signal = "";
+    sData.app_output_file_name = "TMVApp_Data.root";
 
 
 
@@ -189,7 +193,7 @@ namespace SampleList {
     sXicutEPOsSD2.lumi = htmp->GetBinContent(1)/sXicutEPOsSD2.xs;
     
   
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
      //////////////////////////REST//////////////////////////////////
 
@@ -242,7 +246,7 @@ namespace SampleList {
     sXicutEPOsRest.lumi = htmp->GetBinContent(1)/sXicutEPOsRest.xs;
     
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     std::map<TString, sSample> mSample;
 
@@ -277,277 +281,311 @@ namespace SampleList {
 
 
 
-  struct sTMVAOutput
+  //////////////////////////////////////////////////////////////////////////
+  struct sWeightFiles
   {
-    TString method;
-
+    std::vector<TString> vMethod;
     TString training_sample;
-    TString app_input_sample;
-    TString app_output_file_name;
   };
 
+  std::map<TString, sWeightFiles> read_WeightFiles() {
+    std::map<TString, sWeightFiles> mWeightFiles;
 
-  //////////////////////////////////////////////////////////////////////////
-  std::map<TString, sTMVAOutput> read_TMVAOutput() {
-    std::map<TString, sTMVAOutput> mTMVAOutput;
+    mWeightFiles["Pythia8"].vMethod.push_back("BDTG");
+    mWeightFiles["Pythia8"].training_sample = "Pythia8"; // correspond to sSample
 
-    //////////////////////////////////////////////////////////////////////////
-    
-   // Monte Carlo
- 
-    ////////////////////// SD1////////////////////////////////////////////////////
+    mWeightFiles["Pythia8SD1"].vMethod.push_back("BDTG");
+    // mWeightFiles["Pythia8SD1"].vMethod.push_back("Fisher");
+    mWeightFiles["Pythia8SD1"].training_sample = "Pythia8SD1"; // correspond to sSample
 
-    mTMVAOutput["Pythia8SD1_BDTG_Pythia8TrainedSD1"].method = "BDTG";
-    mTMVAOutput["Pythia8SD1_BDTG_Pythia8TrainedSD1"].training_sample = "Pythia8SD1"; // correspond to sSample
-    mTMVAOutput["Pythia8SD1_BDTG_Pythia8TrainedSD1"].app_input_sample = "Pythia8SD1"; // correspond to sSample
-    mTMVAOutput["Pythia8SD1_BDTG_Pythia8TrainedSD1"].app_output_file_name = "TMVApp_Pythia8SD1_BDTG_training_Pythia8SD1.root";
+    mWeightFiles["EPOSSD1"].vMethod.push_back("BDTG");
+    mWeightFiles["EPOSSD1"].training_sample = "EPOSSD1"; // correspond to sSample
 
-    mTMVAOutput["EPOSSD1_BDTG_EPOSSD1Trained"].method = "BDTG";
-    mTMVAOutput["EPOSSD1_BDTG_EPOSSD1Trained"].training_sample = "EPOSSD1"; // correspond to sSample
-    mTMVAOutput["EPOSSD1_BDTG_EPOSSD1Trained"].app_input_sample = "EPOSSD1"; // correspond to sSample
-    mTMVAOutput["EPOSSD1_BDTG_EPOSSD1Trained"].app_output_file_name = "TMVApp_EPOSSD1_BDTG_training_EPOSSD1.root";
-
-
-    mTMVAOutput["XiCutEPOSSD1_BDTG_XiCutEPOSSD1Trained"].method = "BDTG";
-    mTMVAOutput["XiCutEPOSSD1_BDTG_XiCutEPOSSD1Trained"].training_sample = "XiCutEPOSSD1"; // correspond to sSample
-    mTMVAOutput["XiCutEPOSSD1_BDTG_XiCutEPOSSD1Trained"].app_input_sample = "XiCutEPOSSD1"; // correspond to sSample
-    mTMVAOutput["XiCutEPOSSD1_BDTG_XiCutEPOSSD1Trained"].app_output_file_name = "TMVApp_XiCutEPOSSD1_BDTG_training_XiCutEPOSSD1.root";
-
-    mTMVAOutput["XiCutPythia8SD1_BDTG_XiCutPythia8SD1Trained"].method = "BDTG";
-    mTMVAOutput["XiCutPythia8SD1_BDTG_XiCutPythia8SD1Trained"].training_sample = "XiCutPythia8SD1"; // correspond to sSample
-    mTMVAOutput["XiCutPythia8SD1_BDTG_XiCutPythia8SD1Trained"].app_input_sample = "XiCutPythia8SD1"; // correspond to sSample
-    mTMVAOutput["XiCutPythia8SD1_BDTG_XiCutPythia8SD1Trained"].app_output_file_name = "TMVApp_XiCutPythia8SD1_BDTG_training_XiCutPythia8SD1.root";
-
-
-    mTMVAOutput["DataSD1_BDTG_Pythia8SD1Trained"].method = "BDTG";
-    mTMVAOutput["DataSD1_BDTG_Pythia8SD1Trained"].training_sample = "Pythia8SD1"; // correspond to sSample
-    mTMVAOutput["DataSD1_BDTG_Pythia8SD1Trained"].app_input_sample = "Data"; // correspond to sSample
-    mTMVAOutput["DataSD1_BDTG_Pythia8SD1Trained"].app_output_file_name = "TMVApp_DataSD1_BDTG_Pythia8SD1Trained.root";
-
-    mTMVAOutput["DataSD1_BDTG_EPOSSD1Trained"].method = "BDTG";
-    mTMVAOutput["DataSD1_BDTG_EPOSSD1Trained"].training_sample = "EPOSSD1"; // correspond to sSample
-    mTMVAOutput["DataSD1_BDTG_EPOSSD1Trained"].app_input_sample = "Data"; // correspond to sSample
-    mTMVAOutput["DataSD1_BDTG_EPOSSD1Trained"].app_output_file_name = "TMVApp_DataSD1_BDTG_EPOSSD1Trained.root";
-
-    mTMVAOutput["DataSD1_BDTG_XiCutEPOSSD1Trained"].method = "BDTG";
-    mTMVAOutput["DataSD1_BDTG_XiCutEPOSSD1Trained"].training_sample = "XiCutEPOSSD1"; // correspond to sSample
-    mTMVAOutput["DataSD1_BDTG_XiCutEPOSSD1Trained"].app_input_sample = "Data"; // correspond to sSample
-    mTMVAOutput["DataSD1_BDTG_XiCutEPOSSD1Trained"].app_output_file_name = "TMVApp_DataSD1_BDTG_XiCutEPOSSD1Trained.root";
-  
-    mTMVAOutput["DataSD1_BDTG_XiCutPythia8SD1Trained"].method = "BDTG";
-    mTMVAOutput["DataSD1_BDTG_XiCutPythia8SD1Trained"].training_sample = "XiCutPythia8SD1"; // correspond to sSample
-    mTMVAOutput["DataSD1_BDTG_XiCutPythia8SD1Trained"].app_input_sample = "Data"; // correspond to sSample
-    mTMVAOutput["DataSD1_BDTG_XiCutPythia8SD1Trained"].app_output_file_name = "TMVApp_DataSD1_BDTG_XiCutPythia8SD1Trained.root";
-
-
-
-     ////////////////////// SD2////////////////////////////////////////////////////
-
-    mTMVAOutput["Pythia8SD2_BDTG_Pythia8TrainedSD2"].method = "BDTG";
-    mTMVAOutput["Pythia8SD2_BDTG_Pythia8TrainedSD2"].training_sample = "Pythia8SD2"; // correspond to sSample
-    mTMVAOutput["Pythia8SD2_BDTG_Pythia8TrainedSD2"].app_input_sample = "Pythia8SD2"; // correspond to sSample
-    mTMVAOutput["Pythia8SD2_BDTG_Pythia8TrainedSD2"].app_output_file_name = "TMVApp_Pythia8SD2_BDTG_training_Pythia8SD2.root";
-
-    mTMVAOutput["EPOSSD2_BDTG_EPOSSD2Trained"].method = "BDTG";
-    mTMVAOutput["EPOSSD2_BDTG_EPOSSD2Trained"].training_sample = "EPOSSD2"; // correspond to sSample
-    mTMVAOutput["EPOSSD2_BDTG_EPOSSD2Trained"].app_input_sample = "EPOSSD2"; // correspond to sSample
-    mTMVAOutput["EPOSSD2_BDTG_EPOSSD2Trained"].app_output_file_name = "TMVApp_EPOSSD2_BDTG_training_EPOSSD1.root";
-
-
-    mTMVAOutput["XiCutEPOSSD2_BDTG_XiCutEPOSSD2Trained"].method = "BDTG";
-    mTMVAOutput["XiCutEPOSSD2_BDTG_XiCutEPOSSD2Trained"].training_sample = "XiCutEPOSSD2"; // correspond to sSample
-    mTMVAOutput["XiCutEPOSSD2_BDTG_XiCutEPOSSD2Trained"].app_input_sample = "XiCutEPOSSD2"; // correspond to sSample
-    mTMVAOutput["XiCutEPOSSD2_BDTG_XiCutEPOSSD2Trained"].app_output_file_name = "TMVApp_XiCutEPOSSD2_BDTG_training_XiCutEPOSSD2.root";
-
-    mTMVAOutput["XiCutPythia8SD2_BDTG_XiCutPythia8SD2Trained"].method = "BDTG";
-    mTMVAOutput["XiCutPythia8SD2_BDTG_XiCutPythia8SD2Trained"].training_sample = "XiCutPythia8SD2"; // correspond to sSample
-    mTMVAOutput["XiCutPythia8SD2_BDTG_XiCutPythia8SD2Trained"].app_input_sample = "XiCutPythia8SD2"; // correspond to sSample
-    mTMVAOutput["XiCutPythia8SD2_BDTG_XiCutPythia8SD2Trained"].app_output_file_name = "TMVApp_XiCutPythia8SD2_BDTG_training_XiCutPythia8SD2.root";
-
-
-    mTMVAOutput["DataSD2_BDTG_Pythia8SD2Trained"].method = "BDTG";
-    mTMVAOutput["DataSD2_BDTG_Pythia8SD2Trained"].training_sample = "Pythia8SD2"; // correspond to sSample
-    mTMVAOutput["DataSD2_BDTG_Pythia8SD2Trained"].app_input_sample = "Data"; // correspond to sSample
-    mTMVAOutput["DataSD2_BDTG_Pythia8SD2Trained"].app_output_file_name = "TMVApp_DataSD2_BDTG_Pythia8SD2Trained.root";
-
-    mTMVAOutput["DataSD2_BDTG_EPOSSD2Trained"].method = "BDTG";
-    mTMVAOutput["DataSD2_BDTG_EPOSSD2Trained"].training_sample = "EPOSSD2"; // correspond to sSample
-    mTMVAOutput["DataSD2_BDTG_EPOSSD2Trained"].app_input_sample = "Data"; // correspond to sSample
-    mTMVAOutput["DataSD2_BDTG_EPOSSD2Trained"].app_output_file_name = "TMVApp_DataSD2_BDTG_EPOSSD2Trained.root";
-
-    mTMVAOutput["DataSD2_BDTG_XiCutEPOSSD2Trained"].method = "BDTG";
-    mTMVAOutput["DataSD2_BDTG_XiCutEPOSSD2Trained"].training_sample = "XiCutEPOSSD2"; // correspond to sSample
-    mTMVAOutput["DataSD2_BDTG_XiCutEPOSSD2Trained"].app_input_sample = "Data"; // correspond to sSample
-    mTMVAOutput["DataSD2_BDTG_XiCutEPOSSD2Trained"].app_output_file_name = "TMVApp_DataSD2_BDTG_XiCutEPOSSD2Trained.root";
-  
-
-    mTMVAOutput["DataSD2_BDTG_XiCutPythia8SD2Trained"].method = "BDTG";
-    mTMVAOutput["DataSD2_BDTG_XiCutPythia8SD2Trained"].training_sample = "XiCutPythia8SD2"; // correspond to sSample
-    mTMVAOutput["DataSD2_BDTG_XiCutPythia8SD2Trained"].app_input_sample = "Data"; // correspond to sSample
-    mTMVAOutput["DataSD2_BDTG_XiCutPythia8SD2Trained"].app_output_file_name = "TMVApp_DataSD2_BDTG_XiCutPythia8SD1Trained.root";
-
-      ////////////////////// REST////////////////////////////////////////////////////
-
-    mTMVAOutput["Pythia8Rest_BDTG_Pythia8TrainedRest"].method = "BDTG";
-    mTMVAOutput["Pythia8Rest_BDTG_Pythia8TrainedRest"].training_sample = "Pythia8Rest"; // correspond to sSample
-    mTMVAOutput["Pythia8Rest_BDTG_Pythia8TrainedRest"].app_input_sample = "Pythia8Rest"; // correspond to sSample
-    mTMVAOutput["Pythia8Rest_BDTG_Pythia8TrainedRest"].app_output_file_name = "TMVApp_Pythia8Rest_BDTG_training_Pythia8Rest.root";
-
-    mTMVAOutput["EPOSRest_BDTG_EPOSRestTrained"].method = "BDTG";
-    mTMVAOutput["EPOSRest_BDTG_EPOSRestTrained"].training_sample = "EPOSRest"; // correspond to sSample
-    mTMVAOutput["EPOSRest_BDTG_EPOSRestTrained"].app_input_sample = "EPOSRest"; // correspond to sSample
-    mTMVAOutput["EPOSRest_BDTG_EPOSRestTrained"].app_output_file_name = "TMVApp_EPOSRest_BDTG_training_EPOSRest.root";
-
-
-    mTMVAOutput["XiCutEPOSRest_BDTG_XiCutEPOSRestTrained"].method = "BDTG";
-    mTMVAOutput["XiCutEPOSRest_BDTG_XiCutEPOSRestTrained"].training_sample = "XiCutEPOSRest"; // correspond to sSample
-    mTMVAOutput["XiCutEPOSRest_BDTG_XiCutEPOSRestTrained"].app_input_sample = "XiCutEPOSRest"; // correspond to sSample
-    mTMVAOutput["XiCutEPOSRest_BDTG_XiCutEPOSRestTrained"].app_output_file_name = "TMVApp_XiCutEPOSRest_BDTG_training_XiCutEPOSRest.root";
-
-    mTMVAOutput["XiCutPythia8Rest_BDTG_XiCutPythia8RestTrained"].method = "BDTG";
-    mTMVAOutput["XiCutPythia8Rest_BDTG_XiCutPythia8RestTrained"].training_sample = "XiCutPythia8Rest"; // correspond to sSample
-    mTMVAOutput["XiCutPythia8Rest_BDTG_XiCutPythia8RestTrained"].app_input_sample = "XiCutPythia8Rest"; // correspond to sSample
-    mTMVAOutput["XiCutPythia8Rest_BDTG_XiCutPythia8RestTrained"].app_output_file_name = "TMVApp_XiCutPythia8Rest_BDTG_training_XiCutPythia8Rest.root";
-
-
-    mTMVAOutput["DataRest_BDTG_Pythia8RestTrained"].method = "BDTG";
-    mTMVAOutput["DataRest_BDTG_Pythia8RestTrained"].training_sample = "Pythia8Rest"; // correspond to sSample
-    mTMVAOutput["DataRest_BDTG_Pythia8RestTrained"].app_input_sample = "Data"; // correspond to sSample
-    mTMVAOutput["DataRest_BDTG_Pythia8RestTrained"].app_output_file_name = "TMVApp_DataRest_BDTG_Pythia8RestTrained.root";
-
-    mTMVAOutput["DataRest_BDTG_EPOSRestTrained"].method = "BDTG";
-    mTMVAOutput["DataRest_BDTG_EPOSRestTrained"].training_sample = "EPOSRest"; // correspond to sSample
-    mTMVAOutput["DataRest_BDTG_EPOSRestTrained"].app_input_sample = "Data"; // correspond to sSample
-    mTMVAOutput["DataRest_BDTG_EPOSRestTrained"].app_output_file_name = "TMVApp_DataRest_BDTG_EPOSRestTrained.root";
-
-    mTMVAOutput["DataRest_BDTG_XiCutEPOSRestTrained"].method = "BDTG";
-    mTMVAOutput["DataRest_BDTG_XiCutEPOSRestTrained"].training_sample = "XiCutEPOSRest"; // correspond to sSample
-    mTMVAOutput["DataRest_BDTG_XiCutEPOSRestTrained"].app_input_sample = "Data"; // correspond to sSample
-    mTMVAOutput["DataRest_BDTG_XiCutEPOSRestTrained"].app_output_file_name = "TMVApp_DataRest_BDTG_XiCutEPOSRestTrained.root";
-  
-
-    mTMVAOutput["DataRest_BDTG_XiCutPythia8RestTrained"].method = "BDTG";
-    mTMVAOutput["DataRest_BDTG_XiCutPythia8RestTrained"].training_sample = "XiCutPythia8Rest"; // correspond to sSample
-    mTMVAOutput["DataRest_BDTG_XiCutPythia8RestTrained"].app_input_sample = "Data"; // correspond to sSample
-    mTMVAOutput["DataRest_BDTG_XiCutPythia8RestTrained"].app_output_file_name = "TMVApp_DataRest_BDTG_XiCutPythia8SD1Trained.root";
-
-
-
-
-
-    //////////////////////////DD////////////////////////////////////////////////
-    mTMVAOutput["Pythia8_BDTG_Pythia8Trained"].method = "BDTG";
-    mTMVAOutput["Pythia8_BDTG_Pythia8Trained"].training_sample = "Pythia8"; // correspond to sSample
-    mTMVAOutput["Pythia8_BDTG_Pythia8Trained"].app_input_sample = "Pythia8"; // correspond to sSample
-    mTMVAOutput["Pythia8_BDTG_Pythia8Trained"].app_output_file_name = "TMVApp_Pythia8_BDTG_training_Pythia8.root";
-   
-    mTMVAOutput["EPOS_BDTG_Pythia8Trained"].method = "BDTG";
-    mTMVAOutput["EPOS_BDTG_Pythia8Trained"].training_sample = "Pythia8"; // correspond to sSample
-    mTMVAOutput["EPOS_BDTG_Pythia8Trained"].app_input_sample = "EPOS"; // correspond to sSample
-    mTMVAOutput["EPOS_BDTG_Pythia8Trained"].app_output_file_name = "TMVApp_EPOS_BDTG_Pythia8Trained.root";
-
-    mTMVAOutput["XiCutPythia8_BDTG_Pythia8Trained"].method = "BDTG";
-    mTMVAOutput["XiCutPythia8_BDTG_Pythia8Trained"].training_sample = "Pythia8"; // correspond to sSample
-    mTMVAOutput["XiCutPythia8_BDTG_Pythia8Trained"].app_input_sample = "XiCutPythia8"; // correspond to sSample
-    mTMVAOutput["XiCutPythia8_BDTG_Pythia8Trained"].app_output_file_name = "TMVApp_XiCutPythia8Trained_BDTG_Pythia8Trained.root";
-
-    mTMVAOutput["EPOS_BDTG_EPOSTrained"].method = "BDTG";
-    mTMVAOutput["EPOS_BDTG_EPOSTrained"].training_sample = "EPOS"; // correspond to sSample
-    mTMVAOutput["EPOS_BDTG_EPOSTrained"].app_input_sample = "EPOS"; // correspond to sSample
-    mTMVAOutput["EPOS_BDTG_EPOSTrained"].app_output_file_name = "TMVApp_EPOS_BDTG_training_EPOS.root";
-
-    mTMVAOutput["XiCutEPOS_BDTG_EPOSTrained"].method = "BDTG";
-    mTMVAOutput["XiCutEPOS_BDTG_EPOSTrained"].training_sample = "EPOS"; // correspond to sSample
-    mTMVAOutput["XiCutEPOS_BDTG_EPOSTrained"].app_input_sample = "XiCutEPOS"; // correspond to sSample
-    mTMVAOutput["XiCutEPOS_BDTG_EPOSTrained"].app_output_file_name = "TMVApp_XiCutEPOS_BDTG_training_EPOS.root";
-
-
-
-    mTMVAOutput["Pythia8_BDTG_EPOSTrained"].method = "BDTG";
-    mTMVAOutput["Pythia8_BDTG_EPOSTrained"].training_sample = "EPOS"; // correspond to sSample
-    mTMVAOutput["Pythia8_BDTG_EPOSTrained"].app_input_sample = "Pythia8"; // correspond to sSample
-    mTMVAOutput["Pythia8_BDTG_EPOSTrained"].app_output_file_name = "TMVApp_Pythia8_BDTG_training_EPOS.root";
-    
-    mTMVAOutput["XiCutPythia8_BDTG_EPOSTrained"].method = "BDTG";
-    mTMVAOutput["XiCutPythia8_BDTG_EPOSTrained"].training_sample = "EPOS"; // correspond to sSample
-    mTMVAOutput["XiCutPythia8_BDTG_EPOSTrained"].app_input_sample = "XiCutPythia8"; // correspond to sSample
-    mTMVAOutput["XiCutPythia8_BDTG_EPOSTrained"].app_output_file_name = "TMVApp_XiCutPythia8_BDTG_training_EPOS.root";
-
-   /////////////////////XiCutEPOS//////////////////////////////////////////////////////////////////////////
-    mTMVAOutput["XiCutEPOS_BDTG_XiCutEPOSTrained"].method = "BDTG";
-    mTMVAOutput["XiCutEPOS_BDTG_XiCutEPOSTrained"].training_sample = "XiCutEPOS"; // correspond to sSample
-    mTMVAOutput["XiCutEPOS_BDTG_XiCutEPOSTrained"].app_input_sample = "XiCutEPOS"; // correspond to sSample
-    mTMVAOutput["XiCutEPOS_BDTG_XiCutEPOSTrained"].app_output_file_name = "TMVApp_XiCutEPOS_BDTG_training_XiCutEPOS.root";
-
-    mTMVAOutput["EPOS_BDTG_XiCutEPOSTrained"].method = "BDTG";
-    mTMVAOutput["EPOS_BDTG_XiCutEPOSTrained"].training_sample = "XiCutEPOS"; // correspond to sSample
-    mTMVAOutput["EPOS_BDTG_XiCutEPOSTrained"].app_input_sample = "EPOS"; // correspond to sSample
-    mTMVAOutput["EPOS_BDTG_XiCutEPOSTrained"].app_output_file_name = "TMVApp_EPOS_BDTG_training_XiCutEPOS.root";
-
-    mTMVAOutput["Pythia8_BDTG_XiCutEPOSTrained"].method = "BDTG";
-    mTMVAOutput["Pythia8_BDTG_XiCutEPOSTrained"].training_sample = "XiCutEPOS"; // correspond to sSample
-    mTMVAOutput["Pythia8_BDTG_XiCutEPOSTrained"].app_input_sample = "Pythia8"; // correspond to sSample
-    mTMVAOutput["Pythia8_BDTG_XiCutEPOSTrained"].app_output_file_name = "TMVApp_Pythia8_BDTG_training_XiCutEPOS.root";
-    
-    mTMVAOutput["XiCutPythia8_BDTG_XiCutEPOSTrained"].method = "BDTG";
-    mTMVAOutput["XiCutPythia8_BDTG_XiCutEPOSTrained"].training_sample = "XiCutEPOS"; // correspond to sSample
-    mTMVAOutput["XiCutPythia8_BDTG_XiCutEPOSTrained"].app_input_sample = "XiCutPythia8"; // correspond to sSample
-    mTMVAOutput["XiCutPythia8_BDTG_XiCutEPOSTrained"].app_output_file_name = "TMVApp_XiCutPythia8_BDTG_training_XiCutEPOS.root";
-
-
-
-
-   
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-    mTMVAOutput["EPOS_BDTG_XiCutPythia8Trained"].method = "BDTG";
-    mTMVAOutput["EPOS_BDTG_XiCutPythia8Trained"].training_sample = "XiCutPythia8"; // correspond to sSample
-    mTMVAOutput["EPOS_BDTG_XiCutPythia8Trained"].app_input_sample = "EPOS"; // correspond to sSample
-    mTMVAOutput["EPOS_BDTG_XiCutPythia8Trained"].app_output_file_name = "TMVApp_EPOS_BDTG_training_XiCutPythia8.root";
-
-    mTMVAOutput["Pythia8_BDTG_XiCutPythia8Trained"].method = "BDTG";
-    mTMVAOutput["Pythia8_BDTG_XiCutPythia8Trained"].training_sample = "XiCutPythia8"; // correspond to sSample
-    mTMVAOutput["Pythia8_BDTG_XiCutPythia8Trained"].app_input_sample = "Pythia8"; // correspond to sSample
-    mTMVAOutput["Pythia8_BDTG_XiCutPythia8Trained"].app_output_file_name = "TMVApp_Pythia8_BDTG_training_XiCutPythia8.root";
-    
-    mTMVAOutput["XiCutPythia8_BDTG_XiCutPythia8Trained"].method = "BDTG";
-    mTMVAOutput["XiCutPythia8_BDTG_XiCutPythia8Trained"].training_sample = "XiCutPythia8"; // correspond to sSample
-    mTMVAOutput["XiCutPythia8_BDTG_XiCutPythia8Trained"].app_input_sample = "XiCutPythia8"; // correspond to sSample
-    mTMVAOutput["XiCutPythia8_BDTG_XiCutPythia8Trained"].app_output_file_name = "TMVApp_XiCutPythia8_BDTG_training_XiCutPythia8.root";
-
-
-
-
-
-    //////////////////////////////////////////////////////////////////////////
-    // Data
-    mTMVAOutput["Data_BDTG_Pythia8Trained"].method = "BDTG";
-    mTMVAOutput["Data_BDTG_Pythia8Trained"].training_sample = "Pythia8"; // correspond to sSample
-    mTMVAOutput["Data_BDTG_Pythia8Trained"].app_input_sample = "Data"; // correspond to sSample
-    mTMVAOutput["Data_BDTG_Pythia8Trained"].app_output_file_name = "TMVApp_Data_BDTG_Pythia8Trained.root";
-
-    mTMVAOutput["Data_BDTG_EPOSTrained"].method = "BDTG";
-    mTMVAOutput["Data_BDTG_EPOSTrained"].training_sample = "EPOS"; // correspond to sSample
-    mTMVAOutput["Data_BDTG_EPOSTrained"].app_input_sample = "Data"; // correspond to sSample
-    mTMVAOutput["Data_BDTG_EPOSTrained"].app_output_file_name = "TMVApp_Data_BDTG_EPOSTrained.root";
-
-    mTMVAOutput["Data_BDTG_XiCutEPOSTrained"].method = "BDTG";
-    mTMVAOutput["Data_BDTG_XiCutEPOSTrained"].training_sample = "XiCutEPOS"; // correspond to sSample
-    mTMVAOutput["Data_BDTG_XiCutEPOSTrained"].app_input_sample = "Data"; // correspond to sSample
-    mTMVAOutput["Data_BDTG_XiCutEPOSTrained"].app_output_file_name = "TMVApp_Data_BDTG_XiCutEPOSTrained.root";
-  
-
-
-    mTMVAOutput["Data_BDTG_XiCutPythia8Trained"].method = "BDTG";
-    mTMVAOutput["Data_BDTG_XiCutPythia8Trained"].training_sample = "XiCutPythia8"; // correspond to sSample
-    mTMVAOutput["Data_BDTG_XiCutPythia8Trained"].app_input_sample = "Data"; // correspond to sSample
-    mTMVAOutput["Data_BDTG_XiCutPythia8Trained"].app_output_file_name = "TMVApp_Data_BDTG_XiCutPythia8Trained.root";
-
-
-
-
-    return mTMVAOutput;
+    return mWeightFiles;
   }
-  //////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+//   struct sTMVAOutput
+//   {
+//     TString method;
+
+//     TString training_sample;
+//     TString app_input_sample;
+//     TString app_output_file_name;
+//   };
+
+
+//   //////////////////////////////////////////////////////////////////////////
+//   std::map<TString, sTMVAOutput> read_TMVAOutput() {
+//     std::map<TString, sTMVAOutput> mTMVAOutput;
+
+//     //////////////////////////////////////////////////////////////////////////
+    
+//    // Monte Carlo
+ 
+//     ////////////////////// SD1////////////////////////////////////////////////////
+
+//     mTMVAOutput["Pythia8SD1_BDTG_Pythia8TrainedSD1"].method = "BDTG";
+//     mTMVAOutput["Pythia8SD1_BDTG_Pythia8TrainedSD1"].training_sample = "Pythia8SD1"; // correspond to sSample
+//     mTMVAOutput["Pythia8SD1_BDTG_Pythia8TrainedSD1"].app_input_sample = "Pythia8SD1"; // correspond to sSample
+//     mTMVAOutput["Pythia8SD1_BDTG_Pythia8TrainedSD1"].app_output_file_name = "TMVApp_Pythia8SD1_BDTG_training_Pythia8SD1.root";
+
+//     mTMVAOutput["EPOSSD1_BDTG_EPOSSD1Trained"].method = "BDTG";
+//     mTMVAOutput["EPOSSD1_BDTG_EPOSSD1Trained"].training_sample = "EPOSSD1"; // correspond to sSample
+//     mTMVAOutput["EPOSSD1_BDTG_EPOSSD1Trained"].app_input_sample = "EPOSSD1"; // correspond to sSample
+//     mTMVAOutput["EPOSSD1_BDTG_EPOSSD1Trained"].app_output_file_name = "TMVApp_EPOSSD1_BDTG_training_EPOSSD1.root";
+
+
+//     mTMVAOutput["XiCutEPOSSD1_BDTG_XiCutEPOSSD1Trained"].method = "BDTG";
+//     mTMVAOutput["XiCutEPOSSD1_BDTG_XiCutEPOSSD1Trained"].training_sample = "XiCutEPOSSD1"; // correspond to sSample
+//     mTMVAOutput["XiCutEPOSSD1_BDTG_XiCutEPOSSD1Trained"].app_input_sample = "XiCutEPOSSD1"; // correspond to sSample
+//     mTMVAOutput["XiCutEPOSSD1_BDTG_XiCutEPOSSD1Trained"].app_output_file_name = "TMVApp_XiCutEPOSSD1_BDTG_training_XiCutEPOSSD1.root";
+
+//     mTMVAOutput["XiCutPythia8SD1_BDTG_XiCutPythia8SD1Trained"].method = "BDTG";
+//     mTMVAOutput["XiCutPythia8SD1_BDTG_XiCutPythia8SD1Trained"].training_sample = "XiCutPythia8SD1"; // correspond to sSample
+//     mTMVAOutput["XiCutPythia8SD1_BDTG_XiCutPythia8SD1Trained"].app_input_sample = "XiCutPythia8SD1"; // correspond to sSample
+//     mTMVAOutput["XiCutPythia8SD1_BDTG_XiCutPythia8SD1Trained"].app_output_file_name = "TMVApp_XiCutPythia8SD1_BDTG_training_XiCutPythia8SD1.root";
+
+
+//     mTMVAOutput["DataSD1_BDTG_Pythia8SD1Trained"].method = "BDTG";
+//     mTMVAOutput["DataSD1_BDTG_Pythia8SD1Trained"].training_sample = "Pythia8SD1"; // correspond to sSample
+//     mTMVAOutput["DataSD1_BDTG_Pythia8SD1Trained"].app_input_sample = "Data"; // correspond to sSample
+//     mTMVAOutput["DataSD1_BDTG_Pythia8SD1Trained"].app_output_file_name = "TMVApp_DataSD1_BDTG_Pythia8SD1Trained.root";
+
+//     mTMVAOutput["DataSD1_BDTG_EPOSSD1Trained"].method = "BDTG";
+//     mTMVAOutput["DataSD1_BDTG_EPOSSD1Trained"].training_sample = "EPOSSD1"; // correspond to sSample
+//     mTMVAOutput["DataSD1_BDTG_EPOSSD1Trained"].app_input_sample = "Data"; // correspond to sSample
+//     mTMVAOutput["DataSD1_BDTG_EPOSSD1Trained"].app_output_file_name = "TMVApp_DataSD1_BDTG_EPOSSD1Trained.root";
+
+//     mTMVAOutput["DataSD1_BDTG_XiCutEPOSSD1Trained"].method = "BDTG";
+//     mTMVAOutput["DataSD1_BDTG_XiCutEPOSSD1Trained"].training_sample = "XiCutEPOSSD1"; // correspond to sSample
+//     mTMVAOutput["DataSD1_BDTG_XiCutEPOSSD1Trained"].app_input_sample = "Data"; // correspond to sSample
+//     mTMVAOutput["DataSD1_BDTG_XiCutEPOSSD1Trained"].app_output_file_name = "TMVApp_DataSD1_BDTG_XiCutEPOSSD1Trained.root";
+  
+//     mTMVAOutput["DataSD1_BDTG_XiCutPythia8SD1Trained"].method = "BDTG";
+//     mTMVAOutput["DataSD1_BDTG_XiCutPythia8SD1Trained"].training_sample = "XiCutPythia8SD1"; // correspond to sSample
+//     mTMVAOutput["DataSD1_BDTG_XiCutPythia8SD1Trained"].app_input_sample = "Data"; // correspond to sSample
+//     mTMVAOutput["DataSD1_BDTG_XiCutPythia8SD1Trained"].app_output_file_name = "TMVApp_DataSD1_BDTG_XiCutPythia8SD1Trained.root";
+
+
+
+//      ////////////////////// SD2////////////////////////////////////////////////////
+
+//     mTMVAOutput["Pythia8SD2_BDTG_Pythia8TrainedSD2"].method = "BDTG";
+//     mTMVAOutput["Pythia8SD2_BDTG_Pythia8TrainedSD2"].training_sample = "Pythia8SD2"; // correspond to sSample
+//     mTMVAOutput["Pythia8SD2_BDTG_Pythia8TrainedSD2"].app_input_sample = "Pythia8SD2"; // correspond to sSample
+//     mTMVAOutput["Pythia8SD2_BDTG_Pythia8TrainedSD2"].app_output_file_name = "TMVApp_Pythia8SD2_BDTG_training_Pythia8SD2.root";
+
+//     mTMVAOutput["EPOSSD2_BDTG_EPOSSD2Trained"].method = "BDTG";
+//     mTMVAOutput["EPOSSD2_BDTG_EPOSSD2Trained"].training_sample = "EPOSSD2"; // correspond to sSample
+//     mTMVAOutput["EPOSSD2_BDTG_EPOSSD2Trained"].app_input_sample = "EPOSSD2"; // correspond to sSample
+//     mTMVAOutput["EPOSSD2_BDTG_EPOSSD2Trained"].app_output_file_name = "TMVApp_EPOSSD2_BDTG_training_EPOSSD1.root";
+
+
+//     mTMVAOutput["XiCutEPOSSD2_BDTG_XiCutEPOSSD2Trained"].method = "BDTG";
+//     mTMVAOutput["XiCutEPOSSD2_BDTG_XiCutEPOSSD2Trained"].training_sample = "XiCutEPOSSD2"; // correspond to sSample
+//     mTMVAOutput["XiCutEPOSSD2_BDTG_XiCutEPOSSD2Trained"].app_input_sample = "XiCutEPOSSD2"; // correspond to sSample
+//     mTMVAOutput["XiCutEPOSSD2_BDTG_XiCutEPOSSD2Trained"].app_output_file_name = "TMVApp_XiCutEPOSSD2_BDTG_training_XiCutEPOSSD2.root";
+
+//     mTMVAOutput["XiCutPythia8SD2_BDTG_XiCutPythia8SD2Trained"].method = "BDTG";
+//     mTMVAOutput["XiCutPythia8SD2_BDTG_XiCutPythia8SD2Trained"].training_sample = "XiCutPythia8SD2"; // correspond to sSample
+//     mTMVAOutput["XiCutPythia8SD2_BDTG_XiCutPythia8SD2Trained"].app_input_sample = "XiCutPythia8SD2"; // correspond to sSample
+//     mTMVAOutput["XiCutPythia8SD2_BDTG_XiCutPythia8SD2Trained"].app_output_file_name = "TMVApp_XiCutPythia8SD2_BDTG_training_XiCutPythia8SD2.root";
+
+
+//     mTMVAOutput["DataSD2_BDTG_Pythia8SD2Trained"].method = "BDTG";
+//     mTMVAOutput["DataSD2_BDTG_Pythia8SD2Trained"].training_sample = "Pythia8SD2"; // correspond to sSample
+//     mTMVAOutput["DataSD2_BDTG_Pythia8SD2Trained"].app_input_sample = "Data"; // correspond to sSample
+//     mTMVAOutput["DataSD2_BDTG_Pythia8SD2Trained"].app_output_file_name = "TMVApp_DataSD2_BDTG_Pythia8SD2Trained.root";
+
+//     mTMVAOutput["DataSD2_BDTG_EPOSSD2Trained"].method = "BDTG";
+//     mTMVAOutput["DataSD2_BDTG_EPOSSD2Trained"].training_sample = "EPOSSD2"; // correspond to sSample
+//     mTMVAOutput["DataSD2_BDTG_EPOSSD2Trained"].app_input_sample = "Data"; // correspond to sSample
+//     mTMVAOutput["DataSD2_BDTG_EPOSSD2Trained"].app_output_file_name = "TMVApp_DataSD2_BDTG_EPOSSD2Trained.root";
+
+//     mTMVAOutput["DataSD2_BDTG_XiCutEPOSSD2Trained"].method = "BDTG";
+//     mTMVAOutput["DataSD2_BDTG_XiCutEPOSSD2Trained"].training_sample = "XiCutEPOSSD2"; // correspond to sSample
+//     mTMVAOutput["DataSD2_BDTG_XiCutEPOSSD2Trained"].app_input_sample = "Data"; // correspond to sSample
+//     mTMVAOutput["DataSD2_BDTG_XiCutEPOSSD2Trained"].app_output_file_name = "TMVApp_DataSD2_BDTG_XiCutEPOSSD2Trained.root";
+  
+
+//     mTMVAOutput["DataSD2_BDTG_XiCutPythia8SD2Trained"].method = "BDTG";
+//     mTMVAOutput["DataSD2_BDTG_XiCutPythia8SD2Trained"].training_sample = "XiCutPythia8SD2"; // correspond to sSample
+//     mTMVAOutput["DataSD2_BDTG_XiCutPythia8SD2Trained"].app_input_sample = "Data"; // correspond to sSample
+//     mTMVAOutput["DataSD2_BDTG_XiCutPythia8SD2Trained"].app_output_file_name = "TMVApp_DataSD2_BDTG_XiCutPythia8SD1Trained.root";
+
+//       ////////////////////// REST////////////////////////////////////////////////////
+
+//     mTMVAOutput["Pythia8Rest_BDTG_Pythia8TrainedRest"].method = "BDTG";
+//     mTMVAOutput["Pythia8Rest_BDTG_Pythia8TrainedRest"].training_sample = "Pythia8Rest"; // correspond to sSample
+//     mTMVAOutput["Pythia8Rest_BDTG_Pythia8TrainedRest"].app_input_sample = "Pythia8Rest"; // correspond to sSample
+//     mTMVAOutput["Pythia8Rest_BDTG_Pythia8TrainedRest"].app_output_file_name = "TMVApp_Pythia8Rest_BDTG_training_Pythia8Rest.root";
+
+//     mTMVAOutput["EPOSRest_BDTG_EPOSRestTrained"].method = "BDTG";
+//     mTMVAOutput["EPOSRest_BDTG_EPOSRestTrained"].training_sample = "EPOSRest"; // correspond to sSample
+//     mTMVAOutput["EPOSRest_BDTG_EPOSRestTrained"].app_input_sample = "EPOSRest"; // correspond to sSample
+//     mTMVAOutput["EPOSRest_BDTG_EPOSRestTrained"].app_output_file_name = "TMVApp_EPOSRest_BDTG_training_EPOSRest.root";
+
+
+//     mTMVAOutput["XiCutEPOSRest_BDTG_XiCutEPOSRestTrained"].method = "BDTG";
+//     mTMVAOutput["XiCutEPOSRest_BDTG_XiCutEPOSRestTrained"].training_sample = "XiCutEPOSRest"; // correspond to sSample
+//     mTMVAOutput["XiCutEPOSRest_BDTG_XiCutEPOSRestTrained"].app_input_sample = "XiCutEPOSRest"; // correspond to sSample
+//     mTMVAOutput["XiCutEPOSRest_BDTG_XiCutEPOSRestTrained"].app_output_file_name = "TMVApp_XiCutEPOSRest_BDTG_training_XiCutEPOSRest.root";
+
+//     mTMVAOutput["XiCutPythia8Rest_BDTG_XiCutPythia8RestTrained"].method = "BDTG";
+//     mTMVAOutput["XiCutPythia8Rest_BDTG_XiCutPythia8RestTrained"].training_sample = "XiCutPythia8Rest"; // correspond to sSample
+//     mTMVAOutput["XiCutPythia8Rest_BDTG_XiCutPythia8RestTrained"].app_input_sample = "XiCutPythia8Rest"; // correspond to sSample
+//     mTMVAOutput["XiCutPythia8Rest_BDTG_XiCutPythia8RestTrained"].app_output_file_name = "TMVApp_XiCutPythia8Rest_BDTG_training_XiCutPythia8Rest.root";
+
+
+//     mTMVAOutput["DataRest_BDTG_Pythia8RestTrained"].method = "BDTG";
+//     mTMVAOutput["DataRest_BDTG_Pythia8RestTrained"].training_sample = "Pythia8Rest"; // correspond to sSample
+//     mTMVAOutput["DataRest_BDTG_Pythia8RestTrained"].app_input_sample = "Data"; // correspond to sSample
+//     mTMVAOutput["DataRest_BDTG_Pythia8RestTrained"].app_output_file_name = "TMVApp_DataRest_BDTG_Pythia8RestTrained.root";
+
+//     mTMVAOutput["DataRest_BDTG_EPOSRestTrained"].method = "BDTG";
+//     mTMVAOutput["DataRest_BDTG_EPOSRestTrained"].training_sample = "EPOSRest"; // correspond to sSample
+//     mTMVAOutput["DataRest_BDTG_EPOSRestTrained"].app_input_sample = "Data"; // correspond to sSample
+//     mTMVAOutput["DataRest_BDTG_EPOSRestTrained"].app_output_file_name = "TMVApp_DataRest_BDTG_EPOSRestTrained.root";
+
+//     mTMVAOutput["DataRest_BDTG_XiCutEPOSRestTrained"].method = "BDTG";
+//     mTMVAOutput["DataRest_BDTG_XiCutEPOSRestTrained"].training_sample = "XiCutEPOSRest"; // correspond to sSample
+//     mTMVAOutput["DataRest_BDTG_XiCutEPOSRestTrained"].app_input_sample = "Data"; // correspond to sSample
+//     mTMVAOutput["DataRest_BDTG_XiCutEPOSRestTrained"].app_output_file_name = "TMVApp_DataRest_BDTG_XiCutEPOSRestTrained.root";
+  
+
+//     mTMVAOutput["DataRest_BDTG_XiCutPythia8RestTrained"].method = "BDTG";
+//     mTMVAOutput["DataRest_BDTG_XiCutPythia8RestTrained"].training_sample = "XiCutPythia8Rest"; // correspond to sSample
+//     mTMVAOutput["DataRest_BDTG_XiCutPythia8RestTrained"].app_input_sample = "Data"; // correspond to sSample
+//     mTMVAOutput["DataRest_BDTG_XiCutPythia8RestTrained"].app_output_file_name = "TMVApp_DataRest_BDTG_XiCutPythia8SD1Trained.root";
+
+
+
+
+
+//     //////////////////////////DD////////////////////////////////////////////////
+//     mTMVAOutput["Pythia8_BDTG_Pythia8Trained"].method = "BDTG";
+//     mTMVAOutput["Pythia8_BDTG_Pythia8Trained"].training_sample = "Pythia8"; // correspond to sSample
+//     mTMVAOutput["Pythia8_BDTG_Pythia8Trained"].app_input_sample = "Pythia8"; // correspond to sSample
+//     mTMVAOutput["Pythia8_BDTG_Pythia8Trained"].app_output_file_name = "TMVApp_Pythia8_BDTG_training_Pythia8.root";
+   
+//     mTMVAOutput["EPOS_BDTG_Pythia8Trained"].method = "BDTG";
+//     mTMVAOutput["EPOS_BDTG_Pythia8Trained"].training_sample = "Pythia8"; // correspond to sSample
+//     mTMVAOutput["EPOS_BDTG_Pythia8Trained"].app_input_sample = "EPOS"; // correspond to sSample
+//     mTMVAOutput["EPOS_BDTG_Pythia8Trained"].app_output_file_name = "TMVApp_EPOS_BDTG_Pythia8Trained.root";
+
+//     mTMVAOutput["XiCutPythia8_BDTG_Pythia8Trained"].method = "BDTG";
+//     mTMVAOutput["XiCutPythia8_BDTG_Pythia8Trained"].training_sample = "Pythia8"; // correspond to sSample
+//     mTMVAOutput["XiCutPythia8_BDTG_Pythia8Trained"].app_input_sample = "XiCutPythia8"; // correspond to sSample
+//     mTMVAOutput["XiCutPythia8_BDTG_Pythia8Trained"].app_output_file_name = "TMVApp_XiCutPythia8Trained_BDTG_Pythia8Trained.root";
+
+//     mTMVAOutput["EPOS_BDTG_EPOSTrained"].method = "BDTG";
+//     mTMVAOutput["EPOS_BDTG_EPOSTrained"].training_sample = "EPOS"; // correspond to sSample
+//     mTMVAOutput["EPOS_BDTG_EPOSTrained"].app_input_sample = "EPOS"; // correspond to sSample
+//     mTMVAOutput["EPOS_BDTG_EPOSTrained"].app_output_file_name = "TMVApp_EPOS_BDTG_training_EPOS.root";
+
+//     mTMVAOutput["XiCutEPOS_BDTG_EPOSTrained"].method = "BDTG";
+//     mTMVAOutput["XiCutEPOS_BDTG_EPOSTrained"].training_sample = "EPOS"; // correspond to sSample
+//     mTMVAOutput["XiCutEPOS_BDTG_EPOSTrained"].app_input_sample = "XiCutEPOS"; // correspond to sSample
+//     mTMVAOutput["XiCutEPOS_BDTG_EPOSTrained"].app_output_file_name = "TMVApp_XiCutEPOS_BDTG_training_EPOS.root";
+
+
+
+//     mTMVAOutput["Pythia8_BDTG_EPOSTrained"].method = "BDTG";
+//     mTMVAOutput["Pythia8_BDTG_EPOSTrained"].training_sample = "EPOS"; // correspond to sSample
+//     mTMVAOutput["Pythia8_BDTG_EPOSTrained"].app_input_sample = "Pythia8"; // correspond to sSample
+//     mTMVAOutput["Pythia8_BDTG_EPOSTrained"].app_output_file_name = "TMVApp_Pythia8_BDTG_training_EPOS.root";
+    
+//     mTMVAOutput["XiCutPythia8_BDTG_EPOSTrained"].method = "BDTG";
+//     mTMVAOutput["XiCutPythia8_BDTG_EPOSTrained"].training_sample = "EPOS"; // correspond to sSample
+//     mTMVAOutput["XiCutPythia8_BDTG_EPOSTrained"].app_input_sample = "XiCutPythia8"; // correspond to sSample
+//     mTMVAOutput["XiCutPythia8_BDTG_EPOSTrained"].app_output_file_name = "TMVApp_XiCutPythia8_BDTG_training_EPOS.root";
+
+//    /////////////////////XiCutEPOS//////////////////////////////////////////////////////////////////////////
+//     mTMVAOutput["XiCutEPOS_BDTG_XiCutEPOSTrained"].method = "BDTG";
+//     mTMVAOutput["XiCutEPOS_BDTG_XiCutEPOSTrained"].training_sample = "XiCutEPOS"; // correspond to sSample
+//     mTMVAOutput["XiCutEPOS_BDTG_XiCutEPOSTrained"].app_input_sample = "XiCutEPOS"; // correspond to sSample
+//     mTMVAOutput["XiCutEPOS_BDTG_XiCutEPOSTrained"].app_output_file_name = "TMVApp_XiCutEPOS_BDTG_training_XiCutEPOS.root";
+
+//     mTMVAOutput["EPOS_BDTG_XiCutEPOSTrained"].method = "BDTG";
+//     mTMVAOutput["EPOS_BDTG_XiCutEPOSTrained"].training_sample = "XiCutEPOS"; // correspond to sSample
+//     mTMVAOutput["EPOS_BDTG_XiCutEPOSTrained"].app_input_sample = "EPOS"; // correspond to sSample
+//     mTMVAOutput["EPOS_BDTG_XiCutEPOSTrained"].app_output_file_name = "TMVApp_EPOS_BDTG_training_XiCutEPOS.root";
+
+//     mTMVAOutput["Pythia8_BDTG_XiCutEPOSTrained"].method = "BDTG";
+//     mTMVAOutput["Pythia8_BDTG_XiCutEPOSTrained"].training_sample = "XiCutEPOS"; // correspond to sSample
+//     mTMVAOutput["Pythia8_BDTG_XiCutEPOSTrained"].app_input_sample = "Pythia8"; // correspond to sSample
+//     mTMVAOutput["Pythia8_BDTG_XiCutEPOSTrained"].app_output_file_name = "TMVApp_Pythia8_BDTG_training_XiCutEPOS.root";
+    
+//     mTMVAOutput["XiCutPythia8_BDTG_XiCutEPOSTrained"].method = "BDTG";
+//     mTMVAOutput["XiCutPythia8_BDTG_XiCutEPOSTrained"].training_sample = "XiCutEPOS"; // correspond to sSample
+//     mTMVAOutput["XiCutPythia8_BDTG_XiCutEPOSTrained"].app_input_sample = "XiCutPythia8"; // correspond to sSample
+//     mTMVAOutput["XiCutPythia8_BDTG_XiCutEPOSTrained"].app_output_file_name = "TMVApp_XiCutPythia8_BDTG_training_XiCutEPOS.root";
+
+
+
+
+   
+// ///////////////////////////////////////////////////////////////////////////////////////////////////////
+//     mTMVAOutput["EPOS_BDTG_XiCutPythia8Trained"].method = "BDTG";
+//     mTMVAOutput["EPOS_BDTG_XiCutPythia8Trained"].training_sample = "XiCutPythia8"; // correspond to sSample
+//     mTMVAOutput["EPOS_BDTG_XiCutPythia8Trained"].app_input_sample = "EPOS"; // correspond to sSample
+//     mTMVAOutput["EPOS_BDTG_XiCutPythia8Trained"].app_output_file_name = "TMVApp_EPOS_BDTG_training_XiCutPythia8.root";
+
+//     mTMVAOutput["Pythia8_BDTG_XiCutPythia8Trained"].method = "BDTG";
+//     mTMVAOutput["Pythia8_BDTG_XiCutPythia8Trained"].training_sample = "XiCutPythia8"; // correspond to sSample
+//     mTMVAOutput["Pythia8_BDTG_XiCutPythia8Trained"].app_input_sample = "Pythia8"; // correspond to sSample
+//     mTMVAOutput["Pythia8_BDTG_XiCutPythia8Trained"].app_output_file_name = "TMVApp_Pythia8_BDTG_training_XiCutPythia8.root";
+    
+//     mTMVAOutput["XiCutPythia8_BDTG_XiCutPythia8Trained"].method = "BDTG";
+//     mTMVAOutput["XiCutPythia8_BDTG_XiCutPythia8Trained"].training_sample = "XiCutPythia8"; // correspond to sSample
+//     mTMVAOutput["XiCutPythia8_BDTG_XiCutPythia8Trained"].app_input_sample = "XiCutPythia8"; // correspond to sSample
+//     mTMVAOutput["XiCutPythia8_BDTG_XiCutPythia8Trained"].app_output_file_name = "TMVApp_XiCutPythia8_BDTG_training_XiCutPythia8.root";
+
+
+
+
+
+//     //////////////////////////////////////////////////////////////////////////
+//     // Data
+//     mTMVAOutput["Data_BDTG_Pythia8Trained"].method = "BDTG";
+//     mTMVAOutput["Data_BDTG_Pythia8Trained"].training_sample = "Pythia8"; // correspond to sSample
+//     mTMVAOutput["Data_BDTG_Pythia8Trained"].app_input_sample = "Data"; // correspond to sSample
+//     mTMVAOutput["Data_BDTG_Pythia8Trained"].app_output_file_name = "TMVApp_Data_BDTG_Pythia8Trained.root";
+
+//     mTMVAOutput["Data_BDTG_EPOSTrained"].method = "BDTG";
+//     mTMVAOutput["Data_BDTG_EPOSTrained"].training_sample = "EPOS"; // correspond to sSample
+//     mTMVAOutput["Data_BDTG_EPOSTrained"].app_input_sample = "Data"; // correspond to sSample
+//     mTMVAOutput["Data_BDTG_EPOSTrained"].app_output_file_name = "TMVApp_Data_BDTG_EPOSTrained.root";
+
+//     mTMVAOutput["Data_BDTG_XiCutEPOSTrained"].method = "BDTG";
+//     mTMVAOutput["Data_BDTG_XiCutEPOSTrained"].training_sample = "XiCutEPOS"; // correspond to sSample
+//     mTMVAOutput["Data_BDTG_XiCutEPOSTrained"].app_input_sample = "Data"; // correspond to sSample
+//     mTMVAOutput["Data_BDTG_XiCutEPOSTrained"].app_output_file_name = "TMVApp_Data_BDTG_XiCutEPOSTrained.root";
+  
+
+
+//     mTMVAOutput["Data_BDTG_XiCutPythia8Trained"].method = "BDTG";
+//     mTMVAOutput["Data_BDTG_XiCutPythia8Trained"].training_sample = "XiCutPythia8"; // correspond to sSample
+//     mTMVAOutput["Data_BDTG_XiCutPythia8Trained"].app_input_sample = "Data"; // correspond to sSample
+//     mTMVAOutput["Data_BDTG_XiCutPythia8Trained"].app_output_file_name = "TMVApp_Data_BDTG_XiCutPythia8Trained.root";
+
+
+
+
+//     return mTMVAOutput;
+//   }
+//   //////////////////////////////////////////////////////////////////////////
 
 
 } // end of namespace
