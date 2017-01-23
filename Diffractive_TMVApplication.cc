@@ -76,7 +76,7 @@ void Diffractive_TMVApplication()
    //Pythia8_BDTG_Pythia8Trained, EPOS_BDTG_Pythia8Trained, Pythia8XiEventselectioncut_BDTG_Pythia8Trained,Data_BDTG_Pythia8Trained 
    ////////////////////////////////////////////////////////////////////////////
    // !!!
-   TString sampleName = "Pythia8";
+   TString sampleName = "Data";
    ////////////////////////////////////////////////////////////////////////////
 
 
@@ -88,7 +88,7 @@ void Diffractive_TMVApplication()
 
    ////////////////////////////////////////////////////////////////////////////
    std::map<TString, SampleList::sSample> mSample = SampleList::read_data_mc_files();
-   std::map<TString, SampleList::sWeightFiles> mWeightFiles = SampleList::read_WeightFiles();
+   // std::map<TString, SampleList::sWeightFiles> mWeightFiles = SampleList::read_WeightFiles();
    ////////////////////////////////////////////////////////////////////////////
 
 
@@ -121,19 +121,30 @@ void Diffractive_TMVApplication()
    // reader->AddVariable("log10XiDD",&log10XiDD);
 
    // --- Book the MVA methods
-   TString weightfile;
-   TString methodName;
+   std::map<TString, TString> mMethodeHistSuffix;
+   std::string sUseWeightFile;
 
    std::cout << "--- Using weight files:" << std::endl;
-   for(std::map<TString, SampleList::sWeightFiles>::iterator it=mWeightFiles.begin(); it!=mWeightFiles.end(); it++) {
-      for(std::vector<TString>::iterator vit=it->second.vMethod.begin(); vit!=it->second.vMethod.end(); vit++) {
-         weightfile = "TMVAClassification_" + *vit + "." + mSample[it->second.training_sample].weight_name + ".xml";
-         methodName = *vit + " method " + it->first;
+   for(std::map<TString, SampleList::sSample>::iterator it=mSample.begin(); it!=mSample.end(); it++) {
+      for(std::vector<TString>::iterator vit=it->second.vMethode.begin(); vit!=it->second.vMethode.end(); vit++) {
+         TString weightfile = "TMVAClassification_" + *vit + "." + it->second.weight_name + ".xml";
+         TString methodName = *vit + " method " + it->first;
+
+         std::ifstream fweight_file_tmp("weights/" + weightfile);
+         if(!fweight_file_tmp.good()) continue;
+
+         if(sUseWeightFile!="rest") {
+            sUseWeightFile == "";
+            std::cout << "!!! Should I use this weight file: " << weightfile << " (y/n/rest) ?" << std::endl;
+            std::cin >> sUseWeightFile;
+            if(sUseWeightFile == "n") continue;
+         }
+         mMethodeHistSuffix[methodName] = it->first + "_" + *vit;
+
          reader->BookMVA(methodName, "weights/" + weightfile );
       }
    }
    
-
 
    ////////////////////////////////////////////////////////////////////////////
    // Book output histograms
@@ -151,11 +162,9 @@ void Diffractive_TMVApplication()
    TString histname;
    for(int iproc=0; iproc<Nproc; iproc++) {
 
-      for(std::map<TString, SampleList::sWeightFiles>::iterator it=mWeightFiles.begin(); it!=mWeightFiles.end(); it++) {
-         for(std::vector<TString>::iterator vit=it->second.vMethod.begin(); vit!=it->second.vMethod.end(); vit++) {
-            histname = TString("hDisciminant_") + it->second.training_sample + "_" + *vit + proccesses[iproc];
+      for(std::map<TString, TString>::iterator it=mMethodeHistSuffix.begin(); it!=mMethodeHistSuffix.end(); it++) {
+            histname = TString("hDisciminant_") + it->second + proccesses[iproc];
             mHist[histname] = new TH1F(histname,histname,40,-1,1);
-         }
       }
 
    }
@@ -220,12 +229,9 @@ void Diffractive_TMVApplication()
       // Pythia8processid=(Float_t)Pythia8processid_tree;
       // EventselectionXiprocessid=(Float_t)EventselectionXiprocessid_tree;
 
-      for(std::map<TString, SampleList::sWeightFiles>::iterator it=mWeightFiles.begin(); it!=mWeightFiles.end(); it++) {
-         for(std::vector<TString>::iterator vit=it->second.vMethod.begin(); vit!=it->second.vMethod.end(); vit++) {
-            methodName = *vit + " method " + it->first;
-            mClassifier_Value[it->first + *vit] = reader->EvaluateMVA(methodName);
-         }
-      }
+
+      for(std::map<TString, TString>::iterator it=mMethodeHistSuffix.begin(); it!=mMethodeHistSuffix.end(); it++)
+            mClassifier_Value[it->second] = reader->EvaluateMVA(it->first);
 
 
       // Fill hist depending on proccess ID string
@@ -235,15 +241,13 @@ void Diffractive_TMVApplication()
       else proccess = get_Pythia_Process_ID(EventselectionXiprocessid_tree);  
 
 
-      for(std::map<TString, SampleList::sWeightFiles>::iterator it=mWeightFiles.begin(); it!=mWeightFiles.end(); it++) {
-         for(std::vector<TString>::iterator vit=it->second.vMethod.begin(); vit!=it->second.vMethod.end(); vit++) {
+      for(std::map<TString, TString>::iterator it=mMethodeHistSuffix.begin(); it!=mMethodeHistSuffix.end(); it++) {
             // Fill general hists
-            histname = TString("hDisciminant_") + it->first + "_" + *vit;
-            mHist[histname]->Fill(mClassifier_Value[it->first + *vit]);
+            histname = TString("hDisciminant_") + it->second;
+            mHist[histname]->Fill(mClassifier_Value[it->second]);
 
-            histname = TString("hDisciminant_") + it->first + "_" + *vit + proccess;
-            mHist[histname]->Fill(mClassifier_Value[it->first + *vit]);
-         }
+            histname = TString("hDisciminant_") + it->second + proccess;
+            mHist[histname]->Fill(mClassifier_Value[it->second]);
       }
 
 

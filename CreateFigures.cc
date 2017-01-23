@@ -107,8 +107,7 @@ std::map<TString, TH1*> single_figure_compare_mc_data(CanvasHelper& ch,
 
 //////////////////////////////////////////////////////////////////////////
 // plot discriminant value for different proccess
-void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSample,
-                                  std::map<TString, SampleList::sWeightFiles>& mWeightFiles);
+void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSample);
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -159,8 +158,8 @@ int main( int argc, char** argv )
   // training_variables_compare_mc_data(mSample);
 
 
-  // discriminant_compare_mc_data(mSample,mWeightFiles);
-  // discriminant_results(mSample);
+  // discriminant_compare_mc_data(mSample);
+  discriminant_results(mSample);
 
   calc_signal_cross_section(mSample);
 
@@ -752,10 +751,8 @@ single_figure_compare_mc_data(CanvasHelper& ch,
 
 
 //////////////////////////////////////////////////////////////////////////
-void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSample,
-                                  std::map<TString, SampleList::sWeightFiles>& mWeightFiles)
+void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSample)
 {
-  UNUSED(mWeightFiles);
 
   std::vector<TString> vSuffix;
   // vSuffix.push_back("_NONE");
