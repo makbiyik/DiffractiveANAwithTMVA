@@ -769,11 +769,11 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sTMVAOutput>& mT
 
   TString hist_name = "hDisciminant";
 
-  // TString mc_sample_name = "Pythia8_BDTG_Pythia8Trained";
-  // TString data_sample_name = "Data_BDTG_Pythia8Trained";
+  TString mc_sample_name = "Pythia8_BDTG_Pythia8Trained";
+  TString data_sample_name = "Data_BDTG_Pythia8Trained";
 
-  TString mc_sample_name = "EPOSSD1_BDTG_EPOSSD1Trained";
-  TString data_sample_name = "DataSD1_BDTG_EPOSSD1Trained";
+  // TString mc_sample_name = "EPOSSD1_BDTG_EPOSSD1Trained";
+  // TString data_sample_name = "DataSD1_BDTG_EPOSSD1Trained";
 
   TString data_dir = "data";
   TFile* mc_file = TFile::Open(data_dir + "/" + mTMVAOutput[mc_sample_name].app_output_file_name);
