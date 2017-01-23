@@ -91,6 +91,23 @@ void Diffractive_TMVApplication()
    // std::map<TString, SampleList::sWeightFiles> mWeightFiles = SampleList::read_WeightFiles();
    ////////////////////////////////////////////////////////////////////////////
 
+   bool bFoundSample = false;
+
+   do {
+      std::cout << "Which Sample you want to use?" << std::endl;
+      std::cout << "Possible Samples are: " << std::endl;
+      for(std::map<TString, SampleList::sSample>::iterator it=mSample.begin(); it!=mSample.end(); it++)
+         std::cout << "--- " << it->first << std::endl;
+      std::cin >> sampleName;
+      if(mSample.find(sampleName) == mSample.end()) {
+         std::cout << "Sorry sampel " << sampleName << " could not be found" << std::endl;
+         std::cout << "Try again" << std::endl;
+         bFoundSample = false;
+      } else {
+         bFoundSample = true;
+      }
+   } while(!bFoundSample);
+
 
    // --------------------------------------------------------------------------------------------------
    // --- Create the Reader object

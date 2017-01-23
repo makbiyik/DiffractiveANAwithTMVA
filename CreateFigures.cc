@@ -150,7 +150,6 @@ int main( int argc, char** argv )
   //////////////////////////////////////////////////////////////////////////
   // read data files
   std::map<TString, SampleList::sSample> mSample = SampleList::read_data_mc_files();
-  std::map<TString, SampleList::sWeightFiles> mWeightFiles = SampleList::read_WeightFiles();
   
 
   //////////////////////////////////////////////////////////////////////////
