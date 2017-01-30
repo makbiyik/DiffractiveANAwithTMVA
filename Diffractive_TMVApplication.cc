@@ -151,7 +151,7 @@ void Diffractive_TMVApplication()
          if(!fweight_file_tmp.good()) continue;
 
          if(sUseWeightFile!="rest") {
-            sUseWeightFile == "";
+            sUseWeightFile = "";
             std::cout << "!!! Should I use this weight file: " << weightfile << " (y/n/rest) ?" << std::endl;
             std::cin >> sUseWeightFile;
             if(sUseWeightFile == "n") continue;
