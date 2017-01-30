@@ -38,8 +38,9 @@
 #define UNUSED(x) (void)(x) // to avoid unused compiler warning
 
 const TString figure_dir = "AN_figures";
-const TString figure_type = "pdf";
-const bool draw_figure = false;
+const TString figure_type = "png";
+// const TString figure_type = "gif";
+const bool draw_figure = true;
 
 
 // temporary struct for training variables directly compared to data
@@ -157,7 +158,7 @@ int main( int argc, char** argv )
   // training_variables_compare_mc_data(mSample);
 
 
-  // discriminant_compare_mc_data(mSample);
+  discriminant_compare_mc_data(mSample);
   discriminant_results(mSample);
 
   calc_signal_cross_section(mSample);
@@ -760,10 +761,10 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
-  TString mc_sample_name = "Pythia8";
+  TString mc_sample_name = "XiCutPythia8";
   TString data_sample_name = "Data";
 
-  TString training_sample_name = "EPOSSD1";
+  TString training_sample_name = "Pythia8";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
@@ -826,7 +827,7 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
   TH1F* hMC = (TH1F*)mc_file->Get(hist_name);
   hMC->Scale( 1./events_mc, "width" );
   ch.addHist( hMC, "HIST", kBlue+2 );
-  leg->AddEntry( hMC, mc_sample_name, "l");
+  leg->AddEntry( hMC, mSample[mc_sample_name].legend_name , "l");
 
   //////////////////////////////////////////////////////////////////////////
   // access data hist
@@ -843,7 +844,7 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
 
   ch.addDataHist( hData );
   // add legend entry
-  leg->AddEntry( hData, "DATA", "lep" );
+  leg->AddEntry( hData, mSample[data_sample_name].legend_name , "lep" );
 
   ch.addRatioHist( get_Ratio(hMC,hData), "HIST", kBlue );
   ch.addRatioHist( get_Ratio(hData,hData), "EP", kBlack );
@@ -854,10 +855,9 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
   // draw legend
   ch.getCanvas()->cd(1);
   leg->Draw("same");
-
+  if(draw_figure)ch.getCanvas()->Print( figure_dir + "/hDisciminant_" + training_sample_name + "." + figure_type );
   ch.DrawCMSPreliminary(true,11,"0.34 #mub^{-1} (13 TeV)");
 }
-
 
 
 void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
@@ -871,10 +871,10 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
-  TString mc_sample_name = "Pythia8";
+  TString mc_sample_name = "XiCutPythia8";
   TString data_sample_name = "Data";
 
-  TString training_sample_name = "Pythia8";
+  TString training_sample_name = "XiCutPythia8";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
@@ -1082,10 +1082,10 @@ void calc_signal_cross_section(std::map<TString, SampleList::sSample>& mSample)
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
-  TString mc_sample_name = "Pythia8";
+  TString mc_sample_name = "XiCutPythia8";
   TString data_sample_name = "Data";
 
-  TString training_sample_name = "Pythia8";
+  TString training_sample_name = "XiCutPythia8";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
