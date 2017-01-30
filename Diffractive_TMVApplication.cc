@@ -76,7 +76,7 @@ void Diffractive_TMVApplication()
    //Pythia8_BDTG_Pythia8Trained, EPOS_BDTG_Pythia8Trained, Pythia8XiEventselectioncut_BDTG_Pythia8Trained,Data_BDTG_Pythia8Trained 
    ////////////////////////////////////////////////////////////////////////////
    // !!!
-   TString sampleName = "Data";
+   TString sampleName = "XiCutEPOSRest";
    ////////////////////////////////////////////////////////////////////////////
 
 
