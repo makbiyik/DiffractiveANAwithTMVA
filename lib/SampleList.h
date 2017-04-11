@@ -43,6 +43,9 @@ namespace SampleList {
     mSample["Pythia8"].weight_name = "Pythia8_DD_weights";
     mSample["Pythia8"].signal = "DD";
     mSample["Pythia8"].vMethode.push_back("BDTG");
+    mSample["Pythia8"].vMethode.push_back("Fisher");
+    mSample["Pythia8"].vMethode.push_back("Likelihood");
+    mSample["Pythia8"].vMethode.push_back("MLP");
     mSample["Pythia8"].app_output_file_name = "TMVApp_Pythia8.root";
     htmp = (TH1F*)mSample["Pythia8"].file->Get(mSample["Pythia8"].tree_name + "/hNentries");
     mSample["Pythia8"].lumi = htmp->GetBinContent(1)/mSample["Pythia8"].xs;
@@ -91,7 +94,8 @@ namespace SampleList {
     mSample["XiCutEPOS"].lumi = htmp->GetBinContent(1)/mSample["XiCutEPOS"].xs;
     
     mSample["Data"].isData = true;
-    mSample["Data"].lumi = 0.34; // 1/nb
+    // effective lumi; already divided by prescale
+    mSample["Data"].lumi = 0.35; // 1/ub
     mSample["Data"].xs = 0;
     mSample["Data"].legend_name = "DATA";
     mSample["Data"].file = TFile::Open("data/trackanddiffractive_sigDD_data.root");
@@ -99,10 +103,34 @@ namespace SampleList {
     mSample["Data"].weight_name = "";
     mSample["Data"].signal = "";
     mSample["Data"].app_output_file_name = "TMVApp_Data.root";
+    
+    // mSample["Data"].isData = true;
+    // // effective lumi; already divided by prescale
+    // mSample["Data"].lumi = 0.35; // 1/ub
+    // mSample["Data"].xs = 0;
+    // mSample["Data"].legend_name = "DATA";
+    // mSample["Data"].file = TFile::Open("data/trackanddiffractive_sigDD_DataHF.root");
+    // mSample["Data"].tree_name = "data_ZeroBias1_CASTOR";
+    // mSample["Data"].weight_name = "";
+    // mSample["Data"].signal = "";
+    // mSample["Data"].app_output_file_name = "TMVApp_DataHF.root";
+    
+
+    // effective lumi; already divided by prescale
+    // mSample["Data"].isData = true;
+    // mSample["Data"].lumi = 3.73; // 1/ub
+    // mSample["Data"].xs = 0;
+    // mSample["Data"].legend_name = "DATA";
+    // mSample["Data"].file = TFile::Open("data/trackanddiffractive_sigDD_data_247934.root");
+    // mSample["Data"].tree_name = "data_ZeroBias_27Jan2016_LHCf";
+    // mSample["Data"].weight_name = "";
+    // mSample["Data"].signal = "";
+    // mSample["Data"].app_output_file_name = "TMVApp_Data.root";
+   
 
 
 
-   //////////////////////////SD1//////////////////////////////////
+   // // //////////////////////////SD1//////////////////////////////////
 
     mSample["Pythia8SD1"].isData = false;
     mSample["Pythia8SD1"].procesesID_pythia8 = true;
@@ -161,7 +189,7 @@ namespace SampleList {
     mSample["XiCutEPOSSD1"].lumi = htmp->GetBinContent(1)/mSample["XiCutEPOSSD1"].xs;
     
    
-    //////////////////////////SD2//////////////////////////////////
+   //  //////////////////////////SD2//////////////////////////////////
 
     mSample["Pythia8SD2"].isData = false;
     mSample["Pythia8SD2"].procesesID_pythia8 = true;
@@ -220,9 +248,9 @@ namespace SampleList {
     mSample["XiCutEPOSSD2"].lumi = htmp->GetBinContent(1)/mSample["XiCutEPOSSD2"].xs;
     
   
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   //  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-     //////////////////////////REST//////////////////////////////////
+   //   //////////////////////////REST//////////////////////////////////
 
     mSample["Pythia8Rest"].isData = false;
     mSample["Pythia8Rest"].procesesID_pythia8 = true;
@@ -238,47 +266,47 @@ namespace SampleList {
     mSample["Pythia8Rest"].lumi = htmp->GetBinContent(1)/mSample["Pythia8Rest"].xs;
 
 
-    mSample["XiCutPythia8Rest"].isData = false;
-    mSample["XiCutPythia8Rest"].procesesID_pythia8 = false;
-    mSample["XiCutPythia8Rest"].lumi = 0;
-    mSample["XiCutPythia8Rest"].xs = 79948.200000; // ub
-    mSample["XiCutPythia8Rest"].file = TFile::Open("data/trackanddiffractive_sigRest_XiCutpythia8.root");
-    mSample["XiCutPythia8Rest"].legend_name = "Pythia8 MBR";
-    mSample["XiCutPythia8Rest"].tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
-    mSample["XiCutPythia8Rest"].weight_name = "Pythia8_XiEvtSel_Rest_weights";
-    mSample["XiCutPythia8Rest"].signal = "Rest";
-    mSample["XiCutPythia8Rest"].vMethode.push_back("BDTG");
-    mSample["XiCutPythia8Rest"].app_output_file_name = "TMVApp_XiCutPythia8Rest.root";
-    htmp = (TH1F*)mSample["XiCutPythia8Rest"].file->Get(mSample["XiCutPythia8Rest"].tree_name + "/hNentries");
-    mSample["XiCutPythia8Rest"].lumi = htmp->GetBinContent(1)/mSample["XiCutPythia8Rest"].xs;
+   //  mSample["XiCutPythia8Rest"].isData = false;
+   //  mSample["XiCutPythia8Rest"].procesesID_pythia8 = false;
+   //  mSample["XiCutPythia8Rest"].lumi = 0;
+   //  mSample["XiCutPythia8Rest"].xs = 79948.200000; // ub
+   //  mSample["XiCutPythia8Rest"].file = TFile::Open("data/trackanddiffractive_sigRest_XiCutpythia8.root");
+   //  mSample["XiCutPythia8Rest"].legend_name = "Pythia8 MBR";
+   //  mSample["XiCutPythia8Rest"].tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
+   //  mSample["XiCutPythia8Rest"].weight_name = "Pythia8_XiEvtSel_Rest_weights";
+   //  mSample["XiCutPythia8Rest"].signal = "Rest";
+   //  mSample["XiCutPythia8Rest"].vMethode.push_back("BDTG");
+   //  mSample["XiCutPythia8Rest"].app_output_file_name = "TMVApp_XiCutPythia8Rest.root";
+   //  htmp = (TH1F*)mSample["XiCutPythia8Rest"].file->Get(mSample["XiCutPythia8Rest"].tree_name + "/hNentries");
+   //  mSample["XiCutPythia8Rest"].lumi = htmp->GetBinContent(1)/mSample["XiCutPythia8Rest"].xs;
 
-    mSample["EPOSRest"].isData = false;
-    mSample["EPOSRest"].procesesID_pythia8 = true;
-    mSample["EPOSRest"].lumi = 0;
-    mSample["EPOSRest"].xs = 79948.200000; // ub
-    mSample["EPOSRest"].file = TFile::Open("data/trackanddiffractive_sigRest_epos.root");
-    mSample["EPOSRest"].legend_name = "EPOS";
-    mSample["EPOSRest"].tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
-    mSample["EPOSRest"].weight_name = "EPOS_Rest_weights";
-    mSample["EPOSRest"].signal = "Rest";
-    mSample["EPOSRest"].vMethode.push_back("BDTG");
-    mSample["EPOSRest"].app_output_file_name = "TMVApp_EPOSRest.root";
-    htmp = (TH1F*)mSample["EPOSRest"].file->Get(mSample["EPOSRest"].tree_name + "/hNentries");
-    mSample["EPOSRest"].lumi = htmp->GetBinContent(1)/mSample["EPOSRest"].xs;
+    // mSample["EPOSRest"].isData = false;
+    // mSample["EPOSRest"].procesesID_pythia8 = true;
+    // mSample["EPOSRest"].lumi = 0;
+    // mSample["EPOSRest"].xs = 79948.200000; // ub
+    // mSample["EPOSRest"].file = TFile::Open("data/trackanddiffractive_sigRest_epos.root");
+    // mSample["EPOSRest"].legend_name = "EPOS";
+    // mSample["EPOSRest"].tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
+    // mSample["EPOSRest"].weight_name = "EPOS_Rest_weights";
+    // mSample["EPOSRest"].signal = "Rest";
+    // mSample["EPOSRest"].vMethode.push_back("BDTG");
+    // mSample["EPOSRest"].app_output_file_name = "TMVApp_EPOSRest.root";
+    // htmp = (TH1F*)mSample["EPOSRest"].file->Get(mSample["EPOSRest"].tree_name + "/hNentries");
+    // mSample["EPOSRest"].lumi = htmp->GetBinContent(1)/mSample["EPOSRest"].xs;
 
-    mSample["XiCutEPOSRest"].isData = false;
-    mSample["XiCutEPOSRest"].procesesID_pythia8 = false;
-    mSample["XiCutEPOSRest"].lumi = 0;
-    mSample["XiCutEPOSRest"].xs = 79948.200000; // ub
-    mSample["XiCutEPOSRest"].file = TFile::Open("data/trackanddiffractive_sigRest_XiCutepos.root");
-    mSample["XiCutEPOSRest"].legend_name = "EPOS";
-    mSample["XiCutEPOSRest"].tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
-    mSample["XiCutEPOSRest"].weight_name = "XiCutEPOS_Rest_weights";
-    mSample["XiCutEPOSRest"].signal = "Rest";
-    mSample["XiCutEPOSRest"].vMethode.push_back("BDTG");
-    mSample["XiCutEPOSRest"].app_output_file_name = "TMVApp_XiCutEPOSRest.root";
-    htmp = (TH1F*)mSample["XiCutEPOSRest"].file->Get(mSample["XiCutEPOSRest"].tree_name + "/hNentries");
-    mSample["XiCutEPOSRest"].lumi = htmp->GetBinContent(1)/mSample["XiCutEPOSRest"].xs;
+   //  mSample["XiCutEPOSRest"].isData = false;
+   //  mSample["XiCutEPOSRest"].procesesID_pythia8 = false;
+   //  mSample["XiCutEPOSRest"].lumi = 0;
+   //  mSample["XiCutEPOSRest"].xs = 79948.200000; // ub
+   //  mSample["XiCutEPOSRest"].file = TFile::Open("data/trackanddiffractive_sigRest_XiCutepos.root");
+   //  mSample["XiCutEPOSRest"].legend_name = "EPOS";
+   //  mSample["XiCutEPOSRest"].tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
+   //  mSample["XiCutEPOSRest"].weight_name = "XiCutEPOS_Rest_weights";
+   //  mSample["XiCutEPOSRest"].signal = "Rest";
+   //  mSample["XiCutEPOSRest"].vMethode.push_back("BDTG");
+   //  mSample["XiCutEPOSRest"].app_output_file_name = "TMVApp_XiCutEPOSRest.root";
+   //  htmp = (TH1F*)mSample["XiCutEPOSRest"].file->Get(mSample["XiCutEPOSRest"].tree_name + "/hNentries");
+   //  mSample["XiCutEPOSRest"].lumi = htmp->GetBinContent(1)/mSample["XiCutEPOSRest"].xs;
     
     return mSample;
   }
