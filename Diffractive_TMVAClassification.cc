@@ -99,7 +99,7 @@ int Diffractive_TMVAClassification()
    // factory->AddVariable( "RGmean","RGmean", "units", 'F' );
 
 
-   TString sample_name = "Pythia8";
+   TString sample_name = "XiCutEPOSSD2";
    TFile *input = mSample[sample_name].file;
    std::cout << "--- TMVAClassification       : Using input file: " << input->GetName() << std::endl;
 

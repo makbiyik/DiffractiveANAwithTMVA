@@ -51,7 +51,7 @@ struct sSample
 // get string from integer value Pythia8processid
 TString get_Pythia_Process_ID(int Pythia8processid) {
 
-   if(Pythia8processid == 101) {
+   if(Pythia8processid == -1) {
       return "_Rest";
    } else if (Pythia8processid == 103) {
       return "_SD1";
@@ -59,13 +59,32 @@ TString get_Pythia_Process_ID(int Pythia8processid) {
       return "_SD2";
    } else if (Pythia8processid == 105) {
       return "_DD";
-   } else if (Pythia8processid == 106) {
-      return "_CD";
    }
+   // } else if (Pythia8processid == 106) {
+   //    return "_CD";
+   // }
 
-   return "_NONE";
+   return "_Rest";
 }
 
+TString get_Pythia_Process_ID(int EventselectionXiprocessDD_tree,
+                              int EventselectionXiprocessSD1_tree,
+                              int EventselectionXiprocessSD2_tree,
+                              int EventselectionXiprocessRest_tree) {
+
+
+   if (EventselectionXiprocessDD_tree == 1) {
+      return "_DD";
+   } else if (EventselectionXiprocessSD1_tree == 1) {
+      return "_SD1";
+   } else if (EventselectionXiprocessSD1_tree == 1) {
+      return "_SD2";
+   } else if (EventselectionXiprocessSD1_tree == 1) {
+      return "_Rest";
+   }
+
+   return "_Rest";
+}
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -76,7 +95,7 @@ void Diffractive_TMVApplication()
    //Pythia8_BDTG_Pythia8Trained, EPOS_BDTG_Pythia8Trained, Pythia8XiEventselectioncut_BDTG_Pythia8Trained,Data_BDTG_Pythia8Trained 
    ////////////////////////////////////////////////////////////////////////////
    // !!!
-   TString sampleName = "Pythia8SD1";
+   TString sampleName = "Pythia8";
    ////////////////////////////////////////////////////////////////////////////
 
 
@@ -119,20 +138,29 @@ void Diffractive_TMVApplication()
    // Create a set of variables and declare them to the reader
    // - the variable names MUST corresponds in name and type to those given in the weight file(s) used
    
-   Float_t deltazero, etamax;
-   Float_t etamin, log10XixReco, log10XiyReco;//log10XiDD;
-   Float_t HFminusNtowers ,HFplusNtowers ,CastorNtowers,Ntracks;// ,Pythia8processid,EventselectionXiprocessid;
+   Float_t deltazero, etamax, etamin;
+   // Float_t  log10XixReco, log10XiyReco;//log10XiDD;
+   Float_t HFminusNtowers ,HFplusNtowers ,CastorNtowers,Ntracks;//RGmean;// ,Pythia8processid,EventselectionXiprocessid;
+   Float_t MaxCastorEnergy; //CastorSumEnergy,CaloReducedenergyClass, HFSumEnergy;//;//MaxHFEnergy;
+   
 
    reader->AddVariable( "deltazero", &deltazero );
    reader->AddVariable( "etamax" , &etamax );
    reader->AddVariable( "etamin" , &etamin );
+   reader->AddVariable( "HFminusNtowers" , &HFminusNtowers);
+   reader->AddVariable( "HFplusNtowers" , &HFplusNtowers);
+   reader->AddVariable( "CastorNtowers" , &CastorNtowers);
+   reader->AddVariable( "Ntracks" ,&Ntracks );
+   // reader->AddVariable( "CaloReducedenergyClass",&CaloReducedenergyClass);
+   // reader->AddVariable( "CastorSumEnergy",&CastorSumEnergy);
+   // reader->AddVariable( "HFSumEnergy",&HFSumEnergy);
+   reader->AddVariable( "MaxCastorEnergy",&MaxCastorEnergy);
    // reader->AddVariable( "log10XixReco" , &log10XixReco );
    // reader->AddVariable( "log10XiyReco" , &log10XiyReco );
-   reader->AddVariable( "HFminusNtowers" , &HFminusNtowers );
-   reader->AddVariable( "HFplusNtowers" , &HFplusNtowers );
-   reader->AddVariable( "CastorNtowers" , &CastorNtowers );
-   reader->AddVariable( "Ntracks" ,&Ntracks );
-
+   // reader->AddVariable( "MaxHFEnergy",&MaxHFEnergy);
+   // reader->AddVariable( "RGmean",&RGmean);
+   
+   
    /*reader->AddVariable( "Pythia8processid" , &Pythia8processid );
    reader->AddVariable( "EventselectionXiprocessid" , &EventselectionXiprocessid );*/
    // reader->AddVariable("log10XiDD",&log10XiDD);
@@ -208,20 +236,31 @@ void Diffractive_TMVApplication()
    
 
    Int_t HFminusNtowers_tree ,HFplusNtowers_tree ,CastorNtowers_tree,Ntracks_tree;
-   Int_t Pythia8processid_tree, EventselectionXiprocessid_tree;
-   
+   Int_t Pythia8processid_tree;
+   Int_t EventselectionXiprocessDD_tree, EventselectionXiprocessSD1_tree, EventselectionXiprocessSD2_tree, EventselectionXiprocessRest_tree;
+    
    theTree->SetBranchAddress("deltazero", &deltazero);
    theTree->SetBranchAddress("etamax", &etamax);
    theTree->SetBranchAddress("etamin", &etamin);
-   theTree->SetBranchAddress("log10XixReco", &log10XixReco);
-   theTree->SetBranchAddress("log10XiyReco", &log10XiyReco);
-   // theTree->SetBranchAddress("log10XiDD",&log10XiDD);
+   // theTree->SetBranchAddress("log10XixReco", &log10XixReco);
+   // theTree->SetBranchAddress("log10XiyReco", &log10XiyReco);
    theTree->SetBranchAddress("HFminusNtowers", &HFminusNtowers_tree);
    theTree->SetBranchAddress("HFplusNtowers", &HFplusNtowers_tree);
    theTree->SetBranchAddress("CastorNtowers", &CastorNtowers_tree);
    theTree->SetBranchAddress("Ntracks",&Ntracks_tree);
    theTree->SetBranchAddress("Pythia8processid",&Pythia8processid_tree);
-   theTree->SetBranchAddress("EventselectionXiprocessid",&EventselectionXiprocessid_tree);
+   // theTree->SetBranchAddress("EventselectionXiprocessid",&EventselectionXiprocessid_tree);
+   theTree->SetBranchAddress("EventselectionXiprocessDD",&EventselectionXiprocessDD_tree);
+   theTree->SetBranchAddress("EventselectionXiprocessSD1",&EventselectionXiprocessSD1_tree);
+   theTree->SetBranchAddress("EventselectionXiprocessSD2",&EventselectionXiprocessSD2_tree);
+   theTree->SetBranchAddress("EventselectionXiprocessRest",&EventselectionXiprocessRest_tree);
+   // theTree->SetBranchAddress("CaloReducedenergyClass", &CaloReducedenergyClass);
+   // theTree->SetBranchAddress( "CastorSumEnergy",&CastorSumEnergy);
+   // theTree->SetBranchAddress( "HFSumEnergy",&HFSumEnergy);
+   theTree->SetBranchAddress( "MaxCastorEnergy",&MaxCastorEnergy);
+   // theTree->SetBranchAddress( "RGmean",&RGmean );
+   // theTree->SetBranchAddress( "MaxHFEnergy",&MaxHFEnergy);
+   // theTree->SetBranchAddress("log10XiDD",&log10XiDD);
 
    std::map<TString, double> mClassifier_Value;
 
@@ -243,6 +282,8 @@ void Diffractive_TMVApplication()
       HFminusNtowers = (Float_t)HFminusNtowers_tree;
       CastorNtowers = (Float_t)CastorNtowers_tree;
       Ntracks =(Float_t)Ntracks_tree;
+
+     
       // Pythia8processid=(Float_t)Pythia8processid_tree;
       // EventselectionXiprocessid=(Float_t)EventselectionXiprocessid_tree;
 
@@ -255,7 +296,7 @@ void Diffractive_TMVApplication()
       TString proccess = "" ;
      
       if (mSample[sampleName].procesesID_pythia8) proccess = get_Pythia_Process_ID(Pythia8processid_tree);
-      else proccess = get_Pythia_Process_ID(EventselectionXiprocessid_tree);  
+      else proccess = get_Pythia_Process_ID(EventselectionXiprocessDD_tree, EventselectionXiprocessSD1_tree, EventselectionXiprocessSD2_tree, EventselectionXiprocessRest_tree);  
 
 
       for(std::map<TString, TString>::iterator it=mMethodeHistSuffix.begin(); it!=mMethodeHistSuffix.end(); it++) {
