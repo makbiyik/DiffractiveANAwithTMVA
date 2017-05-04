@@ -99,26 +99,45 @@ int Diffractive_TMVAClassification()
    // factory->AddVariable( "RGmean","RGmean", "units", 'F' );
 
 
-   TString sample_name = "XiCutEPOSSD2";
+   TString sample_name = "Pythia8";
    TFile *input = mSample[sample_name].file;
    std::cout << "--- TMVAClassification       : Using input file: " << input->GetName() << std::endl;
 
    // --- Register the training and test trees
-   TTree *signal = (TTree*)input->Get( mSample[sample_name].tree_name + "/sigTree");
-   TTree *background = (TTree*)input->Get( mSample[sample_name].tree_name + "/bkgTree");   
+   // TTree *signal = (TTree*)input->Get( mSample[sample_name].tree_name + "/sigTreeDD");
+   // TTree *background = (TTree*)input->Get( mSample[sample_name].tree_name + "/bkgTreeDD");   
+   // Double_t signalWeight     = 1.0;
+   // Double_t backgroundWeight = 1.0;
+   // // You can add an arbitrary number of signal or background trees
+   // factory->AddSignalTree(signal, signalWeight);
+   // factory->AddBackgroundTree(background, backgroundWeight);
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Signal and Background events located in the same tree
+   TTree* inputTree = (TTree*)input->Get( mSample[sample_name].tree_name + "/AllTree" );
+   // 
+   // how to identify signal events
+   // TCut signalCut = "Pythia8processid==105";
+   // how to identify background events
+   // TCut backgrCut = "Pythia8processid!=105";
+   // use Xi-Selection-Cut
+   // 
+   TCut signalCut = mSample[sample_name].signalCut;
+   TCut backgrCut = mSample[sample_name].backgrCut;
+   // 
+   factory->SetInputTrees( inputTree, signalCut, backgrCut );
+
    // change weight file extension
    (TMVA::gConfig().GetIONames()).fWeightFileExtension = mSample[sample_name].weight_name;
-   Double_t signalWeight     = 1.0;
-   Double_t backgroundWeight = 1.0;
-   // You can add an arbitrary number of signal or background trees
-   factory->AddSignalTree(signal, signalWeight);
-   factory->AddBackgroundTree(background, backgroundWeight);
+
+
    
    // Apply additional cuts on the signal and background samples (can be different)
    TCut mycuts = "deltazero>=0" ; // for example: TCut mycuts = "abs(var1)<0.5 && abs(var2-0.5)<1";
    TCut mycutb = "deltazero>=0"; // for example: TCut mycutb = "abs(var1)<0.5";
    factory->PrepareTrainingAndTestTree( mycuts, mycutb,
-                                        "nTrain_Signal=60000:nTest_Signal=60000:nTrain_Background=60000:nTest_Background=60000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                        // "nTrain_Signal=60000:nTest_Signal=60000:nTrain_Background=60000:nTest_Background=60000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                       "nTrain_Signal=1000:nTest_Signal=7000:nTrain_Background=1000:nTest_Background=7000:SplitMode=Random:NormMode=NumEvents:!V" );
 
                                           //100000
 
@@ -136,10 +155,10 @@ int Diffractive_TMVAClassification()
    
    // Boosted Decision Trees
    factory->BookMethod( TMVA::Types::kBDT, "BDTG", "!H:!V:NTrees=1000:MinNodeSize=2.5%:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.9:nCuts=20:MaxDepth=2" );
-   factory->BookMethod( TMVA::Types::kFisher, "Fisher", "H:!V:Fisher:VarTransform=None:CreateMVAPdfs:PDFInterpolMVAPdf=Spline2:NbinsMVAPdf=50:NsmoothMVAPdf=10" );
+   // factory->BookMethod( TMVA::Types::kFisher, "Fisher", "H:!V:Fisher:VarTransform=None:CreateMVAPdfs:PDFInterpolMVAPdf=Spline2:NbinsMVAPdf=50:NsmoothMVAPdf=10" );
    // factory->BookMethod( TMVA::Types::kLD, "LD", "H:!V:VarTransform=None:CreateMVAPdfs:PDFInterpolMVAPdf=Spline2:NbinsMVAPdf=50:NsmoothMVAPdf=10" );
-   factory->BookMethod( TMVA::Types::kLikelihood, "Likelihood","H:!V:TransformOutput:PDFInterpol=Spline2:NSmoothSig[0]=20:NSmoothBkg[0]=20:NSmoothBkg[1]=10:NSmooth=1:NAvEvtPerBin=50" );
-   factory->BookMethod( TMVA::Types::kMLP, "MLP", "H:!V:NeuronType=tanh:VarTransform=N:NCycles=600:HiddenLayers=N+5:TestRate=5:!UseRegulator" );
+   // factory->BookMethod( TMVA::Types::kLikelihood, "Likelihood","H:!V:TransformOutput:PDFInterpol=Spline2:NSmoothSig[0]=20:NSmoothBkg[0]=20:NSmoothBkg[1]=10:NSmooth=1:NAvEvtPerBin=50" );
+   // factory->BookMethod( TMVA::Types::kMLP, "MLP", "H:!V:NeuronType=tanh:VarTransform=N:NCycles=600:HiddenLayers=N+5:TestRate=5:!UseRegulator" );
 
 
    // // Train MVAs using the set of training events

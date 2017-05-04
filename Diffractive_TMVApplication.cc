@@ -77,9 +77,9 @@ TString get_Pythia_Process_ID(int EventselectionXiprocessDD_tree,
       return "_DD";
    } else if (EventselectionXiprocessSD1_tree == 1) {
       return "_SD1";
-   } else if (EventselectionXiprocessSD1_tree == 1) {
+   } else if (EventselectionXiprocessSD2_tree == 1) {
       return "_SD2";
-   } else if (EventselectionXiprocessSD1_tree == 1) {
+   } else if (EventselectionXiprocessRest_tree == 1) {
       return "_Rest";
    }
 
