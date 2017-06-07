@@ -11,9 +11,11 @@ def writeListToFile(chfile,list,nbr_bad_ch):
         chfile.write( "    [{},{}],".format(list[ich][1],list[ich][2]) )
         chfile.write( "\n" )
 
-file = TFile.Open("data/trackanddiffractive_sigDD_data.root")
+file = TFile.Open("trackanddiffractive_data.root")
+hist = file.Get("data_ZeroBias1_CASTOR/Calotower2D_eta_phi_withnoisytowers")
 
-hist = file.Get("data_ZeroBias1_CASTOR/Calotower2D_eta_phi")
+# file = TFile.Open("data/trackanddiffractive_sigSDD_data_247934.root")
+# hist = file.Get("data_ZeroBias_27Jan2016_LHCf/Calotower2D_eta_phi_withnoisytowers")
 
 # hist.Draw("colz")
 
@@ -44,9 +46,10 @@ for iXbin in xrange(hist.GetXaxis().GetNbins()):
             ch20list.append([value,ieta,iphi])
         elif abs(ieta) <= 33:
             ch33list.append([value,ieta,iphi])
-        else:
+        elif abs(ieta)<= 44:
             chRestlist.append([value,ieta,iphi])
-
+       
+      
         # if ieta == -28 and iphi == 53:
         #     print '{}, {}, {}'.format(ieta,iphi,value)
 
@@ -72,10 +75,10 @@ chlist_file.write("bad_channels_eta_phi = [\n")
 #     if ich < number_of_bad_channels-1:
 #         chlist_file.write(",\n")
 
-number_bad_channels_14list = 10
-number_bad_channels_20list = 50
+number_bad_channels_14list = 20
+number_bad_channels_20list = 30 #30#40#60
 number_bad_channels_33list = 50
-number_bad_channels_Restlist = 10
+number_bad_channels_Restlist =6
 
 writeListToFile(chlist_file,ch14list,number_bad_channels_14list)
 writeListToFile(chlist_file,ch20list,number_bad_channels_20list)

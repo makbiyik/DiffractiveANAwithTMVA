@@ -201,7 +201,7 @@ std::map<TString, sSingleVar> build_hist_parameters()
   mSingleTrainingVar["EtaMin"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
   mSingleTrainingVar["EtaMin"].ratio_title = "MC / Data";
   mSingleTrainingVar["EtaMin"].canvas_title = "cEtaMin_";
-  mSingleTrainingVar["EtaMin"].xmin = -5.5;
+  mSingleTrainingVar["EtaMin"].xmin = -6.;
   mSingleTrainingVar["EtaMin"].xmax = 5.5;
   mSingleTrainingVar["EtaMin"].ymin = 1;
   mSingleTrainingVar["EtaMin"].ymax = 1e11;
@@ -218,7 +218,7 @@ std::map<TString, sSingleVar> build_hist_parameters()
   mSingleTrainingVar["EtaMax"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
   mSingleTrainingVar["EtaMax"].ratio_title = "MC / Data";
   mSingleTrainingVar["EtaMax"].canvas_title = "cEtaMax_";
-  mSingleTrainingVar["EtaMax"].xmin = -5.5;
+  mSingleTrainingVar["EtaMax"].xmin = -6.0;
   mSingleTrainingVar["EtaMax"].xmax = 5.5;
   mSingleTrainingVar["EtaMax"].ymin = 1;
   mSingleTrainingVar["EtaMax"].ymax = 1e11;
@@ -549,29 +549,46 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
   
   std::vector<TString> vSuffix;
   // vSuffix.push_back("_NONE");
-  vSuffix.push_back("_SD1");
-  vSuffix.push_back("_SD2");
-  vSuffix.push_back("_DD");
-  vSuffix.push_back("_Rest");
+  const bool inverted = false;
+  if (inverted) {
+    vSuffix.push_back("_Rest");
+    vSuffix.push_back("_SD1");
+    vSuffix.push_back("_SD2");
+    vSuffix.push_back("_DD");
 
 
+
+
+  } else {  
+    vSuffix.push_back("_Rest");
+    vSuffix.push_back("_SD2");
+    vSuffix.push_back("_SD1");
+    vSuffix.push_back("_DD");
+  } 
+/*
+    vSuffix.push_back("_SD1");
+    vSuffix.push_back("_SD2");
+    vSuffix.push_back("_DD");
+    vSuffix.push_back("_Rest");
+*/
   std::map<TString, sSingleVar> mSingleTrainingVar = build_hist_parameters();
 
   single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8");
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1",false);
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS",false);
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1",false);
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1",false);
-  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2",false);
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD2",false); 
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8Rest",false);
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSRest",false); 
 
 
   std::vector<TString> vSuff_XiEventSel;
-  vSuff_XiEventSel.push_back("_SD1");
-  vSuff_XiEventSel.push_back("_SD2");
-  vSuff_XiEventSel.push_back("_DD");
   vSuff_XiEventSel.push_back("_Rest");
+  vSuff_XiEventSel.push_back("_SD2");
+  vSuff_XiEventSel.push_back("_SD1");
+  vSuff_XiEventSel.push_back("_DD");
   mSingleTrainingVar["EtaDeltaZero"].hist_name = "Hist_eventXiID_DeltaZero";
   mSingleTrainingVar["EtaMin"].hist_name = "Hist_eventXiID_Min";
   mSingleTrainingVar["EtaMax"].hist_name = "Hist_eventXiID_Max";
@@ -889,7 +906,7 @@ single_figure_compare_mc_data(CanvasHelper& ch,
 
   //////////////////////////////////////////////////////////////////////////
   // color code for the different hists
-  Color_t col[5] = {29, kGreen -1, kGreen, kYellow, 24};
+  Color_t col[5] = {29, kGreen, kGreen+1, kYellow+1, 24};
 
   /////////////////////////////////////////////////////////////i/////////////
   // access the stacked hists and add it to the canvas helper
@@ -935,16 +952,18 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
 
   std::vector<TString> vSuffix;
   // vSuffix.push_back("_NONE");
+  vSuffix.push_back("_Rest");
   vSuffix.push_back("_SD1");
   vSuffix.push_back("_SD2");
   vSuffix.push_back("_DD");
-  vSuffix.push_back("_Rest");
 
-  TString mc_sample_name = "Pythia8";
+  TString mc_sample_name = "XiCutPythia8";
   TString data_sample_name = "Data";
+  TString sSignal ="DD";
 
-  TString training_sample_name = "Pythia8";
-  TString training_method = "Fisher";
+
+  TString training_sample_name = "XiCutPythia8";
+  TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
 
@@ -974,8 +993,8 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
   // init canvas helper
   CanvasHelper ch("cDiscriminant" + mc_sample_name + training_method);
   ch.initRatioCanvas(-1,1,
-                     // 0,1,
-                     5e1,1e7,
+                     // 0,3e5,
+                     1e3,1e6,
                      0,3,
                      "Classifier X",
                      // "1/N_{evt} dN/dX",
@@ -989,8 +1008,11 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
 
   //////////////////////////////////////////////////////////////////////////
   // color code for the different hists
-  Color_t col[5] = {29, kGreen -1, kGreen, kYellow, 24};
+  // Color_t col[5] = {29, kGreen-1, kGreen, kYellow, 24};
+  Color_t BkgColor = kGreen-1;
+  Color_t col[5] = {kYellow, BkgColor, BkgColor, BkgColor, BkgColor};
 
+  ////////////////////////
   /////////////////////////////////////////////////////////////i/////////////
   // access the stacked hists and add it to the canvas helper
   for(unsigned int iHist=0; iHist<shh.getHistSize(); iHist++) {
@@ -1002,7 +1024,13 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
     TString leg_text = vSuffix[shh.getHistSize()-iHist-1];
     leg_text.Remove(0,1);
     // add legend entry
-    leg->AddEntry( shh.getHist(iHist), leg_text, "f" );
+    // leg->AddEntry( shh.getHist(iHist), leg_text, "f" );
+    if( leg_text == "Rest" ) {
+      leg_text = "Background";
+      leg->AddEntry( shh.getHist(iHist), leg_text, "f" );
+    } else if( leg_text== sSignal ) {
+      leg->AddEntry( shh.getHist(iHist), leg_text, "f" );
+    }
   }
 
   TH1F* hMC = (TH1F*)mc_file->Get(hist_name);
@@ -1055,11 +1083,11 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
-  TString mc_sample_name = "Pythia8";
+  TString mc_sample_name = "XiCutPythia8";
   TString data_sample_name = "Data";
 
-  TString training_sample_name = "Pythia8";
-  TString training_method = "Fisher";
+  TString training_sample_name = "XiCutPythia8";
+  TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
 
@@ -1076,13 +1104,11 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
   for(unsigned int idx=0; idx<vSuffix.size(); idx++) {
     if( vSuffix[idx].Copy().Remove(0,1) == sSignal ) continue;
     hbkg[ vSuffix[idx].Copy().Remove(0,1) ] = (TH1F*)mc_file->Get(hist_name+vSuffix[idx]);
-  
-
-  
-
-
   }
   
+  // std::cout << "file name = " << data_dir + "/" + mSample[mc_sample_name].app_output_file_name << std::endl;
+  // std::cout << "hist_name = " << hist_name+"_"+sSignal << std::endl;
+
   CanvasHelper chROCurve("ROC");
   TCanvas * cROC = chROCurve.initNormalCanvas(0,1.2,0,1.4,"signal efficiency","background rejection",510,510);
   cROC->SetGrid();
@@ -1148,12 +1174,18 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
       }
     }
 
+
     efficiencyXout = Entry_sig / Entry_sig_all;
     purityXout = 1 - Entry_bkg / Entry_bkg_all;
-    prob_sig = Entry_sig / (Entry_bkg + Entry_sig);
-    prob_bkg = Entry_bkg / (Entry_bkg + Entry_sig);
-
-    SdivSqrtSplusB = Entry_sig / sqrt( Entry_sig + Entry_bkg);
+    if( Entry_sig + Entry_bkg <= 0 ) {
+      prob_sig = 0;
+      prob_bkg = 0;
+      SdivSqrtSplusB = 0;
+    } else {
+      prob_sig = Entry_sig / (Entry_bkg + Entry_sig);
+      prob_bkg = Entry_bkg / (Entry_bkg + Entry_sig);
+      SdivSqrtSplusB = Entry_sig / sqrt( Entry_sig + Entry_bkg );
+    }
 
     // std::cout << "Discriminat Cut Value = " << discriminant_cut_value << std::endl;
     // std::cout << "--- Signal Eff = " << efficiencyXout << std::endl;
@@ -1271,11 +1303,11 @@ void calc_signal_cross_section(std::map<TString, SampleList::sSample>& mSample)
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
-  TString mc_sample_name = "Pythia8";
+  TString mc_sample_name = "XiCutPythia8";
   TString data_sample_name = "Data";
 
-  TString training_sample_name = "Pythia8";
-  TString training_method = "Fisher";
+  TString training_sample_name = "XiCutPythia8";
+  TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
 
@@ -1301,9 +1333,12 @@ void calc_signal_cross_section(std::map<TString, SampleList::sSample>& mSample)
     std::cout << "Background selected: " << testName  << std::endl;
   }
 
+  // std::cout << "file name = " << data_dir + "/" + mSample[mc_sample_name].app_output_file_name << std::endl;
+  // std::cout << "hist_name = " << hist_name+"_"+sSignal << std::endl;
+
   //////////////////////////////////////////////////////////////////////////
   // value to cut in classifier/discriminant output distribution
-  double classifier_cut =  0.05;
+  double classifier_cut = 0.5;
 
   double Entry_sig= 0; 
   double Entry_sig_all = 0;
@@ -1326,6 +1361,12 @@ void calc_signal_cross_section(std::map<TString, SampleList::sSample>& mSample)
 
       Entry_data += hData->GetBinContent(iBin);
     }
+
+    // std::cout << "classifier_value = " << classifier_value << std::endl;
+    // std::cout << "Entry_sig_all = " << Entry_sig_all << std::endl;
+    // std::cout << "Entry_sig = " << Entry_sig << std::endl;
+    // std::cout << "Entry_bkg = " << Entry_bkg << std::endl;
+    // std::cout << "Entry_data = " << Entry_data << std::endl;
   }
 
   double prob_sig = Entry_sig / (Entry_bkg + Entry_sig);
