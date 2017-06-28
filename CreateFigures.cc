@@ -35,6 +35,8 @@
 
 #include "SampleList.h"
 
+using namespace std;
+
 #define UNUSED(x) (void)(x) // to avoid unused compiler warning
 
 const TString figure_dir = "AN_figures";
@@ -549,12 +551,18 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
   
   std::vector<TString> vSuffix;
   // vSuffix.push_back("_NONE");
-  const bool inverted = false;
+  const bool inverted = true;
   if (inverted) {
-    vSuffix.push_back("_Rest");
-    vSuffix.push_back("_SD1");
     vSuffix.push_back("_SD2");
+    vSuffix.push_back("_SD1");
     vSuffix.push_back("_DD");
+    vSuffix.push_back("_Rest");
+
+
+    // vSuffix.push_back("_Rest");
+    // vSuffix.push_back("_SD1");
+    // vSuffix.push_back("_SD2");
+    // vSuffix.push_back("_DD");
 
 
 
@@ -575,7 +583,7 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
 
   single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8");
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS",false);
+  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS",false);
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1",false);
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1",false);
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2",false);
@@ -585,10 +593,15 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
 
 
   std::vector<TString> vSuff_XiEventSel;
-  vSuff_XiEventSel.push_back("_Rest");
   vSuff_XiEventSel.push_back("_SD2");
   vSuff_XiEventSel.push_back("_SD1");
   vSuff_XiEventSel.push_back("_DD");
+  vSuff_XiEventSel.push_back("_Rest");
+
+  // vSuff_XiEventSel.push_back("_Rest");
+  // vSuff_XiEventSel.push_back("_SD2");
+  // vSuff_XiEventSel.push_back("_SD1");
+  // vSuff_XiEventSel.push_back("_DD");
   mSingleTrainingVar["EtaDeltaZero"].hist_name = "Hist_eventXiID_DeltaZero";
   mSingleTrainingVar["EtaMin"].hist_name = "Hist_eventXiID_Min";
   mSingleTrainingVar["EtaMax"].hist_name = "Hist_eventXiID_Max";
@@ -952,11 +965,11 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
 
   std::vector<TString> vSuffix;
   // vSuffix.push_back("_NONE");
-  vSuffix.push_back("_Rest");
-  vSuffix.push_back("_SD1");
   vSuffix.push_back("_SD2");
+  vSuffix.push_back("_SD1");
+  vSuffix.push_back("_Rest");
   vSuffix.push_back("_DD");
-
+  
   TString mc_sample_name = "XiCutPythia8";
   TString data_sample_name = "Data";
   TString sSignal ="DD";
@@ -1034,6 +1047,10 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
   }
 
   TH1F* hMC = (TH1F*)mc_file->Get(hist_name);
+  if (!hMC) {
+    cout << "cannot read " << hist_name << " from file " << mc_file->GetName() << endl;
+    exit(1);
+  }
   // hMC->Scale( 1./events_mc, "width" );
   hMC->Scale( 1./lumi_mc, "width" );
   ch.addHist( hMC, "HIST", kBlue+2 );
@@ -1042,6 +1059,10 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
   //////////////////////////////////////////////////////////////////////////
   // access data hist
   TH1F* hData = (TH1F*)data_file->Get(hist_name);
+  if (!hData) {
+    cout << "cannot read " << hist_name << " from file " << data_file->GetName() << endl;
+    exit(1);
+  }
 
   //////////////////////////////////////////////////////////////////////////
   // get data lumi
@@ -1338,7 +1359,7 @@ void calc_signal_cross_section(std::map<TString, SampleList::sSample>& mSample)
 
   //////////////////////////////////////////////////////////////////////////
   // value to cut in classifier/discriminant output distribution
-  double classifier_cut = 0.5;
+  double classifier_cut = 0.6;
 
   double Entry_sig= 0; 
   double Entry_sig_all = 0;

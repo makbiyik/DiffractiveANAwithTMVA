@@ -67,21 +67,37 @@ TString get_Pythia_Process_ID(int Pythia8processid) {
    return "_Rest";
 }
 
-TString get_Pythia_Process_ID(int EventselectionXiprocessDD_tree,
+TString get_Pythia_Process_ID(TString& sampleSignal,
+                              int EventselectionXiprocessDD_tree,
                               int EventselectionXiprocessSD1_tree,
                               int EventselectionXiprocessSD2_tree,
                               int EventselectionXiprocessRest_tree) {
 
 
-   if (EventselectionXiprocessDD_tree == 1) {
-      return "_DD";
-   } else if (EventselectionXiprocessSD1_tree == 1) {
-      return "_SD1";
-   } else if (EventselectionXiprocessSD2_tree == 1) {
-      return "_SD2";
-   } else if (EventselectionXiprocessRest_tree == 1) {
-      return "_Rest";
+   if ( sampleSignal == "DD" ) {
+      if (EventselectionXiprocessDD_tree == 1) 
+         return "_DD";
+   } else if ( sampleSignal == "SD1" ) {
+      if (EventselectionXiprocessSD1_tree == 1) 
+         return "_SD1";
+   } else if ( sampleSignal == "SD2" ) {
+      if (EventselectionXiprocessSD2_tree == 1) 
+         return "_SD2";
+   } else if ( sampleSignal == "Rest" ) {
+      if (EventselectionXiprocessRest_tree == 1) 
+         return "_Rest";
    }
+
+
+   // if (EventselectionXiprocessDD_tree == 1) {
+   //    return "_DD";
+   // } else if (EventselectionXiprocessSD1_tree == 1) {
+   //    return "_SD1";
+   // } else if (EventselectionXiprocessSD2_tree == 1) {
+   //    return "_SD2";
+   // } else if (EventselectionXiprocessRest_tree == 1) {
+   //    return "_Rest";
+   // }
 
    return "_Rest";
 }
@@ -139,9 +155,9 @@ void Diffractive_TMVApplication()
    // - the variable names MUST corresponds in name and type to those given in the weight file(s) used
    
    Float_t deltazero, etamax, etamin;
-   // Float_t  log10XixReco, log10XiyReco;//log10XiDD;
-   Float_t HFminusNtowers ,HFplusNtowers ,CastorNtowers,Ntracks;//RGmean;// ,Pythia8processid,EventselectionXiprocessid;
-   Float_t MaxCastorEnergy; //CastorSumEnergy,CaloReducedenergyClass, HFSumEnergy;//;//MaxHFEnergy;
+   Float_t  log10XixReco, log10XiyReco;//log10XiDD;
+   Float_t HFminusNtowers, HFplusNtowers ,CastorNtowers,Ntracks;//RGmean;// ,Pythia8processid,EventselectionXiprocessid;
+   Float_t MaxCastorEnergy,CaloReducedenergyClass; //CastorSumEnergy,CaloReducedenergyClass, HFSumEnergy;//;//MaxHFEnergy;
    
 
    reader->AddVariable( "deltazero", &deltazero );
@@ -151,12 +167,12 @@ void Diffractive_TMVApplication()
    reader->AddVariable( "HFplusNtowers" , &HFplusNtowers);
    reader->AddVariable( "CastorNtowers" , &CastorNtowers);
    reader->AddVariable( "Ntracks" ,&Ntracks );
-   // reader->AddVariable( "CaloReducedenergyClass",&CaloReducedenergyClass);
+   reader->AddVariable( "CaloReducedenergyClass",&CaloReducedenergyClass);
    // reader->AddVariable( "CastorSumEnergy",&CastorSumEnergy);
    // reader->AddVariable( "HFSumEnergy",&HFSumEnergy);
    reader->AddVariable( "MaxCastorEnergy",&MaxCastorEnergy);
-   // reader->AddVariable( "log10XixReco" , &log10XixReco );
-   // reader->AddVariable( "log10XiyReco" , &log10XiyReco );
+   reader->AddVariable( "log10XixReco" , &log10XixReco );
+   reader->AddVariable( "log10XiyReco" , &log10XiyReco );
    // reader->AddVariable( "MaxHFEnergy",&MaxHFEnergy);
    // reader->AddVariable( "RGmean",&RGmean);
    
@@ -230,10 +246,12 @@ void Diffractive_TMVApplication()
    ////////////////////////////////////////////////////////////////////////////
    std::cout << "--- TMVAClassification       : Using input file: " << mSample[sampleName].file->GetName() << std::endl;
  
+   // --- Get trained signal for this sampleName
+   TString sampleSignal = mSample[sampleName].signal;
+
    // --- Register the training and test trees   
    std::cout << "--- Select signal sample" << std::endl;
    TTree* theTree = (TTree*)mSample[sampleName].file->Get(mSample[sampleName].tree_name + "/AllTree");
-   
 
    Int_t HFminusNtowers_tree ,HFplusNtowers_tree ,CastorNtowers_tree,Ntracks_tree;
    Int_t Pythia8processid_tree;
@@ -242,8 +260,8 @@ void Diffractive_TMVApplication()
    theTree->SetBranchAddress("deltazero", &deltazero);
    theTree->SetBranchAddress("etamax", &etamax);
    theTree->SetBranchAddress("etamin", &etamin);
-   // theTree->SetBranchAddress("log10XixReco", &log10XixReco);
-   // theTree->SetBranchAddress("log10XiyReco", &log10XiyReco);
+   theTree->SetBranchAddress("log10XixReco", &log10XixReco);
+   theTree->SetBranchAddress("log10XiyReco", &log10XiyReco);
    theTree->SetBranchAddress("HFminusNtowers", &HFminusNtowers_tree);
    theTree->SetBranchAddress("HFplusNtowers", &HFplusNtowers_tree);
    theTree->SetBranchAddress("CastorNtowers", &CastorNtowers_tree);
@@ -254,7 +272,7 @@ void Diffractive_TMVApplication()
    theTree->SetBranchAddress("EventselectionXiprocessSD1",&EventselectionXiprocessSD1_tree);
    theTree->SetBranchAddress("EventselectionXiprocessSD2",&EventselectionXiprocessSD2_tree);
    theTree->SetBranchAddress("EventselectionXiprocessRest",&EventselectionXiprocessRest_tree);
-   // theTree->SetBranchAddress("CaloReducedenergyClass", &CaloReducedenergyClass);
+   theTree->SetBranchAddress("CaloReducedenergyClass", &CaloReducedenergyClass);
    // theTree->SetBranchAddress( "CastorSumEnergy",&CastorSumEnergy);
    // theTree->SetBranchAddress( "HFSumEnergy",&HFSumEnergy);
    theTree->SetBranchAddress( "MaxCastorEnergy",&MaxCastorEnergy);
@@ -294,9 +312,8 @@ void Diffractive_TMVApplication()
 
       // Fill hist depending on proccess ID string
       TString proccess = "" ;
-     
       if (mSample[sampleName].procesesID_pythia8) proccess = get_Pythia_Process_ID(Pythia8processid_tree);
-      else proccess = get_Pythia_Process_ID(EventselectionXiprocessDD_tree, EventselectionXiprocessSD1_tree, EventselectionXiprocessSD2_tree, EventselectionXiprocessRest_tree);  
+      else proccess = get_Pythia_Process_ID(sampleSignal, EventselectionXiprocessDD_tree, EventselectionXiprocessSD1_tree, EventselectionXiprocessSD2_tree, EventselectionXiprocessRest_tree);  
 
 
       for(std::map<TString, TString>::iterator it=mMethodeHistSuffix.begin(); it!=mMethodeHistSuffix.end(); it++) {

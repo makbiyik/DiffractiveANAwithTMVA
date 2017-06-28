@@ -56,11 +56,16 @@
 #include "TObjString.h"
 #include "TSystem.h"
 #include "TROOT.h"
+#include "TApplication.h"
+
 #include "TMVA/Factory.h"
 #include "TMVA/Tools.h"
-// #include "TMVA/TMVAGui.h"
+#include "TMVA/TMVAGui.h"
 #include "TMVA/Config.h"
+
 #include "SampleList.h"
+
+
 #define UNUSED(x) (void)(x) // to avoid unused compiler warning
 
 
@@ -89,17 +94,17 @@ int Diffractive_TMVAClassification()
    factory->AddVariable( "HFplusNtowers","HFplusNtowers", "units", 'I' );//Log->logdegistirdin
    factory->AddVariable( "CastorNtowers","CastorNtowers", "units", 'I' );
    factory->AddVariable( "Ntracks","Ntracks", "units", 'I' );
-   // factory->AddVariable( "CaloReducedenergyClass","CaloReducedenergyClass", "units", 'F' );
+   factory->AddVariable( "CaloReducedenergyClass","CaloReducedenergyClass", "units", 'F' );
    // factory->AddVariable( "CastorSumEnergy","CastorSumEnergy", "units", 'F' );
    // factory->AddVariable( "HFSumEnergy","HFSumEnergy", "units", 'F' );
    // factory->AddVariable( "MaxHFEnergy","MaxHFEnergy", "units", 'F' );
    factory->AddVariable( "MaxCastorEnergy","MaxCastorEnergy", "units", 'F' );
-   // factory->AddVariable( "log10XixReco","log10XixReco", "units", 'F' );
-   // factory->AddVariable( "log10XiyReco","log10XiyReco", "units", 'F' );//Log->logdegistirdin
+   factory->AddVariable( "log10XixReco","log10XixReco", "units", 'F' );
+   factory->AddVariable( "log10XiyReco","log10XiyReco", "units", 'F' );//Log->logdegistirdin
    // factory->AddVariable( "RGmean","RGmean", "units", 'F' );
 
 
-   TString sample_name = "Pythia8";
+   TString sample_name = "XiCutEPOSSD2";
    TFile *input = mSample[sample_name].file;
    std::cout << "--- TMVAClassification       : Using input file: " << input->GetName() << std::endl;
 
@@ -135,9 +140,10 @@ int Diffractive_TMVAClassification()
    // Apply additional cuts on the signal and background samples (can be different)
    TCut mycuts = "deltazero>=0" ; // for example: TCut mycuts = "abs(var1)<0.5 && abs(var2-0.5)<1";
    TCut mycutb = "deltazero>=0"; // for example: TCut mycutb = "abs(var1)<0.5";
+   // 
    factory->PrepareTrainingAndTestTree( mycuts, mycutb,
-                                        // "nTrain_Signal=60000:nTest_Signal=60000:nTrain_Background=60000:nTest_Background=60000:SplitMode=Random:NormMode=NumEvents:!V" );
-                                       "nTrain_Signal=1000:nTest_Signal=7000:nTrain_Background=1000:nTest_Background=7000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                        "nTrain_Signal=25000:nTest_Signal=7500:nTrain_Background=25000:nTest_Background=7500:SplitMode=Random:NormMode=NumEvents:!V" );
+                                       // "nTrain_Signal=1000:nTest_Signal=7000:nTrain_Background=1000:nTest_Background=7000:SplitMode=Random:NormMode=NumEvents:!V" );
 
                                           //100000
 
@@ -154,7 +160,10 @@ int Diffractive_TMVAClassification()
    // Cut optimisation
    
    // Boosted Decision Trees
-   factory->BookMethod( TMVA::Types::kBDT, "BDTG", "!H:!V:NTrees=1000:MinNodeSize=2.5%:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.9:nCuts=20:MaxDepth=2" );
+   factory->BookMethod( TMVA::Types::kBDT, "BDTG", "!H:!V:NTrees=1000:MinNodeSize=2.5%:BoostType=Grad:Shrinkage=0.3:UseBaggedBoost:BaggedSampleFraction=0.9:nCuts=20:MaxDepth=3" );
+   // factory->BookMethod( TMVA::Types::kBDT, "BDTG", "!H:!V:NTrees=1000:MinNodeSize=2.5%:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.9:nCuts=20:MaxDepth=2" );
+
+
    // factory->BookMethod( TMVA::Types::kFisher, "Fisher", "H:!V:Fisher:VarTransform=None:CreateMVAPdfs:PDFInterpolMVAPdf=Spline2:NbinsMVAPdf=50:NsmoothMVAPdf=10" );
    // factory->BookMethod( TMVA::Types::kLD, "LD", "H:!V:VarTransform=None:CreateMVAPdfs:PDFInterpolMVAPdf=Spline2:NbinsMVAPdf=50:NsmoothMVAPdf=10" );
    // factory->BookMethod( TMVA::Types::kLikelihood, "Likelihood","H:!V:TransformOutput:PDFInterpol=Spline2:NSmoothSig[0]=20:NSmoothBkg[0]=20:NSmoothBkg[1]=10:NSmooth=1:NAvEvtPerBin=50" );
@@ -182,15 +191,23 @@ int Diffractive_TMVAClassification()
 
    // Launch the GUI for the root macros
    // if (!gROOT->IsBatch()) TMVA::TMVAGui( outfileName );
+   TMVA::TMVAGui( outfileName );
 
    return 0;
 }
 
+// !!! to start TMVAGui start Gui inside root
+// !!! > root -l
+// !!! > TMVA::TMVAGui("data/TMVA.root") // <- check outfileName
 int main( int argc, char** argv )
 {
    UNUSED(argc);
    UNUSED(argv);
 
+
+   //////////////////////////////////////////////////////////////////////////
+   // later say app->Run() to freeze the program before execution
+   TApplication * app = new TApplication("app",0,0);
 
    // Select methods (don't look at this code - not of interest)
    // TString methodList = ""; 
@@ -200,5 +217,13 @@ int main( int argc, char** argv )
    //    if (!methodList.IsNull()) methodList += TString(","); 
    //    methodList += regMethod;
    // }
-   return Diffractive_TMVAClassification(); 
+
+   Diffractive_TMVAClassification(); 
+
+   /////////////////////////////////////////////////
+   // freeze program
+   app->Run();
+   /////////////////////////////////////////////////
+
+   return 0;
 }
