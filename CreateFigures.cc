@@ -98,11 +98,13 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
                                    std::vector<TString>& vSuffix,
                                    std::map<TString, sSingleVar>& mSingleTrainingVar,
                                    TString sample_name,
+                                   TString data_sample_name,
                                    bool scale_data = true);
 std::map<TString, TH1*> single_figure_compare_mc_data(CanvasHelper& ch,
                                                       std::map<TString, SampleList::sSample>& mSample,
                                                       std::vector<TString>& vSuffix,
                                                       TString sample_name,
+                                                      TString data_sample_name,
                                                       TString hist_var_name,
                                                       // TLegend* leg,
                                                       bool scale_data = true);
@@ -118,7 +120,8 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
 void discriminant_results(std::map<TString, SampleList::sSample>& mSample);
 
 
-void calc_signal_cross_section(std::map<TString, SampleList::sSample>& mSample);
+void calc_signal_cross_section(std::map<TString, SampleList::sSample>& mSample
+                              );
 
 //////////////////////////////////////////////////////////////////////////
 // main function
@@ -157,7 +160,7 @@ int main( int argc, char** argv )
 
   //////////////////////////////////////////////////////////////////////////
   // compare training variables MC with DATA
-  training_variables_compare_mc_data(mSample);
+  // training_variables_compare_mc_data(mSample);
 
 
   discriminant_compare_mc_data(mSample);
@@ -184,6 +187,21 @@ std::map<TString, sSingleVar> build_hist_parameters()
 {
 
   std::map<TString, sSingleVar> mSingleTrainingVar;
+
+  
+
+  mSingleTrainingVar["ForwardEtaDelta"].hist_name = "Hist_forwarddelta";
+  mSingleTrainingVar["ForwardEtaDelta"].xaxis_title = "#Delta#eta^{f}";
+  mSingleTrainingVar["ForwardEtaDelta"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
+  mSingleTrainingVar["ForwardEtaDelta"].ratio_title = "MC / Data";
+  mSingleTrainingVar["ForwardEtaDelta"].canvas_title = "cForwardDeltaEta_";
+  mSingleTrainingVar["ForwardEtaDelta"].xmin = 0;
+  mSingleTrainingVar["ForwardEtaDelta"].xmax = 9;
+  mSingleTrainingVar["ForwardEtaDelta"].ymin = 1;
+  mSingleTrainingVar["ForwardEtaDelta"].ymax = 1e10;
+  mSingleTrainingVar["ForwardEtaDelta"].rmin = 0;
+  mSingleTrainingVar["ForwardEtaDelta"].rmax = 3;
+  mSingleTrainingVar["ForwardEtaDelta"].cms_alignment = 33;
 
   mSingleTrainingVar["EtaDeltaZero"].hist_name = "Hist_Eta_DeltaZero";
   mSingleTrainingVar["EtaDeltaZero"].xaxis_title = "#Delta#eta_{0}";
@@ -581,15 +599,76 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
 */
   std::map<TString, sSingleVar> mSingleTrainingVar = build_hist_parameters();
 
-  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8");
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1",false);
-  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD2",false); 
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8Rest",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSRest",false); 
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8","Data");
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS","Data",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1","Data",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1","Data",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2","Data",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD2","Data",false); 
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8Rest","Data",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data",false); 
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1_sysplus","Data",false); 
+ 
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8","Data_sysHFPlus");
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data_sysHFPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS","Data_sysHFPlus",false);
+  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1","Data_sysHFPlus",true);
+  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1","Data_sysHFPlus",true);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2","Data_sysHFPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD2","Data_sysHFPlus",false); 
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8Rest","Data_sysHFPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data_sysHFPlus",false); 
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1_sysplus","Data_sysHFPlus",false); 
+ 
+
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8","DATA_sysCastorPlus");
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","DATA_sysCastorPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS","DATA_sysCastorPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1","DATA_sysCastorPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1","DATA_sysCastorPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2","DATA_sysCastorPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD2","DATA_sysCastorPlus",false); 
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8Rest","DATA_sysCastorPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","DATA_sysCastorPlus",false); 
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1_sysplus","DATA_sysCastorPlus",false); 
+
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8","Data_sysCastorMinus");
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data_sysCastorMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS","Data_sysCastorMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1","Data_sysCastorMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1","Data_sysCastorMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2","Data_sysCastorMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD2","Data_sysCastorMinus",false); 
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8Rest","Data_sysCastorMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data_sysCastorMinus",false); 
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1_sysplus","Data_sysCastorMinus",false); 
+
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8","Data_sysTrackPlus");
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data_sysTrackPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS","Data_sysTrackPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1","Data_sysTrackPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1","Data_sysTrackPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2","Data_sysTrackPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD2","Data_sysTrackPlus",false); 
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8Rest","Data_sysTrackPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data_sysTrackPlus",false); 
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1_sysplus","Data_sysTrackPlus",false); 
+
+
+
+ // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8","Data_sysTrackMinus");
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data_sysTrackMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS","Data_sysTrackMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1","Data_sysTrackMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1","Data_sysTrackMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2","Data_sysTrackMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD2","Data_sysTrackMinus",false); 
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8Rest","Data_sysTrackMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data_sysTrackMinus",false); 
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1_sysplus","Data_sysTrackMinus",false); 
+
+
 
 
   std::vector<TString> vSuff_XiEventSel;
@@ -602,6 +681,7 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
   // vSuff_XiEventSel.push_back("_SD2");
   // vSuff_XiEventSel.push_back("_SD1");
   // vSuff_XiEventSel.push_back("_DD");
+  mSingleTrainingVar["ForwardEtaDelta"].hist_name = "Hist_eventXiID_forwarddelta";
   mSingleTrainingVar["EtaDeltaZero"].hist_name = "Hist_eventXiID_DeltaZero";
   mSingleTrainingVar["EtaMin"].hist_name = "Hist_eventXiID_Min";
   mSingleTrainingVar["EtaMax"].hist_name = "Hist_eventXiID_Max";
@@ -617,15 +697,61 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
   mSingleTrainingVar["NTracks"].hist_name = "Hist_eventXiID_NbrTracks";
   mSingleTrainingVar["recoXix"].hist_name = "Hist_eventXiID_log10XiX";
   mSingleTrainingVar["recoXiy"].hist_name = "Hist_eventXiID_log10XiY";
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8",true);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOS",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8","Data",true);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOS","Data",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD1","Data",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD1","Data",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD2","Data",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD2","Data",false); 
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8Rest","Data",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"CUETP8M1","Data",false); 
   
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD1",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD1",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD2",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD2",false); 
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8Rest",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSRest",false); 
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8","Data_sysHFPlus",true);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOS","Data_sysHFPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD1","Data_sysHFPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD1","Data_sysHFPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD2","Data_sysHFPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD2","Data_sysHFPlus",false); 
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8Rest","Data_sysHFPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"CUETP8M1","Data_sysHFPlus",false); 
+
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8","DATA_sysCastorPlus",true);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOS","DATA_sysCastorPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD1","DATA_sysCastorPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD1","DATA_sysCastorPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD2","DATA_sysCastorPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD2","DATA_sysCastorPlus",false); 
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8Rest","DATA_sysCastorPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"CUETP8M1","DATA_sysCastorPlus",false); 
+
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8","Data_sysCastorMinus",true);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOS","Data_sysCastorMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD1","Data_sysCastorMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD1","Data_sysCastorMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD2","Data_sysCastorMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD2","Data_sysCastorMinus",false); 
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8Rest","Data_sysCastorMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"CUETP8M1","Data_sysCastorMinus",false); 
+
+   // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8","Data_sysTrackPlus",true);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOS","Data_sysTrackPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD1","Data_sysTrackPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD1","Data_sysTrackPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD2","Data_sysTrackPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD2","Data_sysTrackPlus",false); 
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8Rest","Data_sysTrackPlus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"CUETP8M1","Data_sysTrackPlus",false); 
+
+
+
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8","Data_sysTrackMinus",true);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOS","Data_sysTrackMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD1","Data_sysTrackMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD1","Data_sysTrackMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD2","Data_sysTrackMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD2","Data_sysTrackMinus",false); 
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8Rest","Data_sysTrackMinus",false);
+  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"CUETP8M1","Data_sysTrackMinus",false); 
 
 
 
@@ -639,6 +765,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
                                    std::vector<TString>& vSuffix,
                                    std::map<TString, sSingleVar>& mSingleTrainingVar,
                                    TString sample_name,
+                                   TString data_sample_name,
                                    bool scale_data) 
 {
 
@@ -662,12 +789,29 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
                                             it->second.yaxis_title,
                                             it->second.ratio_title);
 
-    mDrawHists[it->first] = single_figure_compare_mc_data(ch,mSample,vSuffix,sample_name,it->second.hist_name,scale_data);
-    ch.DrawCMSPreliminary(true,it->second.cms_alignment,"0.34 #mub^{-1} (13 TeV)");
+    mDrawHists[it->first] = single_figure_compare_mc_data(ch,mSample,vSuffix,sample_name,data_sample_name,it->second.hist_name,scale_data);
+    ch.DrawCMSPreliminary(true,it->second.cms_alignment,"3.86 #mub^{-1} (13 TeV)");
   }
 
   //////////////////////////////////////////////////////////////////////////
   // Draw Legends for different Hists
+  mCanvas["ForwardEtaDelta"]->cd(1);
+  mLegend["ForwardEtaDelta"] = new TLegend(0.37,0.50,0.72,0.87);
+  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+    // define legend text for stacked hist
+    TString leg_text = vSuffix[iSuffix];
+    leg_text.Remove(0,1);
+    // add legend entry
+    mLegend["ForwardEtaDelta"]->AddEntry( mDrawHists["ForwardEtaDelta"][ vSuffix[iSuffix] ], leg_text, "f" );
+  }
+  mLegend["ForwardEtaDelta"]->AddEntry( mDrawHists["ForwardEtaDelta"][sample_name], sample_name, "l" );
+  mLegend["ForwardEtaDelta"]->AddEntry( mDrawHists["ForwardEtaDelta"][data_sample_name], "Data", "lep" );
+  mLegend["ForwardEtaDelta"]->Draw("same");
+  if(draw_figure) mCanvas["ForwardEtaDelta"]->Print( figure_dir + "/ForwardEtaDelta_" + sample_name + "." + figure_type );
+
+
+
+
   mCanvas["EtaDeltaZero"]->cd(1);
   mLegend["EtaDeltaZero"] = new TLegend(0.37,0.50,0.72,0.87);
   for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
@@ -678,7 +822,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"][ vSuffix[iSuffix] ], leg_text, "f" );
   }
   mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"][sample_name], sample_name, "l" );
-  mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"]["Data"], "Data", "lep" );
+  mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"][data_sample_name], "Data", "lep" );
   mLegend["EtaDeltaZero"]->Draw("same");
   if(draw_figure) mCanvas["EtaDeltaZero"]->Print( figure_dir + "/EtaDeltaZero_" + sample_name + "." + figure_type );
 
@@ -693,7 +837,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     mLegend["EtaMin"]->AddEntry( mDrawHists["EtaMin"][ vSuffix[iSuffix] ], leg_text, "f" );
   }
   mLegend["EtaMin"]->AddEntry( mDrawHists["EtaMin"][sample_name], sample_name, "l" );
-  mLegend["EtaMin"]->AddEntry( mDrawHists["EtaMin"]["Data"], "Data", "lep" );
+  mLegend["EtaMin"]->AddEntry( mDrawHists["EtaMin"][data_sample_name], "Data", "lep" );
   mLegend["EtaMin"]->Draw("same");
   if(draw_figure) mCanvas["EtaMin"]->Print( figure_dir + "/EtaMin_" + sample_name + "." + figure_type );
   
@@ -707,7 +851,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     mLegend["EtaMax"]->AddEntry( mDrawHists["EtaMax"][ vSuffix[iSuffix] ], leg_text, "f" );
   }
   mLegend["EtaMax"]->AddEntry( mDrawHists["EtaMax"][sample_name], sample_name, "l" );
-  mLegend["EtaMax"]->AddEntry( mDrawHists["EtaMax"]["Data"], "Data", "lep" );
+  mLegend["EtaMax"]->AddEntry( mDrawHists["EtaMax"][data_sample_name], "Data", "lep" );
   mLegend["EtaMax"]->Draw("same");
   if(draw_figure) mCanvas["EtaMax"]->Print( figure_dir + "/EtaMax_" + sample_name + "." + figure_type );
 
@@ -721,7 +865,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     mLegend["NTowHF_plus"]->AddEntry( mDrawHists["NTowHF_plus"][ vSuffix[iSuffix] ], leg_text, "f" );
   }
   mLegend["NTowHF_plus"]->AddEntry( mDrawHists["NTowHF_plus"][sample_name], sample_name, "l" );
-  mLegend["NTowHF_plus"]->AddEntry( mDrawHists["NTowHF_plus"]["Data"], "Data", "lep" );
+  mLegend["NTowHF_plus"]->AddEntry( mDrawHists["NTowHF_plus"][data_sample_name], "Data", "lep" );
   mLegend["NTowHF_plus"]->Draw("same");
   if(draw_figure) mCanvas["NTowHF_plus"]->Print( figure_dir + "/NTowHF_plus_" + sample_name + "." + figure_type );
   
@@ -735,7 +879,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     mLegend["NTowHF_minus"]->AddEntry( mDrawHists["NTowHF_minus"][ vSuffix[iSuffix] ], leg_text, "f" );
   }
   mLegend["NTowHF_minus"]->AddEntry( mDrawHists["NTowHF_minus"][sample_name], sample_name, "l" );
-  mLegend["NTowHF_minus"]->AddEntry( mDrawHists["NTowHF_minus"]["Data"], "Data", "lep" );
+  mLegend["NTowHF_minus"]->AddEntry( mDrawHists["NTowHF_minus"][data_sample_name], "Data", "lep" );
   mLegend["NTowHF_minus"]->Draw("same");
   if(draw_figure) mCanvas["NTowHF_minus"]->Print( figure_dir + "/NTowHF_minus_" + sample_name + "." + figure_type );
 
@@ -749,7 +893,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     mLegend["NTowCastor"]->AddEntry( mDrawHists["NTowCastor"][ vSuffix[iSuffix] ], leg_text, "f" );
   }
   mLegend["NTowCastor"]->AddEntry( mDrawHists["NTowCastor"][sample_name], sample_name, "l" );
-  mLegend["NTowCastor"]->AddEntry( mDrawHists["NTowCastor"]["Data"], "Data", "lep" );
+  mLegend["NTowCastor"]->AddEntry( mDrawHists["NTowCastor"][data_sample_name], "Data", "lep" );
   mLegend["NTowCastor"]->Draw("same");
   if(draw_figure) mCanvas["NTowCastor"]->Print( figure_dir + "/NTowCastor_" + sample_name + "." + figure_type );
 
@@ -764,7 +908,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     mLegend["NTow"]->AddEntry( mDrawHists["NTow"][ vSuffix[iSuffix] ], leg_text, "f" );
   }
   mLegend["NTow"]->AddEntry( mDrawHists["NTow"][sample_name], sample_name, "l" );
-  mLegend["NTow"]->AddEntry( mDrawHists["NTow"]["Data"], "Data", "lep" );
+  mLegend["NTow"]->AddEntry( mDrawHists["NTow"][data_sample_name], "Data", "lep" );
   mLegend["NTow"]->Draw("same");
   if(draw_figure) mCanvas["NTow"]->Print( figure_dir + "/NTow_" + sample_name + "." + figure_type );
 
@@ -779,7 +923,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     mLegend["NTowMaxHF"]->AddEntry( mDrawHists["NTowMaxHF"][ vSuffix[iSuffix] ], leg_text, "f" );
   }
   mLegend["NTowMaxHF"]->AddEntry( mDrawHists["NTowMaxHF"][sample_name], sample_name, "l" );
-  mLegend["NTowMaxHF"]->AddEntry( mDrawHists["NTowMaxHF"]["Data"], "Data", "lep" );
+  mLegend["NTowMaxHF"]->AddEntry( mDrawHists["NTowMaxHF"][data_sample_name], "Data", "lep" );
   mLegend["NTowMaxHF"]->Draw("same");
   if(draw_figure) mCanvas["NTowMaxHF"]->Print( figure_dir + "/NTowMaxHF_" + sample_name + "." + figure_type );
 
@@ -793,7 +937,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     mLegend["SumEnergyHF"]->AddEntry( mDrawHists["SumEnergyHF"][ vSuffix[iSuffix] ], leg_text, "f" );
   }
   mLegend["SumEnergyHF"]->AddEntry( mDrawHists["SumEnergyHF"][sample_name], sample_name, "l" );
-  mLegend["SumEnergyHF"]->AddEntry( mDrawHists["SumEnergyHF"]["Data"], "Data", "lep" );
+  mLegend["SumEnergyHF"]->AddEntry( mDrawHists["SumEnergyHF"][data_sample_name], "Data", "lep" );
   mLegend["SumEnergyHF"]->Draw("same");
   if(draw_figure) mCanvas["SumEnergyHF"]->Print( figure_dir + "/SumEnergyHF_" + sample_name + "." + figure_type );
 
@@ -807,7 +951,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     mLegend["SumEnergyCastor"]->AddEntry( mDrawHists["SumEnergyCastor"][ vSuffix[iSuffix] ], leg_text, "f" );
   }
   mLegend["SumEnergyCastor"]->AddEntry( mDrawHists["SumEnergyCastor"][sample_name], sample_name, "l" );
-  mLegend["SumEnergyCastor"]->AddEntry( mDrawHists["SumEnergyCastor"]["Data"], "Data", "lep" );
+  mLegend["SumEnergyCastor"]->AddEntry( mDrawHists["SumEnergyCastor"][data_sample_name], "Data", "lep" );
   mLegend["SumEnergyCastor"]->Draw("same");
   if(draw_figure) mCanvas["SumEnergyCastor"]->Print( figure_dir + "/SumEnergyCastor_" + sample_name + "." + figure_type );
 
@@ -824,7 +968,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     mLegend["NTowMaxCastor"]->AddEntry( mDrawHists["NTowMaxCastor"][ vSuffix[iSuffix] ], leg_text, "f" );
   }
   mLegend["NTowMaxCastor"]->AddEntry( mDrawHists["NTowMaxCastor"][sample_name], sample_name, "l" );
-  mLegend["NTowMaxCastor"]->AddEntry( mDrawHists["NTowMaxCastor"]["Data"], "Data", "lep" );
+  mLegend["NTowMaxCastor"]->AddEntry( mDrawHists["NTowMaxCastor"][data_sample_name], "Data", "lep" );
   mLegend["NTowMaxCastor"]->Draw("same");
   if(draw_figure) mCanvas["NTowMaxCastor"]->Print( figure_dir + "/NTowMaxCastor_" + sample_name + "." + figure_type );
 
@@ -842,7 +986,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     mLegend["NTracks"]->AddEntry( mDrawHists["NTracks"][ vSuffix[iSuffix] ], leg_text, "f" );
   }
   mLegend["NTracks"]->AddEntry( mDrawHists["NTracks"][sample_name], sample_name, "l" );
-  mLegend["NTracks"]->AddEntry( mDrawHists["NTracks"]["Data"], "Data", "lep" );
+  mLegend["NTracks"]->AddEntry( mDrawHists["NTracks"][data_sample_name], "Data", "lep" );
   mLegend["NTracks"]->Draw("same");
   if(draw_figure) mCanvas["NTracks"]->Print( figure_dir + "/NTracks_" + sample_name + "." + figure_type );
   
@@ -856,7 +1000,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     mLegend["recoXix"]->AddEntry( mDrawHists["recoXix"][ vSuffix[iSuffix] ], leg_text, "f" );
   }
   mLegend["recoXix"]->AddEntry( mDrawHists["recoXix"][sample_name], sample_name, "l" );
-  mLegend["recoXix"]->AddEntry( mDrawHists["recoXix"]["Data"], "Data", "lep" );
+  mLegend["recoXix"]->AddEntry( mDrawHists["recoXix"][data_sample_name], "Data", "lep" );
   mLegend["recoXix"]->Draw("same");
   if(draw_figure) mCanvas["recoXix"]->Print( figure_dir + "/recoXix_" + sample_name + "." + figure_type );
 
@@ -870,7 +1014,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     mLegend["recoXiy"]->AddEntry( mDrawHists["recoXiy"][ vSuffix[iSuffix] ], leg_text, "f" );
   }
   mLegend["recoXiy"]->AddEntry( mDrawHists["recoXiy"][sample_name], sample_name, "l" );
-  mLegend["recoXiy"]->AddEntry( mDrawHists["recoXiy"]["Data"], "Data", "lep" );
+  mLegend["recoXiy"]->AddEntry( mDrawHists["recoXiy"][data_sample_name], "Data", "lep" );
   mLegend["recoXiy"]->Draw("same");
   if(draw_figure) mCanvas["recoXiy"]->Print( figure_dir + "/recoXiy_" + sample_name + "." + figure_type );
 }
@@ -885,6 +1029,7 @@ single_figure_compare_mc_data(CanvasHelper& ch,
                               std::map<TString, SampleList::sSample>& mSample,
                               std::vector<TString>& vSuffix,
                               TString sample_name,
+                              TString data_sample_name,
                               TString hist_var_name,
                               // TLegend* leg,
                               bool scale_data) 
@@ -894,7 +1039,7 @@ single_figure_compare_mc_data(CanvasHelper& ch,
   std::map<TString, TH1*> mDrawHists;
 
   double lumi_mc   = mSample[sample_name].lumi;
-  double lumi_data = mSample["Data"].lumi;
+  double lumi_data = mSample[data_sample_name].lumi;
 
   //////////////////////////////////////////////////////////////////////////
   // stack the hists together
@@ -911,7 +1056,7 @@ single_figure_compare_mc_data(CanvasHelper& ch,
   }
 
   TH1F* hMC = (TH1F*)mSample[sample_name].file->Get(mSample[sample_name].tree_name + "/" + hist_var_name);
-  TH1F* hData = (TH1F*)mSample["Data"].file->Get(mSample["Data"].tree_name + "/" + hist_var_name);
+  TH1F* hData = (TH1F*)mSample[data_sample_name].file->Get(mSample[data_sample_name].tree_name + "/" + hist_var_name);
 
   // lumi_mc = hMC->GetEntries();
   // lumi_data = hData->GetEntries();
@@ -940,7 +1085,7 @@ single_figure_compare_mc_data(CanvasHelper& ch,
   // access data hist
   if(scale_data) hData->Scale( 1/lumi_data , "width" );
   ch.addDataHist( hData );
-  mDrawHists["Data"] = hData;
+  mDrawHists[data_sample_name] = hData;
 
   ch.addRatioHist( get_Ratio(hMC,hData), "HIST", kBlue );
   ch.addRatioHist( get_Ratio(hData,hData), "EP", kBlack );
@@ -966,9 +1111,10 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
   std::vector<TString> vSuffix;
   // vSuffix.push_back("_NONE");
   vSuffix.push_back("_SD2");
-  vSuffix.push_back("_SD1");
   vSuffix.push_back("_Rest");
-  vSuffix.push_back("_DD");
+  vSuffix.push_back("_SD1");
+  
+  vSuffix.push_back("_DD"); //Signal:DD,SD you need to switch
   
   TString mc_sample_name = "XiCutPythia8";
   TString data_sample_name = "Data";
@@ -1134,7 +1280,7 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
   TCanvas * cROC = chROCurve.initNormalCanvas(0,1.2,0,1.4,"signal efficiency","background rejection",510,510);
   cROC->SetGrid();
 
-  const Int_t n = 40;
+  const Int_t n = 45;
   TGraph *gr = new TGraph(n);
   TGraph *gr_mark_point = new TGraph(1);
   TGraph *gr_dist_aim_point = new TGraph(n);
@@ -1314,7 +1460,9 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
 }  
   
 
-void calc_signal_cross_section(std::map<TString, SampleList::sSample>& mSample)
+void calc_signal_cross_section(std::map<TString, SampleList::sSample>& mSample
+                              
+                             )
 {
   std::vector<TString> vSuffix;
   // vSuffix.push_back("_NONE");
@@ -1359,7 +1507,7 @@ void calc_signal_cross_section(std::map<TString, SampleList::sSample>& mSample)
 
   //////////////////////////////////////////////////////////////////////////
   // value to cut in classifier/discriminant output distribution
-  double classifier_cut = 0.6;
+  double classifier_cut = 0.45;
 
   double Entry_sig= 0; 
   double Entry_sig_all = 0;
@@ -1389,11 +1537,39 @@ void calc_signal_cross_section(std::map<TString, SampleList::sSample>& mSample)
     // std::cout << "Entry_bkg = " << Entry_bkg << std::endl;
     // std::cout << "Entry_data = " << Entry_data << std::endl;
   }
+  
+  
+  
+
+
+  TString histoname = "NentriesWithEventSelectionCuts";
+  TH1F* hentry_mc = (TH1F*)mSample[mc_sample_name].file->Get(mSample[mc_sample_name].tree_name + "/" + histoname);
+  TH1F* hentry_data = (TH1F*)mSample[data_sample_name].file->Get(mSample[data_sample_name].tree_name + "/" + histoname);
+
+  std::cout << hentry_mc << std::endl;
+
+  double Allevents_mc = hentry_mc->GetBinContent(hentry_mc->GetXaxis()->FindBin("all"));
+  
+  double Allevents_data = hentry_data->GetBinContent(hentry_data->GetXaxis()->FindBin("run"));
+ 
+  double eventswithvrtzcut_data = hentry_data->GetBinContent(hentry_data->GetXaxis()->FindBin("vtxcut") );
+  
+  double eventswithvrtzcut_mc = hentry_mc->GetBinContent(hentry_mc->GetXaxis()->FindBin("mc_vtxcut") );
+  
+  double Fsplit = 1 - (eventswithvrtzcut_mc / Allevents_mc);
+  
+  std::cout << "Fsplit: " << Fsplit << std::endl;
+  
+  double eff_PU_data = Allevents_data / eventswithvrtzcut_data;
+  std::cout << "eff_PU_data: " << eff_PU_data << std::endl;
+
+
 
   double prob_sig = Entry_sig / (Entry_bkg + Entry_sig);
-  double eff_sig = Entry_sig / Entry_sig_all;
+  
+  double eff_sig = (Entry_sig * Fsplit )/ Entry_sig_all; //MC signal efficiency
 
-  double eff_number_of_signal_events_in_data = (Entry_data * prob_sig)/eff_sig;
+  double eff_number_of_signal_events_in_data = (Entry_data * prob_sig)/eff_sig; //effictive lumi data
 
   double standartError = std::sqrt(eff_number_of_signal_events_in_data);
 
@@ -1411,7 +1587,7 @@ void calc_signal_cross_section(std::map<TString, SampleList::sSample>& mSample)
   std::cout << "--- number of selected data events = " << Entry_data << std::endl;
   std::cout << "--- !!! Effective Number of Signal Events in Data = " << eff_number_of_signal_events_in_data << " !!! ---" << std::endl;
   std::cout << "--- !!! Standart Error = " << standartError << " !!! ---" << std::endl;
-  std::cout << "--- !!! Effective Signal CROSS SECTION = " << eff_number_of_signal_events_in_data/lumi_data << " ub !!! ---" << std::endl;
+  std::cout << "--- !!! Effective Signal CROSS SECTION = " << eff_number_of_signal_events_in_data/(lumi_data/eff_PU_data) << " ub !!! ---" << std::endl;
   std::cout << "======================================================================" << std::endl;
   std::cout << std::endl;
   std::cout << std::endl;

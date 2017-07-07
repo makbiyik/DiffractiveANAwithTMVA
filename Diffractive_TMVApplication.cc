@@ -253,7 +253,7 @@ void Diffractive_TMVApplication()
    std::cout << "--- Select signal sample" << std::endl;
    TTree* theTree = (TTree*)mSample[sampleName].file->Get(mSample[sampleName].tree_name + "/AllTree");
 
-   Int_t HFminusNtowers_tree ,HFplusNtowers_tree ,CastorNtowers_tree,Ntracks_tree;
+   Int_t HFminusNtowers_tree ,HFplusNtowers_tree ,CastorNtowers_tree,Ntracks_tree,CaloReducedenergyClass_tree;
    Int_t Pythia8processid_tree;
    Int_t EventselectionXiprocessDD_tree, EventselectionXiprocessSD1_tree, EventselectionXiprocessSD2_tree, EventselectionXiprocessRest_tree;
     
@@ -272,7 +272,7 @@ void Diffractive_TMVApplication()
    theTree->SetBranchAddress("EventselectionXiprocessSD1",&EventselectionXiprocessSD1_tree);
    theTree->SetBranchAddress("EventselectionXiprocessSD2",&EventselectionXiprocessSD2_tree);
    theTree->SetBranchAddress("EventselectionXiprocessRest",&EventselectionXiprocessRest_tree);
-   theTree->SetBranchAddress("CaloReducedenergyClass", &CaloReducedenergyClass);
+   theTree->SetBranchAddress("CaloReducedenergyClass", &CaloReducedenergyClass_tree);
    // theTree->SetBranchAddress( "CastorSumEnergy",&CastorSumEnergy);
    // theTree->SetBranchAddress( "HFSumEnergy",&HFSumEnergy);
    theTree->SetBranchAddress( "MaxCastorEnergy",&MaxCastorEnergy);
@@ -300,7 +300,7 @@ void Diffractive_TMVApplication()
       HFminusNtowers = (Float_t)HFminusNtowers_tree;
       CastorNtowers = (Float_t)CastorNtowers_tree;
       Ntracks =(Float_t)Ntracks_tree;
-
+      CaloReducedenergyClass = (Float_t)CaloReducedenergyClass_tree;
      
       // Pythia8processid=(Float_t)Pythia8processid_tree;
       // EventselectionXiprocessid=(Float_t)EventselectionXiprocessid_tree;
