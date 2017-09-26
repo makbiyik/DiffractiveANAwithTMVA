@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <algorithm>
 #include <map>
+#include <sstream>
 
 #include "TFile.h"
 #include "TH1.h"
@@ -32,7 +33,7 @@
 #include "CanvasHelper.h"
 #include "StackHistHelper.h"
 #include "SystErrHelper.h"
-
+#include "MyHistograms.h"
 #include "SampleList.h"
 
 using namespace std;
@@ -46,20 +47,20 @@ const bool draw_figure = true;
 
 
 // temporary struct for training variables directly compared to data
-struct sSingleVar
-{
-  TString hist_name;
-  TString xaxis_title;
-  TString yaxis_title;
-  TString ratio_title;
-  TString canvas_title;
+// struct sSingleVar
+// {
+//   TString hist_name;
+//   TString xaxis_title;
+//   TString yaxis_title;
+//   TString ratio_title;
+//   TString canvas_title;
 
-  double xmin, xmax;
-  double ymin, ymax;
-  double rmin, rmax;
+//   double xmin, xmax;
+//   double ymin, ymax;
+//   double rmin, rmax;
 
-  int cms_alignment;
-};
+//   int cms_alignment;
+// };
 
 
 
@@ -225,261 +226,261 @@ int main( int argc, char** argv )
 
 
 //////////////////////////////////////////////////////////////////////////
-std::map<TString, sSingleVar> build_hist_parameters() 
-{
+// std::map<TString, sSingleVar> build_hist_parameters() 
+// {
 
-  std::map<TString, sSingleVar> mSingleTrainingVar;
+//   std::map<TString, sSingleVar> mSingleTrainingVar;
 
-  mSingleTrainingVar["DeltaEta"].hist_name = "Hist_Eta_DeltaMax";
-  mSingleTrainingVar["DeltaEta"].xaxis_title = "#Delta#eta";
-  mSingleTrainingVar["DeltaEta"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
-  mSingleTrainingVar["DeltaEta"].ratio_title = "MC / Data";
-  mSingleTrainingVar["DeltaEta"].canvas_title = "cDeltaEta_";
-  mSingleTrainingVar["DeltaEta"].xmin = 0;
-  mSingleTrainingVar["DeltaEta"].xmax = 11;
-  mSingleTrainingVar["DeltaEta"].ymin = 1;
-  mSingleTrainingVar["DeltaEta"].ymax = 1e10;
-  mSingleTrainingVar["DeltaEta"].rmin = 0;
-  mSingleTrainingVar["DeltaEta"].rmax = 3;
-  mSingleTrainingVar["DeltaEta"].cms_alignment = 33;
-
-
-  mSingleTrainingVar["ForwardEtaDelta"].hist_name = "Hist_forwarddelta";
-  mSingleTrainingVar["ForwardEtaDelta"].xaxis_title = "#Delta#eta^{f}";
-  mSingleTrainingVar["ForwardEtaDelta"].yaxis_title = "1/L dN/d#eta^{f} [#mub^{-1}]";
-  mSingleTrainingVar["ForwardEtaDelta"].ratio_title = "MC / Data";
-  mSingleTrainingVar["ForwardEtaDelta"].canvas_title = "cForwardDeltaEta_";
-  mSingleTrainingVar["ForwardEtaDelta"].xmin = 0;
-  mSingleTrainingVar["ForwardEtaDelta"].xmax = 9;
-  mSingleTrainingVar["ForwardEtaDelta"].ymin = 1;
-  mSingleTrainingVar["ForwardEtaDelta"].ymax = 1e10;
-  mSingleTrainingVar["ForwardEtaDelta"].rmin = 0;
-  mSingleTrainingVar["ForwardEtaDelta"].rmax = 3;
-  mSingleTrainingVar["ForwardEtaDelta"].cms_alignment = 33;
-
-  mSingleTrainingVar["EtaDeltaZero"].hist_name = "Hist_Eta_DeltaZero";
-  mSingleTrainingVar["EtaDeltaZero"].xaxis_title = "#Delta#eta_{0}";
-  mSingleTrainingVar["EtaDeltaZero"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
-  mSingleTrainingVar["EtaDeltaZero"].ratio_title = "MC / Data";
-  mSingleTrainingVar["EtaDeltaZero"].canvas_title = "cDeltaEtaZero_";
-  mSingleTrainingVar["EtaDeltaZero"].xmin = 0;
-  mSingleTrainingVar["EtaDeltaZero"].xmax = 11;
-  mSingleTrainingVar["EtaDeltaZero"].ymin = 1;
-  mSingleTrainingVar["EtaDeltaZero"].ymax = 1e10;
-  mSingleTrainingVar["EtaDeltaZero"].rmin = 0;
-  mSingleTrainingVar["EtaDeltaZero"].rmax = 3;
-  mSingleTrainingVar["EtaDeltaZero"].cms_alignment = 33;
-
-  mSingleTrainingVar["EtaMin"].hist_name = "Hist_Eta_Min";
-  mSingleTrainingVar["EtaMin"].xaxis_title = "#eta_{min}";
-  mSingleTrainingVar["EtaMin"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
-  mSingleTrainingVar["EtaMin"].ratio_title = "MC / Data";
-  mSingleTrainingVar["EtaMin"].canvas_title = "cEtaMin_";
-  mSingleTrainingVar["EtaMin"].xmin = -6.;
-  mSingleTrainingVar["EtaMin"].xmax = 5.5;
-  mSingleTrainingVar["EtaMin"].ymin = 1;
-  mSingleTrainingVar["EtaMin"].ymax = 1e11;
-  mSingleTrainingVar["EtaMin"].rmin = 0;
-  mSingleTrainingVar["EtaMin"].rmax = 3;
-  mSingleTrainingVar["EtaMin"].cms_alignment = 33;
-
-  
+//   mSingleTrainingVar["DeltaEta"].hist_name = "Hist_Eta_DeltaMax";
+//   mSingleTrainingVar["DeltaEta"].xaxis_title = "#Delta#eta";
+//   mSingleTrainingVar["DeltaEta"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
+//   mSingleTrainingVar["DeltaEta"].ratio_title = "MC / Data";
+//   mSingleTrainingVar["DeltaEta"].canvas_title = "cDeltaEta_";
+//   mSingleTrainingVar["DeltaEta"].xmin = 0;
+//   mSingleTrainingVar["DeltaEta"].xmax = 11;
+//   mSingleTrainingVar["DeltaEta"].ymin = 1;
+//   mSingleTrainingVar["DeltaEta"].ymax = 1e10;
+//   mSingleTrainingVar["DeltaEta"].rmin = 0;
+//   mSingleTrainingVar["DeltaEta"].rmax = 3;
+//   mSingleTrainingVar["DeltaEta"].cms_alignment = 33;
 
 
+//   mSingleTrainingVar["ForwardEtaDelta"].hist_name = "Hist_forwarddelta";
+//   mSingleTrainingVar["ForwardEtaDelta"].xaxis_title = "#Delta#eta^{f}";
+//   mSingleTrainingVar["ForwardEtaDelta"].yaxis_title = "1/L dN/d#eta^{f} [#mub^{-1}]";
+//   mSingleTrainingVar["ForwardEtaDelta"].ratio_title = "MC / Data";
+//   mSingleTrainingVar["ForwardEtaDelta"].canvas_title = "cForwardDeltaEta_";
+//   mSingleTrainingVar["ForwardEtaDelta"].xmin = 0;
+//   mSingleTrainingVar["ForwardEtaDelta"].xmax = 9;
+//   mSingleTrainingVar["ForwardEtaDelta"].ymin = 1;
+//   mSingleTrainingVar["ForwardEtaDelta"].ymax = 1e10;
+//   mSingleTrainingVar["ForwardEtaDelta"].rmin = 0;
+//   mSingleTrainingVar["ForwardEtaDelta"].rmax = 3;
+//   mSingleTrainingVar["ForwardEtaDelta"].cms_alignment = 33;
 
-  mSingleTrainingVar["EtaMax"].hist_name = "Hist_Eta_Max";
-  mSingleTrainingVar["EtaMax"].xaxis_title = "#eta_{max}";
-  mSingleTrainingVar["EtaMax"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
-  mSingleTrainingVar["EtaMax"].ratio_title = "MC / Data";
-  mSingleTrainingVar["EtaMax"].canvas_title = "cEtaMax_";
-  mSingleTrainingVar["EtaMax"].xmin = -6.0;
-  mSingleTrainingVar["EtaMax"].xmax = 5.5;
-  mSingleTrainingVar["EtaMax"].ymin = 1;
-  mSingleTrainingVar["EtaMax"].ymax = 1e11;
-  mSingleTrainingVar["EtaMax"].rmin = 0;
-  mSingleTrainingVar["EtaMax"].rmax = 3;
-  mSingleTrainingVar["EtaMax"].cms_alignment = 33;
+//   mSingleTrainingVar["EtaDeltaZero"].hist_name = "Hist_Eta_DeltaZero";
+//   mSingleTrainingVar["EtaDeltaZero"].xaxis_title = "#Delta#eta_{0}";
+//   mSingleTrainingVar["EtaDeltaZero"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
+//   mSingleTrainingVar["EtaDeltaZero"].ratio_title = "MC / Data";
+//   mSingleTrainingVar["EtaDeltaZero"].canvas_title = "cDeltaEtaZero_";
+//   mSingleTrainingVar["EtaDeltaZero"].xmin = 0;
+//   mSingleTrainingVar["EtaDeltaZero"].xmax = 11;
+//   mSingleTrainingVar["EtaDeltaZero"].ymin = 1;
+//   mSingleTrainingVar["EtaDeltaZero"].ymax = 1e10;
+//   mSingleTrainingVar["EtaDeltaZero"].rmin = 0;
+//   mSingleTrainingVar["EtaDeltaZero"].rmax = 3;
+//   mSingleTrainingVar["EtaDeltaZero"].cms_alignment = 33;
+
+//   mSingleTrainingVar["EtaMin"].hist_name = "Hist_Eta_Min";
+//   mSingleTrainingVar["EtaMin"].xaxis_title = "#eta_{min}";
+//   mSingleTrainingVar["EtaMin"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
+//   mSingleTrainingVar["EtaMin"].ratio_title = "MC / Data";
+//   mSingleTrainingVar["EtaMin"].canvas_title = "cEtaMin_";
+//   mSingleTrainingVar["EtaMin"].xmin = -6.;
+//   mSingleTrainingVar["EtaMin"].xmax = 5.5;
+//   mSingleTrainingVar["EtaMin"].ymin = 1;
+//   mSingleTrainingVar["EtaMin"].ymax = 1e11;
+//   mSingleTrainingVar["EtaMin"].rmin = 0;
+//   mSingleTrainingVar["EtaMin"].rmax = 3;
+//   mSingleTrainingVar["EtaMin"].cms_alignment = 33;
 
   
-  mSingleTrainingVar["NTowHF_plus"].hist_name = "Hist_numberoftowerebovenoise_forwardplus";
-  mSingleTrainingVar["NTowHF_plus"].xaxis_title = "N_{tow}";
-  mSingleTrainingVar["NTowHF_plus"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-  mSingleTrainingVar["NTowHF_plus"].ratio_title = "MC / Data";
-  mSingleTrainingVar["NTowHF_plus"].canvas_title = "cNTowHF_plus_";
-  mSingleTrainingVar["NTowHF_plus"].xmin = -0.5;
-  mSingleTrainingVar["NTowHF_plus"].xmax = 100.5;
-  mSingleTrainingVar["NTowHF_plus"].ymin = 1;
-  mSingleTrainingVar["NTowHF_plus"].ymax = 1e8;
-  mSingleTrainingVar["NTowHF_plus"].rmin = 0;
-  mSingleTrainingVar["NTowHF_plus"].rmax = 3;
-  mSingleTrainingVar["NTowHF_plus"].cms_alignment = 33;
+
+
+
+//   mSingleTrainingVar["EtaMax"].hist_name = "Hist_Eta_Max";
+//   mSingleTrainingVar["EtaMax"].xaxis_title = "#eta_{max}";
+//   mSingleTrainingVar["EtaMax"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
+//   mSingleTrainingVar["EtaMax"].ratio_title = "MC / Data";
+//   mSingleTrainingVar["EtaMax"].canvas_title = "cEtaMax_";
+//   mSingleTrainingVar["EtaMax"].xmin = -6.0;
+//   mSingleTrainingVar["EtaMax"].xmax = 5.5;
+//   mSingleTrainingVar["EtaMax"].ymin = 1;
+//   mSingleTrainingVar["EtaMax"].ymax = 1e11;
+//   mSingleTrainingVar["EtaMax"].rmin = 0;
+//   mSingleTrainingVar["EtaMax"].rmax = 3;
+//   mSingleTrainingVar["EtaMax"].cms_alignment = 33;
+
+  
+//   mSingleTrainingVar["NTowHF_plus"].hist_name = "Hist_numberoftowerebovenoise_forwardplus";
+//   mSingleTrainingVar["NTowHF_plus"].xaxis_title = "N_{tow}";
+//   mSingleTrainingVar["NTowHF_plus"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
+//   mSingleTrainingVar["NTowHF_plus"].ratio_title = "MC / Data";
+//   mSingleTrainingVar["NTowHF_plus"].canvas_title = "cNTowHF_plus_";
+//   mSingleTrainingVar["NTowHF_plus"].xmin = -0.5;
+//   mSingleTrainingVar["NTowHF_plus"].xmax = 100.5;
+//   mSingleTrainingVar["NTowHF_plus"].ymin = 1;
+//   mSingleTrainingVar["NTowHF_plus"].ymax = 1e8;
+//   mSingleTrainingVar["NTowHF_plus"].rmin = 0;
+//   mSingleTrainingVar["NTowHF_plus"].rmax = 3;
+//   mSingleTrainingVar["NTowHF_plus"].cms_alignment = 33;
 
 
  
-  mSingleTrainingVar["NTowHF_minus"].hist_name = "Hist_numberoftowerebovenoise_forwardminus";
-  mSingleTrainingVar["NTowHF_minus"].xaxis_title = "N_{tow}";
-  mSingleTrainingVar["NTowHF_minus"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-  mSingleTrainingVar["NTowHF_minus"].ratio_title = "MC / Data";
-  mSingleTrainingVar["NTowHF_minus"].canvas_title = "cNTowHF_minus_";
-  mSingleTrainingVar["NTowHF_minus"].xmin = -0.5;
-  mSingleTrainingVar["NTowHF_minus"].xmax = 100.5;
-  mSingleTrainingVar["NTowHF_minus"].ymin = 1;
-  mSingleTrainingVar["NTowHF_minus"].ymax = 1e8;
-  mSingleTrainingVar["NTowHF_minus"].rmin = 0;
-  mSingleTrainingVar["NTowHF_minus"].rmax = 3;
-  mSingleTrainingVar["NTowHF_minus"].cms_alignment = 33;
+//   mSingleTrainingVar["NTowHF_minus"].hist_name = "Hist_numberoftowerebovenoise_forwardminus";
+//   mSingleTrainingVar["NTowHF_minus"].xaxis_title = "N_{tow}";
+//   mSingleTrainingVar["NTowHF_minus"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
+//   mSingleTrainingVar["NTowHF_minus"].ratio_title = "MC / Data";
+//   mSingleTrainingVar["NTowHF_minus"].canvas_title = "cNTowHF_minus_";
+//   mSingleTrainingVar["NTowHF_minus"].xmin = -0.5;
+//   mSingleTrainingVar["NTowHF_minus"].xmax = 100.5;
+//   mSingleTrainingVar["NTowHF_minus"].ymin = 1;
+//   mSingleTrainingVar["NTowHF_minus"].ymax = 1e8;
+//   mSingleTrainingVar["NTowHF_minus"].rmin = 0;
+//   mSingleTrainingVar["NTowHF_minus"].rmax = 3;
+//   mSingleTrainingVar["NTowHF_minus"].cms_alignment = 33;
 
 
-  mSingleTrainingVar["NTowCastor"].hist_name = "Hist_numberoftowerebovenoise_castor";
-  mSingleTrainingVar["NTowCastor"].xaxis_title = "N_{tow}";
-  mSingleTrainingVar["NTowCastor"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-  mSingleTrainingVar["NTowCastor"].ratio_title = "MC / Data";
-  mSingleTrainingVar["NTowCastor"].canvas_title = "cNTowCastor_";
-  mSingleTrainingVar["NTowCastor"].xmin = 0;
-  mSingleTrainingVar["NTowCastor"].xmax = 16;
-  mSingleTrainingVar["NTowCastor"].ymin = 1;
-  mSingleTrainingVar["NTowCastor"].ymax = 1e8;
-  mSingleTrainingVar["NTowCastor"].rmin = 0;
-  mSingleTrainingVar["NTowCastor"].rmax = 3;
-  mSingleTrainingVar["NTowCastor"].cms_alignment = 33;
-
- 
-  mSingleTrainingVar["NTow"].hist_name = "Hist_CaloReducedenergyClass";
-  mSingleTrainingVar["NTow"].xaxis_title = "N_{tow}";
-  mSingleTrainingVar["NTow"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-  mSingleTrainingVar["NTow"].ratio_title = "MC / Data";
-  mSingleTrainingVar["NTow"].canvas_title = "cNTow_";
-  mSingleTrainingVar["NTow"].xmin = 0;
-  mSingleTrainingVar["NTow"].xmax = 50;
-  mSingleTrainingVar["NTow"].ymin = 1;
-  mSingleTrainingVar["NTow"].ymax = 1e8;
-  mSingleTrainingVar["NTow"].rmin = 0;
-  mSingleTrainingVar["NTow"].rmax = 3;
-  mSingleTrainingVar["NTow"].cms_alignment = 33;
-
-  
-  mSingleTrainingVar["NTowMaxHF"].hist_name = "Hist_MaxHFEnergy";
-  mSingleTrainingVar["NTowMaxHF"].xaxis_title = "Max_{energytow}";
-  mSingleTrainingVar["NTowMaxHF"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-  mSingleTrainingVar["NTowMaxHF"].ratio_title = "MC / Data";
-  mSingleTrainingVar["NTowMaxHF"].canvas_title = "cEnergyMaxTowHF_";
-  mSingleTrainingVar["NTowMaxHF"].xmin = 0;
-  mSingleTrainingVar["NTowMaxHF"].xmax = 600;
-  mSingleTrainingVar["NTowMaxHF"].ymin = 1;
-  mSingleTrainingVar["NTowMaxHF"].ymax = 1e8;
-  mSingleTrainingVar["NTowMaxHF"].rmin = 0;
-  mSingleTrainingVar["NTowMaxHF"].rmax = 3;
-  mSingleTrainingVar["NTowMaxHF"].cms_alignment = 33;
-
-  
-  mSingleTrainingVar["SumEnergyHF"].hist_name = "Hist_HFSumEnergy";
-  mSingleTrainingVar["SumEnergyHF"].xaxis_title = "Sum_{E}";
-  mSingleTrainingVar["SumEnergyHF"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-  mSingleTrainingVar["SumEnergyHF"].ratio_title = "MC / Data";
-  mSingleTrainingVar["SumEnergyHF"].canvas_title = "cSumEnergyHF_";
-  mSingleTrainingVar["SumEnergyHF"].xmin = 0;
-  mSingleTrainingVar["SumEnergyHF"].xmax = 3000;
-  mSingleTrainingVar["SumEnergyHF"].ymin = 1;
-  mSingleTrainingVar["SumEnergyHF"].ymax = 1e8;
-  mSingleTrainingVar["SumEnergyHF"].rmin = 0;
-  mSingleTrainingVar["SumEnergyHF"].rmax = 3;
-  mSingleTrainingVar["SumEnergyHF"].cms_alignment = 33;
-
-
-  mSingleTrainingVar["SumEnergyCastor"].hist_name = "Hist_CastorSumEnergy";
-  mSingleTrainingVar["SumEnergyCastor"].xaxis_title = "Sum_{E}";
-  mSingleTrainingVar["SumEnergyCastor"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-  mSingleTrainingVar["SumEnergyCastor"].ratio_title = "MC / Data";
-  mSingleTrainingVar["SumEnergyCastor"].canvas_title = "cSumEnergyCastor_";
-  mSingleTrainingVar["SumEnergyCastor"].xmin = 0;
-  mSingleTrainingVar["SumEnergyCastor"].xmax = 3000;
-  mSingleTrainingVar["SumEnergyCastor"].ymin = 1;
-  mSingleTrainingVar["SumEnergyCastor"].ymax = 1e8;
-  mSingleTrainingVar["SumEnergyCastor"].rmin = 0;
-  mSingleTrainingVar["SumEnergyCastor"].rmax = 3;
-  mSingleTrainingVar["SumEnergyCastor"].cms_alignment = 33;
-
-
-
-
-
-
-  mSingleTrainingVar["NTowMaxCastor"].hist_name = "Hist_MaxCastorEnergy";
-  mSingleTrainingVar["NTowMaxCastor"].xaxis_title = "Max_{energytow}";
-  mSingleTrainingVar["NTowMaxCastor"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-  mSingleTrainingVar["NTowMaxCastor"].ratio_title = "MC / Data";
-  mSingleTrainingVar["NTowMaxCastor"].canvas_title = "cEnergyMaxTowCastor_";
-  mSingleTrainingVar["NTowMaxCastor"].xmin = 0;
-  mSingleTrainingVar["NTowMaxCastor"].xmax = 600;
-  mSingleTrainingVar["NTowMaxCastor"].ymin = 1;
-  mSingleTrainingVar["NTowMaxCastor"].ymax = 1e8;
-  mSingleTrainingVar["NTowMaxCastor"].rmin = 0;
-  mSingleTrainingVar["NTowMaxCastor"].rmax = 3;
-  mSingleTrainingVar["NTowMaxCastor"].cms_alignment = 33;
+//   mSingleTrainingVar["NTowCastor"].hist_name = "Hist_numberoftowerebovenoise_castor";
+//   mSingleTrainingVar["NTowCastor"].xaxis_title = "N_{tow}";
+//   mSingleTrainingVar["NTowCastor"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
+//   mSingleTrainingVar["NTowCastor"].ratio_title = "MC / Data";
+//   mSingleTrainingVar["NTowCastor"].canvas_title = "cNTowCastor_";
+//   mSingleTrainingVar["NTowCastor"].xmin = 0;
+//   mSingleTrainingVar["NTowCastor"].xmax = 16;
+//   mSingleTrainingVar["NTowCastor"].ymin = 1;
+//   mSingleTrainingVar["NTowCastor"].ymax = 1e8;
+//   mSingleTrainingVar["NTowCastor"].rmin = 0;
+//   mSingleTrainingVar["NTowCastor"].rmax = 3;
+//   mSingleTrainingVar["NTowCastor"].cms_alignment = 33;
 
  
+//   mSingleTrainingVar["NTow"].hist_name = "Hist_CaloReducedenergyClass";
+//   mSingleTrainingVar["NTow"].xaxis_title = "N_{tow}";
+//   mSingleTrainingVar["NTow"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
+//   mSingleTrainingVar["NTow"].ratio_title = "MC / Data";
+//   mSingleTrainingVar["NTow"].canvas_title = "cNTow_";
+//   mSingleTrainingVar["NTow"].xmin = 0;
+//   mSingleTrainingVar["NTow"].xmax = 50;
+//   mSingleTrainingVar["NTow"].ymin = 1;
+//   mSingleTrainingVar["NTow"].ymax = 1e8;
+//   mSingleTrainingVar["NTow"].rmin = 0;
+//   mSingleTrainingVar["NTow"].rmax = 3;
+//   mSingleTrainingVar["NTow"].cms_alignment = 33;
+
+  
+//   mSingleTrainingVar["NTowMaxHF"].hist_name = "Hist_MaxHFEnergy";
+//   mSingleTrainingVar["NTowMaxHF"].xaxis_title = "Max_{energytow}";
+//   mSingleTrainingVar["NTowMaxHF"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
+//   mSingleTrainingVar["NTowMaxHF"].ratio_title = "MC / Data";
+//   mSingleTrainingVar["NTowMaxHF"].canvas_title = "cEnergyMaxTowHF_";
+//   mSingleTrainingVar["NTowMaxHF"].xmin = 0;
+//   mSingleTrainingVar["NTowMaxHF"].xmax = 600;
+//   mSingleTrainingVar["NTowMaxHF"].ymin = 1;
+//   mSingleTrainingVar["NTowMaxHF"].ymax = 1e8;
+//   mSingleTrainingVar["NTowMaxHF"].rmin = 0;
+//   mSingleTrainingVar["NTowMaxHF"].rmax = 3;
+//   mSingleTrainingVar["NTowMaxHF"].cms_alignment = 33;
+
+  
+//   mSingleTrainingVar["SumEnergyHF"].hist_name = "Hist_HFSumEnergy";
+//   mSingleTrainingVar["SumEnergyHF"].xaxis_title = "Sum_{E}";
+//   mSingleTrainingVar["SumEnergyHF"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
+//   mSingleTrainingVar["SumEnergyHF"].ratio_title = "MC / Data";
+//   mSingleTrainingVar["SumEnergyHF"].canvas_title = "cSumEnergyHF_";
+//   mSingleTrainingVar["SumEnergyHF"].xmin = 0;
+//   mSingleTrainingVar["SumEnergyHF"].xmax = 3000;
+//   mSingleTrainingVar["SumEnergyHF"].ymin = 1;
+//   mSingleTrainingVar["SumEnergyHF"].ymax = 1e8;
+//   mSingleTrainingVar["SumEnergyHF"].rmin = 0;
+//   mSingleTrainingVar["SumEnergyHF"].rmax = 3;
+//   mSingleTrainingVar["SumEnergyHF"].cms_alignment = 33;
 
 
-  mSingleTrainingVar["NTracks"].hist_name = "Hist_NbrTracks";
-  mSingleTrainingVar["NTracks"].xaxis_title = "N_{trk}";
-  mSingleTrainingVar["NTracks"].yaxis_title = "1/L dN/dN_{trk} [#mub^{-1}]";
-  mSingleTrainingVar["NTracks"].ratio_title = "MC / Data";
-  mSingleTrainingVar["NTracks"].canvas_title = "cNTracks_";
-  mSingleTrainingVar["NTracks"].xmin = 0;
-  mSingleTrainingVar["NTracks"].xmax = 50;
-  mSingleTrainingVar["NTracks"].ymin = 1;
-  mSingleTrainingVar["NTracks"].ymax = 1e8;
-  mSingleTrainingVar["NTracks"].rmin = 0;
-  mSingleTrainingVar["NTracks"].rmax = 3;
-  mSingleTrainingVar["NTracks"].cms_alignment = 33;
-
-  mSingleTrainingVar["recoXix"].hist_name = "Hist_log10XiX";
-  mSingleTrainingVar["recoXix"].xaxis_title = "log_{10}#xi_{x}";
-  mSingleTrainingVar["recoXix"].yaxis_title = "1/L dN/d(log_{10}#xi_{x}) [#mub^{-1}]";
-  mSingleTrainingVar["recoXix"].ratio_title = "MC / Data";
-  mSingleTrainingVar["recoXix"].canvas_title = "crecoXix_";
-  mSingleTrainingVar["recoXix"].xmin = -11.5;
-  mSingleTrainingVar["recoXix"].xmax = 0.5;
-  mSingleTrainingVar["recoXix"].ymin = 1;
-  mSingleTrainingVar["recoXix"].ymax = 1e10;
-  mSingleTrainingVar["recoXix"].rmin = 0;
-  mSingleTrainingVar["recoXix"].rmax = 3;
-  mSingleTrainingVar["recoXix"].cms_alignment = 33;
-
-
-
-  mSingleTrainingVar["recoXiy"].hist_name = "Hist_log10XiY";
-  mSingleTrainingVar["recoXiy"].xaxis_title = "log_{10}#xi_{y}";
-  mSingleTrainingVar["recoXiy"].yaxis_title = "1/L dN/d(log_{10}#xi_{y}) [#mub^{-1}]";
-  mSingleTrainingVar["recoXiy"].ratio_title = "MC / Data";
-  mSingleTrainingVar["recoXiy"].canvas_title = "crecoXiy_";
-  mSingleTrainingVar["recoXiy"].xmin = -11.5;
-  mSingleTrainingVar["recoXiy"].xmax = 0.5;
-  mSingleTrainingVar["recoXiy"].ymin = 1;
-  mSingleTrainingVar["recoXiy"].ymax = 1e10;
-  mSingleTrainingVar["recoXiy"].rmin = 0;
-  mSingleTrainingVar["recoXiy"].rmax = 3;
-  mSingleTrainingVar["recoXiy"].cms_alignment = 33;
-
-
-
-  // mSingleTrainingVar["XiDD"].hist_name = "Hist_Reco_log10XiDD";
-  // mSingleTrainingVar["XiDD"].xaxis_title = "log_{10}#xi_{DD}";
-  // mSingleTrainingVar["XiDD"].yaxis_title = "1/L dN/d#xi [#mub^{-1}]";
-  // mSingleTrainingVar["XiDD"].ratio_title = "MC / Data";
-  // mSingleTrainingVar["XiDD"].canvas_title = "cXiDD_";
-  // mSingleTrainingVar["XiDD"].xmin = -11.5;
-  // mSingleTrainingVar["XiDD"].xmax = 0.5;
-  // mSingleTrainingVar["XiDD"].ymin = 1;
-  // mSingleTrainingVar["XiDD"].ymax = 1e6;
-  // mSingleTrainingVar["XiDD"].rmin = 0;
-  // mSingleTrainingVar["XiDD"].rmax = 3;
-  // mSingleTrainingVar["XiDD"].cms_alignment = 33;
+//   mSingleTrainingVar["SumEnergyCastor"].hist_name = "Hist_CastorSumEnergy";
+//   mSingleTrainingVar["SumEnergyCastor"].xaxis_title = "Sum_{E}";
+//   mSingleTrainingVar["SumEnergyCastor"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
+//   mSingleTrainingVar["SumEnergyCastor"].ratio_title = "MC / Data";
+//   mSingleTrainingVar["SumEnergyCastor"].canvas_title = "cSumEnergyCastor_";
+//   mSingleTrainingVar["SumEnergyCastor"].xmin = 0;
+//   mSingleTrainingVar["SumEnergyCastor"].xmax = 3000;
+//   mSingleTrainingVar["SumEnergyCastor"].ymin = 1;
+//   mSingleTrainingVar["SumEnergyCastor"].ymax = 1e8;
+//   mSingleTrainingVar["SumEnergyCastor"].rmin = 0;
+//   mSingleTrainingVar["SumEnergyCastor"].rmax = 3;
+//   mSingleTrainingVar["SumEnergyCastor"].cms_alignment = 33;
 
 
 
-  return mSingleTrainingVar;
-}
+
+
+
+//   mSingleTrainingVar["NTowMaxCastor"].hist_name = "Hist_MaxCastorEnergy";
+//   mSingleTrainingVar["NTowMaxCastor"].xaxis_title = "Max_{energytow}";
+//   mSingleTrainingVar["NTowMaxCastor"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
+//   mSingleTrainingVar["NTowMaxCastor"].ratio_title = "MC / Data";
+//   mSingleTrainingVar["NTowMaxCastor"].canvas_title = "cEnergyMaxTowCastor_";
+//   mSingleTrainingVar["NTowMaxCastor"].xmin = 0;
+//   mSingleTrainingVar["NTowMaxCastor"].xmax = 600;
+//   mSingleTrainingVar["NTowMaxCastor"].ymin = 1;
+//   mSingleTrainingVar["NTowMaxCastor"].ymax = 1e8;
+//   mSingleTrainingVar["NTowMaxCastor"].rmin = 0;
+//   mSingleTrainingVar["NTowMaxCastor"].rmax = 3;
+//   mSingleTrainingVar["NTowMaxCastor"].cms_alignment = 33;
+
+ 
+
+
+//   mSingleTrainingVar["NTracks"].hist_name = "Hist_NbrTracks";
+//   mSingleTrainingVar["NTracks"].xaxis_title = "N_{trk}";
+//   mSingleTrainingVar["NTracks"].yaxis_title = "1/L dN/dN_{trk} [#mub^{-1}]";
+//   mSingleTrainingVar["NTracks"].ratio_title = "MC / Data";
+//   mSingleTrainingVar["NTracks"].canvas_title = "cNTracks_";
+//   mSingleTrainingVar["NTracks"].xmin = 0;
+//   mSingleTrainingVar["NTracks"].xmax = 50;
+//   mSingleTrainingVar["NTracks"].ymin = 1;
+//   mSingleTrainingVar["NTracks"].ymax = 1e8;
+//   mSingleTrainingVar["NTracks"].rmin = 0;
+//   mSingleTrainingVar["NTracks"].rmax = 3;
+//   mSingleTrainingVar["NTracks"].cms_alignment = 33;
+
+//   mSingleTrainingVar["recoXix"].hist_name = "Hist_log10XiX";
+//   mSingleTrainingVar["recoXix"].xaxis_title = "log_{10}#xi_{x}";
+//   mSingleTrainingVar["recoXix"].yaxis_title = "1/L dN/d(log_{10}#xi_{x}) [#mub^{-1}]";
+//   mSingleTrainingVar["recoXix"].ratio_title = "MC / Data";
+//   mSingleTrainingVar["recoXix"].canvas_title = "crecoXix_";
+//   mSingleTrainingVar["recoXix"].xmin = -11.5;
+//   mSingleTrainingVar["recoXix"].xmax = 0.5;
+//   mSingleTrainingVar["recoXix"].ymin = 1;
+//   mSingleTrainingVar["recoXix"].ymax = 1e10;
+//   mSingleTrainingVar["recoXix"].rmin = 0;
+//   mSingleTrainingVar["recoXix"].rmax = 3;
+//   mSingleTrainingVar["recoXix"].cms_alignment = 33;
+
+
+
+//   mSingleTrainingVar["recoXiy"].hist_name = "Hist_log10XiY";
+//   mSingleTrainingVar["recoXiy"].xaxis_title = "log_{10}#xi_{y}";
+//   mSingleTrainingVar["recoXiy"].yaxis_title = "1/L dN/d(log_{10}#xi_{y}) [#mub^{-1}]";
+//   mSingleTrainingVar["recoXiy"].ratio_title = "MC / Data";
+//   mSingleTrainingVar["recoXiy"].canvas_title = "crecoXiy_";
+//   mSingleTrainingVar["recoXiy"].xmin = -11.5;
+//   mSingleTrainingVar["recoXiy"].xmax = 0.5;
+//   mSingleTrainingVar["recoXiy"].ymin = 1;
+//   mSingleTrainingVar["recoXiy"].ymax = 1e10;
+//   mSingleTrainingVar["recoXiy"].rmin = 0;
+//   mSingleTrainingVar["recoXiy"].rmax = 3;
+//   mSingleTrainingVar["recoXiy"].cms_alignment = 33;
+
+
+
+//   // mSingleTrainingVar["XiDD"].hist_name = "Hist_Reco_log10XiDD";
+//   // mSingleTrainingVar["XiDD"].xaxis_title = "log_{10}#xi_{DD}";
+//   // mSingleTrainingVar["XiDD"].yaxis_title = "1/L dN/d#xi [#mub^{-1}]";
+//   // mSingleTrainingVar["XiDD"].ratio_title = "MC / Data";
+//   // mSingleTrainingVar["XiDD"].canvas_title = "cXiDD_";
+//   // mSingleTrainingVar["XiDD"].xmin = -11.5;
+//   // mSingleTrainingVar["XiDD"].xmax = 0.5;
+//   // mSingleTrainingVar["XiDD"].ymin = 1;
+//   // mSingleTrainingVar["XiDD"].ymax = 1e6;
+//   // mSingleTrainingVar["XiDD"].rmin = 0;
+//   // mSingleTrainingVar["XiDD"].rmax = 3;
+//   // mSingleTrainingVar["XiDD"].cms_alignment = 33;
+
+
+
+//   return mSingleTrainingVar;
+// }
 
 
 
@@ -694,7 +695,7 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data_sysCastorMinus",false); 
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1_sysplus","Data_sysCastorMinus",false); 
 
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8","Data_sysTrackPlus");
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8","Data_sysCastorPlus");
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data_sysTrackPlus",false);
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS","Data_sysTrackPlus",false);
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1","Data_sysTrackPlus",false);
@@ -1983,105 +1984,133 @@ void single_sample_compare_syst(std::map<TString, SampleList::sSample>& mSample,
                                 TString sample_name,
                                 TString data_sample_name)
 {
-  CanvasHelper ch("dEta_Syst_HFescale_" + sample_name);
-  ch.initRatioCanvas(mSingleTrainingVar["DeltaEta"].xmin, mSingleTrainingVar["DeltaEta"].xmax,
-                     mSingleTrainingVar["DeltaEta"].ymin, mSingleTrainingVar["DeltaEta"].ymax,
-                     mSingleTrainingVar["DeltaEta"].rmin, mSingleTrainingVar["DeltaEta"].rmax,
-                     mSingleTrainingVar["DeltaEta"].xaxis_title,
-                     mSingleTrainingVar["DeltaEta"].yaxis_title,
-                     mSingleTrainingVar["DeltaEta"].ratio_title);
-
-  TString hist_var_name = mSingleTrainingVar["DeltaEta"].hist_name;
-
-  TH1F* hMC = (TH1F*)mSample[sample_name].file->Get(mSample[sample_name].tree_name + "/" + hist_var_name);
-  TH1F* hData = (TH1F*)mSample[data_sample_name].file->Get(mSample[data_sample_name].tree_name + "/" + hist_var_name);
-  
-
   double lumi_mc   = mSample[sample_name].lumi;
   double lumi_data = mSample[data_sample_name].lumi;
 
   //////////////////////////////////////////////////////////////////////////
   // acces hist with systematics
-  TString HFPlus_sample_name = "Data_sysHFPlus";
-  TH1F* hData_HFPlus = (TH1F*)mSample[HFPlus_sample_name].file->Get(mSample[HFPlus_sample_name].tree_name + "/" + hist_var_name);
-  hData_HFPlus->Scale( 1/lumi_data , "width" );
+  //TString HFPlus_sample_name = "Data_sysHFPlus";
 
-  //////////////////////////////////////////////////////////////////////////
-  // create TGraphError
-  hData->Scale( 1/lumi_data , "width" );
-  TGraphAsymmErrors* grData_HF = new TGraphAsymmErrors(hData);
-  grData_HF->SetFillColor(kYellow+2);
+  //const vector<TString> SysList = {"Data_sysHFPlus"};
+  // const vector<TString> SysList = {"Data_sysTrackPlus", "Data_sysTrackMinus"};
+  const vector<TString> SysList = {"Data_sysCastorPlus", "Data_sysCastorMinus"};
+  const vector<TString> ParList = {"DeltaEta"};
 
-  for(int iBin=1; iBin<=hData->GetXaxis()->GetNbins(); iBin++) {
-    double ydiff = hData_HFPlus->GetBinContent(iBin) - hData->GetBinContent(iBin);
-    double yhigh_err =  ydiff > 0 ? ydiff : 0;
-    double ylow_err  =  ydiff > 0 ? 0 : -ydiff;
+  for (unsigned int ipar = 0; ipar<ParList.size(); ipar++){
 
-    double xhigh_err = hData->GetBinLowEdge(iBin+1) - hData->GetBinCenter(iBin);
-    double xlow_err = hData->GetBinCenter(iBin) - hData->GetBinLowEdge(iBin);
+    TString hist_var_name = mSingleTrainingVar[ParList[ipar]].hist_name;
 
-    grData_HF->SetPointEYhigh(iBin-1, yhigh_err);
-    grData_HF->SetPointEYlow(iBin-1, ylow_err);
-    grData_HF->SetPointEXhigh(iBin-1, xhigh_err);
-    grData_HF->SetPointEXlow(iBin-1, xlow_err);
+    TH1F* hMC = (TH1F*)mSample[sample_name].file->Get(mSample[sample_name].tree_name + "/" + hist_var_name);
+    TH1F* hData = (TH1F*)mSample[data_sample_name].file->Get(mSample[data_sample_name].tree_name + "/" + hist_var_name);
+    hData->Scale( 1/lumi_data , "width" );
+    TGraphAsymmErrors* grData_Sys = new TGraphAsymmErrors(hData->GetNbinsX());
+    grData_Sys->SetFillColor(kYellow+2);
+    TGraphAsymmErrors* grData_Sys_Ratio = new TGraphAsymmErrors(hData->GetNbinsX());
+    grData_Sys_Ratio->SetFillColor(kYellow+2);
+    
+    for (unsigned int isys = 0; isys<SysList.size(); isys++) {
+
+      TH1F* hData_Sys = (TH1F*)mSample[SysList[isys]].file->Get(mSample[SysList[isys]].tree_name + "/" + hist_var_name);
+      hData_Sys->Scale( 1/lumi_data , "width" );
+
+      //////////////////////////////////////////////////////////////////////////
+      // create TGraphError
+
+      for(int iBin=1; iBin<=hData->GetXaxis()->GetNbins(); iBin++) {
+        double xvalue = hData->GetBinCenter(iBin+1);
+        double yvalue = hData->GetBinContent(iBin+1);
+        grData_Sys->SetPoint(iBin-1, xvalue, yvalue);
+        double ydiff = hData_Sys->GetBinContent(iBin) - hData->GetBinContent(iBin);
+        if (ydiff>0) {
+          if (grData_Sys->GetEYhigh()[iBin-1]<ydiff) {
+            grData_Sys->SetPointEYhigh(iBin-1, ydiff);
+          }
+        } else {
+          if (grData_Sys->GetEYlow()[iBin-1]<-ydiff) {
+            grData_Sys->SetPointEYlow(iBin-1, -ydiff);
+          }
+        }
+        double xhigh_err = hData->GetBinLowEdge(iBin+1) - hData->GetBinCenter(iBin);
+        double xlow_err = hData->GetBinCenter(iBin) - hData->GetBinLowEdge(iBin);
+        grData_Sys->SetPointEXhigh(iBin-1, xhigh_err);
+        grData_Sys->SetPointEXlow(iBin-1, xlow_err);
+      }    
+
+      TH1F* hData_Sys_Ratio = get_Ratio(hData_Sys,hData);
+
+      for(int iBin=1; iBin<=hData->GetXaxis()->GetNbins(); iBin++) {
+        cout << "Bin Center: " << hData->GetBinCenter(iBin) << endl;
+        cout << "hData: " << hData->GetBinContent(iBin) << endl;
+        cout << "hData_Sys: " << hData_Sys->GetBinContent(iBin) << endl;
+        cout << "hData_Sys_Ratio: " << hData_Sys_Ratio->GetBinContent(iBin) << endl;
+
+        double yvalue = 1;
+        double xvalue = hData_Sys_Ratio->GetBinCenter(iBin);
+
+        grData_Sys_Ratio->SetPoint(iBin-1, xvalue, yvalue);
+
+        double ydiff = hData->GetBinContent(iBin) > 0 ? hData_Sys_Ratio->GetBinContent(iBin)-1 : 0;
+        //double yhigh_err =  ydiff > 0 ? ydiff : 0;
+        //double ylow_err  =  ydiff > 0 ? 0 : -ydiff;
+        if (ydiff>0) {
+          if (grData_Sys_Ratio->GetEYhigh()[iBin-1]<ydiff) {
+            grData_Sys_Ratio->SetPointEYhigh(iBin-1, ydiff);
+          }
+        } else {
+          if (grData_Sys_Ratio->GetEYlow()[iBin-1]<-ydiff) {
+            grData_Sys_Ratio->SetPointEYlow(iBin-1, -ydiff);
+          }
+        }
+
+        // cout << "yhigh_err: " << yhigh_err << endl;
+        // cout << "ylow_err: " << ylow_err << endl;
+
+        double xhigh_err = hData->GetBinLowEdge(iBin+1) - hData->GetBinCenter(iBin);
+        double xlow_err = hData->GetBinCenter(iBin) - hData->GetBinLowEdge(iBin);
+
+
+        //grData_Sys_Ratio->SetPointEYhigh(iBin-1, yhigh_err);
+        //grData_Sys_Ratio->SetPointEYlow(iBin-1, ylow_err);
+        grData_Sys_Ratio->SetPointEXhigh(iBin-1, xhigh_err);
+        grData_Sys_Ratio->SetPointEXlow(iBin-1, xlow_err);
+      }  
+      
+
+    }
+    ostringstream canvasname;
+    canvasname << "canvas_" << ParList[ipar] << "_" << sample_name;
+    CanvasHelper ch(canvasname.str().c_str());
+    ch.initRatioCanvas(mSingleTrainingVar[ParList[ipar]].xmin, mSingleTrainingVar[ParList[ipar]].xmax,
+                       mSingleTrainingVar[ParList[ipar]].ymin, mSingleTrainingVar[ParList[ipar]].ymax,
+                       mSingleTrainingVar[ParList[ipar]].rmin, mSingleTrainingVar[ParList[ipar]].rmax,
+                       mSingleTrainingVar[ParList[ipar]].xaxis_title,
+                       mSingleTrainingVar[ParList[ipar]].yaxis_title,
+                       mSingleTrainingVar[ParList[ipar]].ratio_title);
+
+    ch.getCanvas()->cd(1);
+    grData_Sys->Draw("same 2");
+
+    ch.getCanvas()->cd(2);
+    grData_Sys_Ratio->Draw("same 2");
+
+
+
+    hMC->Scale( 1/lumi_mc, "width" );
+    ch.addHist( hMC, "HIST", kBlue+2);
+    // mDrawHists[sample_name] = hMC;
+
+    //////////////////////////////////////////////////////////////////////////
+    // access data hist
+    ch.addDataHist( hData );
+    ch.addRatioHist( get_Ratio(hMC,hData), "HIST", kBlue+2 );
+    ch.addRatioHist( get_Ratio(hData,hData), "EP", kBlack );
+
+
+    // draw stacked hists
+    ch.DrawHist();
+
+    
   }
-
-
-  TH1F* hData_HFPlus_Ratio = get_Ratio(hData_HFPlus,hData);
-  TGraphAsymmErrors* grData_HF_Ratio = new TGraphAsymmErrors(hData_HFPlus_Ratio);
-  grData_HF_Ratio->SetFillColor(kYellow+2);
-
-  for(int iBin=1; iBin<=hData->GetXaxis()->GetNbins(); iBin++) {
-    cout << "Bin Center: " << hData->GetBinCenter(iBin) << endl;
-    cout << "hData: " << hData->GetBinContent(iBin) << endl;
-    cout << "hData_HFPlus: " << hData_HFPlus->GetBinContent(iBin) << endl;
-    cout << "hData_HFPlus_Ratio: " << hData_HFPlus_Ratio->GetBinContent(iBin) << endl;
-
-    double yvalue = 1;
-    double xvalue = hData_HFPlus_Ratio->GetBinCenter(iBin);
-
-    double ydiff = hData->GetBinContent(iBin) > 0 ? hData_HFPlus_Ratio->GetBinContent(iBin)-1 : 0;
-    double yhigh_err =  ydiff > 0 ? ydiff : 0;
-    double ylow_err  =  ydiff > 0 ? 0 : -ydiff;
-
-    cout << "yhigh_err: " << yhigh_err << endl;
-    cout << "ylow_err: " << ylow_err << endl;
-
-    double xhigh_err = hData->GetBinLowEdge(iBin+1) - hData->GetBinCenter(iBin);
-    double xlow_err = hData->GetBinCenter(iBin) - hData->GetBinLowEdge(iBin);
-
-    grData_HF_Ratio->SetPoint(iBin-1, xvalue, yvalue);
-
-    grData_HF_Ratio->SetPointEYhigh(iBin-1, yhigh_err);
-    grData_HF_Ratio->SetPointEYlow(iBin-1, ylow_err);
-    grData_HF_Ratio->SetPointEXhigh(iBin-1, xhigh_err);
-    grData_HF_Ratio->SetPointEXlow(iBin-1, xlow_err);
-  }  
-
-  ch.getCanvas()->cd(1);
-  grData_HF->Draw("same 2");
-
-  ch.getCanvas()->cd(2);
-  grData_HF_Ratio->Draw("same 2");
-
-
-
-  hMC->Scale( 1/lumi_mc, "width" );
-  ch.addHist( hMC, "HIST", kBlue+2);
-  // mDrawHists[sample_name] = hMC;
-
-  //////////////////////////////////////////////////////////////////////////
-  // access data hist
-  ch.addDataHist( hData );
-
-  ch.addRatioHist( get_Ratio(hMC,hData), "HIST", kBlue+2 );
-  ch.addRatioHist( get_Ratio(hData,hData), "EP", kBlack );
-
-  // draw stacked hists
-  ch.DrawHist();
-
-  
-
 
 
 
