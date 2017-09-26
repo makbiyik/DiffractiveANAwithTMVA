@@ -83,10 +83,13 @@ int Diffractive_TMVAClassification()
    std::map<TString, SampleList::sSample> mSample = SampleList::read_data_mc_files();
    ////////////////////////////////////////////////////////////////////////////
    // Create a ROOT output file where TMVA will store ntuples, histograms, etc.
-   TString outfileName( "data/TMVA.root" );
+   TString outfileName( "data/TMVA_XiCutEPOSSD2.root" );
    TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
    TMVA::Factory *factory = new TMVA::Factory( "TMVAClassification", outputFile,
                                                "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification" );
+   
+
+   factory->AddVariable( "deltaeta","deltaeta", "units", 'F' );
    factory->AddVariable( "deltazero","deltazero", "units", 'F' );
    factory->AddVariable( "etamax","etamax", "units", 'F' );
    factory->AddVariable( "etamin","etamin", "units", 'F' );
@@ -142,8 +145,8 @@ int Diffractive_TMVAClassification()
    TCut mycutb = "deltazero>=0"; // for example: TCut mycutb = "abs(var1)<0.5";
    // 
    factory->PrepareTrainingAndTestTree( mycuts, mycutb,
-                                        "nTrain_Signal=25000:nTest_Signal=7500:nTrain_Background=25000:nTest_Background=7500:SplitMode=Random:NormMode=NumEvents:!V" );
-                                       // "nTrain_Signal=1000:nTest_Signal=7000:nTrain_Background=1000:nTest_Background=7000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                        // "nTrain_Signal=24000:nTest_Signal=8000:nTrain_Background=24000:nTest_Background=8000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                       "nTrain_Signal=1000:nTest_Signal=500:nTrain_Background=1000:nTest_Background=500:SplitMode=Random:NormMode=NumEvents:!V" );
 
                                           //100000
 

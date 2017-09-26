@@ -154,12 +154,13 @@ void Diffractive_TMVApplication()
    // Create a set of variables and declare them to the reader
    // - the variable names MUST corresponds in name and type to those given in the weight file(s) used
    
-   Float_t deltazero, etamax, etamin;
+   Float_t deltaeta, deltazero, etamax, etamin;
    Float_t  log10XixReco, log10XiyReco;//log10XiDD;
    Float_t HFminusNtowers, HFplusNtowers ,CastorNtowers,Ntracks;//RGmean;// ,Pythia8processid,EventselectionXiprocessid;
    Float_t MaxCastorEnergy,CaloReducedenergyClass; //CastorSumEnergy,CaloReducedenergyClass, HFSumEnergy;//;//MaxHFEnergy;
    
-
+   
+   reader->AddVariable("deltaeta", &deltaeta );
    reader->AddVariable( "deltazero", &deltazero );
    reader->AddVariable( "etamax" , &etamax );
    reader->AddVariable( "etamin" , &etamin );
@@ -256,7 +257,8 @@ void Diffractive_TMVApplication()
    Int_t HFminusNtowers_tree ,HFplusNtowers_tree ,CastorNtowers_tree,Ntracks_tree,CaloReducedenergyClass_tree;
    Int_t Pythia8processid_tree;
    Int_t EventselectionXiprocessDD_tree, EventselectionXiprocessSD1_tree, EventselectionXiprocessSD2_tree, EventselectionXiprocessRest_tree;
-    
+   
+   theTree->SetBranchAddress("deltaeta", &deltaeta); 
    theTree->SetBranchAddress("deltazero", &deltazero);
    theTree->SetBranchAddress("etamax", &etamax);
    theTree->SetBranchAddress("etamin", &etamin);
