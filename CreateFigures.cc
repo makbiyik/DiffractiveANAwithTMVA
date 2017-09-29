@@ -95,10 +95,18 @@ void exampleCode();
 //////////////////////////////////////////////////////////////////////////
 // plot the variables for tmva training and compare this with data
 void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& mSample);
+
+std::map<TString, TH1*> single_figure_addstack(CanvasHelper& ch,
+                              std::map<TString, SampleList::sSample>& mSample,
+                              std::vector<TString>& vSuffix,
+                              TString sample_name,
+                              TString hist_var_name) ;
+
+
 void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSample,
                                    std::vector<TString>& vSuffix,
                                    std::map<TString, sSingleVar>& mSingleTrainingVar,
-                                   TString sample_name,
+                                  vector<TString> sample_names,
                                    TString data_sample_name,
                                    bool scale_data = true);
 void single_sample_compare_syst(std::map<TString, SampleList::sSample>& mSample,
@@ -108,7 +116,7 @@ void single_sample_compare_syst(std::map<TString, SampleList::sSample>& mSample,
 std::map<TString, TH1*> single_figure_compare_mc_data(CanvasHelper& ch,
                                                       std::map<TString, SampleList::sSample>& mSample,
                                                       std::vector<TString>& vSuffix,
-                                                      TString sample_name,
+                              vector<TString> sample_names,
                                                       TString data_sample_name,
                                                       TString hist_var_name,
                                                       // TLegend* leg,
@@ -117,14 +125,12 @@ void draw_legend_for_diff_canvas(std::map<TString, TCanvas*>& mCanvas,
                                  std::map<TString, std::map<TString, TH1*> >& mDrawHists,
                                  std::map<TString, TLegend*>& mLegend,
                                  std::vector<TString>& vSuffix,
-                                 TString sample_name,
+                              vector<TString> sample_names,
                                  TString data_sample_name);
-void draw_legend_for_diff_canvas_diffMC(std::map<TString, TCanvas*>& mCanvas,
-                                        std::map<TString, std::map<TString, TH1*> >& mDrawHists,
-                                        std::map<TString, TLegend*>& mLegend,
-                                        std::vector<TString>& vSuffix,
-                                        TString sample_name,
-                                        TString data_sample_name);
+
+
+
+                                       
 
 //////////////////////////////////////////////////////////////////////////
 // plot discriminant value for different proccess
@@ -177,12 +183,12 @@ int main( int argc, char** argv )
   
 
   //////////////////////////////////////////////////////////////////////////
-  // compare training variables MC with DATA
+  // // compare training variables MC with DATA
   training_variables_compare_mc_data(mSample);
 
 
-  discriminant_compare_mc_data(mSample);
-  discriminant_results(mSample);
+  // discriminant_compare_mc_data(mSample);
+  // discriminant_results(mSample);
 
 
 
@@ -201,16 +207,21 @@ int main( int argc, char** argv )
                               mSample, "SD1", clcut);
     htest_clcut->GetXaxis()->SetTitle("Cuts are at Discriminant Value");
     htest_clcut->GetYaxis()->SetTitle("#sigma");
-
     htest_clcut->Fill(clcut, cross_section_result);
+    gStyle->SetLegendTextSize(0.05); //nosuffix
+    gStyle->SetLegendFont(42);
     htest_clcut->SetBinError( htest_clcut->FindBin(clcut), standartError );
+   
+  
+    
+   
+   
+  
+
   }
 
   htest_clcut->Draw();
   //////////////////////////////////////////////////////////////////////////
-
-
-
   /////////////////////////////////////////////////
   // freeze program
   app->Run();
@@ -219,271 +230,6 @@ int main( int argc, char** argv )
   return 0; 
 }
 //////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////
-// std::map<TString, sSingleVar> build_hist_parameters() 
-// {
-
-//   std::map<TString, sSingleVar> mSingleTrainingVar;
-
-//   mSingleTrainingVar["DeltaEta"].hist_name = "Hist_Eta_DeltaMax";
-//   mSingleTrainingVar["DeltaEta"].xaxis_title = "#Delta#eta";
-//   mSingleTrainingVar["DeltaEta"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
-//   mSingleTrainingVar["DeltaEta"].ratio_title = "MC / Data";
-//   mSingleTrainingVar["DeltaEta"].canvas_title = "cDeltaEta_";
-//   mSingleTrainingVar["DeltaEta"].xmin = 0;
-//   mSingleTrainingVar["DeltaEta"].xmax = 11;
-//   mSingleTrainingVar["DeltaEta"].ymin = 1;
-//   mSingleTrainingVar["DeltaEta"].ymax = 1e10;
-//   mSingleTrainingVar["DeltaEta"].rmin = 0;
-//   mSingleTrainingVar["DeltaEta"].rmax = 3;
-//   mSingleTrainingVar["DeltaEta"].cms_alignment = 33;
-
-
-//   mSingleTrainingVar["ForwardEtaDelta"].hist_name = "Hist_forwarddelta";
-//   mSingleTrainingVar["ForwardEtaDelta"].xaxis_title = "#Delta#eta^{f}";
-//   mSingleTrainingVar["ForwardEtaDelta"].yaxis_title = "1/L dN/d#eta^{f} [#mub^{-1}]";
-//   mSingleTrainingVar["ForwardEtaDelta"].ratio_title = "MC / Data";
-//   mSingleTrainingVar["ForwardEtaDelta"].canvas_title = "cForwardDeltaEta_";
-//   mSingleTrainingVar["ForwardEtaDelta"].xmin = 0;
-//   mSingleTrainingVar["ForwardEtaDelta"].xmax = 9;
-//   mSingleTrainingVar["ForwardEtaDelta"].ymin = 1;
-//   mSingleTrainingVar["ForwardEtaDelta"].ymax = 1e10;
-//   mSingleTrainingVar["ForwardEtaDelta"].rmin = 0;
-//   mSingleTrainingVar["ForwardEtaDelta"].rmax = 3;
-//   mSingleTrainingVar["ForwardEtaDelta"].cms_alignment = 33;
-
-//   mSingleTrainingVar["EtaDeltaZero"].hist_name = "Hist_Eta_DeltaZero";
-//   mSingleTrainingVar["EtaDeltaZero"].xaxis_title = "#Delta#eta_{0}";
-//   mSingleTrainingVar["EtaDeltaZero"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
-//   mSingleTrainingVar["EtaDeltaZero"].ratio_title = "MC / Data";
-//   mSingleTrainingVar["EtaDeltaZero"].canvas_title = "cDeltaEtaZero_";
-//   mSingleTrainingVar["EtaDeltaZero"].xmin = 0;
-//   mSingleTrainingVar["EtaDeltaZero"].xmax = 11;
-//   mSingleTrainingVar["EtaDeltaZero"].ymin = 1;
-//   mSingleTrainingVar["EtaDeltaZero"].ymax = 1e10;
-//   mSingleTrainingVar["EtaDeltaZero"].rmin = 0;
-//   mSingleTrainingVar["EtaDeltaZero"].rmax = 3;
-//   mSingleTrainingVar["EtaDeltaZero"].cms_alignment = 33;
-
-//   mSingleTrainingVar["EtaMin"].hist_name = "Hist_Eta_Min";
-//   mSingleTrainingVar["EtaMin"].xaxis_title = "#eta_{min}";
-//   mSingleTrainingVar["EtaMin"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
-//   mSingleTrainingVar["EtaMin"].ratio_title = "MC / Data";
-//   mSingleTrainingVar["EtaMin"].canvas_title = "cEtaMin_";
-//   mSingleTrainingVar["EtaMin"].xmin = -6.;
-//   mSingleTrainingVar["EtaMin"].xmax = 5.5;
-//   mSingleTrainingVar["EtaMin"].ymin = 1;
-//   mSingleTrainingVar["EtaMin"].ymax = 1e11;
-//   mSingleTrainingVar["EtaMin"].rmin = 0;
-//   mSingleTrainingVar["EtaMin"].rmax = 3;
-//   mSingleTrainingVar["EtaMin"].cms_alignment = 33;
-
-  
-
-
-
-//   mSingleTrainingVar["EtaMax"].hist_name = "Hist_Eta_Max";
-//   mSingleTrainingVar["EtaMax"].xaxis_title = "#eta_{max}";
-//   mSingleTrainingVar["EtaMax"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
-//   mSingleTrainingVar["EtaMax"].ratio_title = "MC / Data";
-//   mSingleTrainingVar["EtaMax"].canvas_title = "cEtaMax_";
-//   mSingleTrainingVar["EtaMax"].xmin = -6.0;
-//   mSingleTrainingVar["EtaMax"].xmax = 5.5;
-//   mSingleTrainingVar["EtaMax"].ymin = 1;
-//   mSingleTrainingVar["EtaMax"].ymax = 1e11;
-//   mSingleTrainingVar["EtaMax"].rmin = 0;
-//   mSingleTrainingVar["EtaMax"].rmax = 3;
-//   mSingleTrainingVar["EtaMax"].cms_alignment = 33;
-
-  
-//   mSingleTrainingVar["NTowHF_plus"].hist_name = "Hist_numberoftowerebovenoise_forwardplus";
-//   mSingleTrainingVar["NTowHF_plus"].xaxis_title = "N_{tow}";
-//   mSingleTrainingVar["NTowHF_plus"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-//   mSingleTrainingVar["NTowHF_plus"].ratio_title = "MC / Data";
-//   mSingleTrainingVar["NTowHF_plus"].canvas_title = "cNTowHF_plus_";
-//   mSingleTrainingVar["NTowHF_plus"].xmin = -0.5;
-//   mSingleTrainingVar["NTowHF_plus"].xmax = 100.5;
-//   mSingleTrainingVar["NTowHF_plus"].ymin = 1;
-//   mSingleTrainingVar["NTowHF_plus"].ymax = 1e8;
-//   mSingleTrainingVar["NTowHF_plus"].rmin = 0;
-//   mSingleTrainingVar["NTowHF_plus"].rmax = 3;
-//   mSingleTrainingVar["NTowHF_plus"].cms_alignment = 33;
-
-
- 
-//   mSingleTrainingVar["NTowHF_minus"].hist_name = "Hist_numberoftowerebovenoise_forwardminus";
-//   mSingleTrainingVar["NTowHF_minus"].xaxis_title = "N_{tow}";
-//   mSingleTrainingVar["NTowHF_minus"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-//   mSingleTrainingVar["NTowHF_minus"].ratio_title = "MC / Data";
-//   mSingleTrainingVar["NTowHF_minus"].canvas_title = "cNTowHF_minus_";
-//   mSingleTrainingVar["NTowHF_minus"].xmin = -0.5;
-//   mSingleTrainingVar["NTowHF_minus"].xmax = 100.5;
-//   mSingleTrainingVar["NTowHF_minus"].ymin = 1;
-//   mSingleTrainingVar["NTowHF_minus"].ymax = 1e8;
-//   mSingleTrainingVar["NTowHF_minus"].rmin = 0;
-//   mSingleTrainingVar["NTowHF_minus"].rmax = 3;
-//   mSingleTrainingVar["NTowHF_minus"].cms_alignment = 33;
-
-
-//   mSingleTrainingVar["NTowCastor"].hist_name = "Hist_numberoftowerebovenoise_castor";
-//   mSingleTrainingVar["NTowCastor"].xaxis_title = "N_{tow}";
-//   mSingleTrainingVar["NTowCastor"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-//   mSingleTrainingVar["NTowCastor"].ratio_title = "MC / Data";
-//   mSingleTrainingVar["NTowCastor"].canvas_title = "cNTowCastor_";
-//   mSingleTrainingVar["NTowCastor"].xmin = 0;
-//   mSingleTrainingVar["NTowCastor"].xmax = 16;
-//   mSingleTrainingVar["NTowCastor"].ymin = 1;
-//   mSingleTrainingVar["NTowCastor"].ymax = 1e8;
-//   mSingleTrainingVar["NTowCastor"].rmin = 0;
-//   mSingleTrainingVar["NTowCastor"].rmax = 3;
-//   mSingleTrainingVar["NTowCastor"].cms_alignment = 33;
-
- 
-//   mSingleTrainingVar["NTow"].hist_name = "Hist_CaloReducedenergyClass";
-//   mSingleTrainingVar["NTow"].xaxis_title = "N_{tow}";
-//   mSingleTrainingVar["NTow"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-//   mSingleTrainingVar["NTow"].ratio_title = "MC / Data";
-//   mSingleTrainingVar["NTow"].canvas_title = "cNTow_";
-//   mSingleTrainingVar["NTow"].xmin = 0;
-//   mSingleTrainingVar["NTow"].xmax = 50;
-//   mSingleTrainingVar["NTow"].ymin = 1;
-//   mSingleTrainingVar["NTow"].ymax = 1e8;
-//   mSingleTrainingVar["NTow"].rmin = 0;
-//   mSingleTrainingVar["NTow"].rmax = 3;
-//   mSingleTrainingVar["NTow"].cms_alignment = 33;
-
-  
-//   mSingleTrainingVar["NTowMaxHF"].hist_name = "Hist_MaxHFEnergy";
-//   mSingleTrainingVar["NTowMaxHF"].xaxis_title = "Max_{energytow}";
-//   mSingleTrainingVar["NTowMaxHF"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-//   mSingleTrainingVar["NTowMaxHF"].ratio_title = "MC / Data";
-//   mSingleTrainingVar["NTowMaxHF"].canvas_title = "cEnergyMaxTowHF_";
-//   mSingleTrainingVar["NTowMaxHF"].xmin = 0;
-//   mSingleTrainingVar["NTowMaxHF"].xmax = 600;
-//   mSingleTrainingVar["NTowMaxHF"].ymin = 1;
-//   mSingleTrainingVar["NTowMaxHF"].ymax = 1e8;
-//   mSingleTrainingVar["NTowMaxHF"].rmin = 0;
-//   mSingleTrainingVar["NTowMaxHF"].rmax = 3;
-//   mSingleTrainingVar["NTowMaxHF"].cms_alignment = 33;
-
-  
-//   mSingleTrainingVar["SumEnergyHF"].hist_name = "Hist_HFSumEnergy";
-//   mSingleTrainingVar["SumEnergyHF"].xaxis_title = "Sum_{E}";
-//   mSingleTrainingVar["SumEnergyHF"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-//   mSingleTrainingVar["SumEnergyHF"].ratio_title = "MC / Data";
-//   mSingleTrainingVar["SumEnergyHF"].canvas_title = "cSumEnergyHF_";
-//   mSingleTrainingVar["SumEnergyHF"].xmin = 0;
-//   mSingleTrainingVar["SumEnergyHF"].xmax = 3000;
-//   mSingleTrainingVar["SumEnergyHF"].ymin = 1;
-//   mSingleTrainingVar["SumEnergyHF"].ymax = 1e8;
-//   mSingleTrainingVar["SumEnergyHF"].rmin = 0;
-//   mSingleTrainingVar["SumEnergyHF"].rmax = 3;
-//   mSingleTrainingVar["SumEnergyHF"].cms_alignment = 33;
-
-
-//   mSingleTrainingVar["SumEnergyCastor"].hist_name = "Hist_CastorSumEnergy";
-//   mSingleTrainingVar["SumEnergyCastor"].xaxis_title = "Sum_{E}";
-//   mSingleTrainingVar["SumEnergyCastor"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-//   mSingleTrainingVar["SumEnergyCastor"].ratio_title = "MC / Data";
-//   mSingleTrainingVar["SumEnergyCastor"].canvas_title = "cSumEnergyCastor_";
-//   mSingleTrainingVar["SumEnergyCastor"].xmin = 0;
-//   mSingleTrainingVar["SumEnergyCastor"].xmax = 3000;
-//   mSingleTrainingVar["SumEnergyCastor"].ymin = 1;
-//   mSingleTrainingVar["SumEnergyCastor"].ymax = 1e8;
-//   mSingleTrainingVar["SumEnergyCastor"].rmin = 0;
-//   mSingleTrainingVar["SumEnergyCastor"].rmax = 3;
-//   mSingleTrainingVar["SumEnergyCastor"].cms_alignment = 33;
-
-
-
-
-
-
-//   mSingleTrainingVar["NTowMaxCastor"].hist_name = "Hist_MaxCastorEnergy";
-//   mSingleTrainingVar["NTowMaxCastor"].xaxis_title = "Max_{energytow}";
-//   mSingleTrainingVar["NTowMaxCastor"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-//   mSingleTrainingVar["NTowMaxCastor"].ratio_title = "MC / Data";
-//   mSingleTrainingVar["NTowMaxCastor"].canvas_title = "cEnergyMaxTowCastor_";
-//   mSingleTrainingVar["NTowMaxCastor"].xmin = 0;
-//   mSingleTrainingVar["NTowMaxCastor"].xmax = 600;
-//   mSingleTrainingVar["NTowMaxCastor"].ymin = 1;
-//   mSingleTrainingVar["NTowMaxCastor"].ymax = 1e8;
-//   mSingleTrainingVar["NTowMaxCastor"].rmin = 0;
-//   mSingleTrainingVar["NTowMaxCastor"].rmax = 3;
-//   mSingleTrainingVar["NTowMaxCastor"].cms_alignment = 33;
-
- 
-
-
-//   mSingleTrainingVar["NTracks"].hist_name = "Hist_NbrTracks";
-//   mSingleTrainingVar["NTracks"].xaxis_title = "N_{trk}";
-//   mSingleTrainingVar["NTracks"].yaxis_title = "1/L dN/dN_{trk} [#mub^{-1}]";
-//   mSingleTrainingVar["NTracks"].ratio_title = "MC / Data";
-//   mSingleTrainingVar["NTracks"].canvas_title = "cNTracks_";
-//   mSingleTrainingVar["NTracks"].xmin = 0;
-//   mSingleTrainingVar["NTracks"].xmax = 50;
-//   mSingleTrainingVar["NTracks"].ymin = 1;
-//   mSingleTrainingVar["NTracks"].ymax = 1e8;
-//   mSingleTrainingVar["NTracks"].rmin = 0;
-//   mSingleTrainingVar["NTracks"].rmax = 3;
-//   mSingleTrainingVar["NTracks"].cms_alignment = 33;
-
-//   mSingleTrainingVar["recoXix"].hist_name = "Hist_log10XiX";
-//   mSingleTrainingVar["recoXix"].xaxis_title = "log_{10}#xi_{x}";
-//   mSingleTrainingVar["recoXix"].yaxis_title = "1/L dN/d(log_{10}#xi_{x}) [#mub^{-1}]";
-//   mSingleTrainingVar["recoXix"].ratio_title = "MC / Data";
-//   mSingleTrainingVar["recoXix"].canvas_title = "crecoXix_";
-//   mSingleTrainingVar["recoXix"].xmin = -11.5;
-//   mSingleTrainingVar["recoXix"].xmax = 0.5;
-//   mSingleTrainingVar["recoXix"].ymin = 1;
-//   mSingleTrainingVar["recoXix"].ymax = 1e10;
-//   mSingleTrainingVar["recoXix"].rmin = 0;
-//   mSingleTrainingVar["recoXix"].rmax = 3;
-//   mSingleTrainingVar["recoXix"].cms_alignment = 33;
-
-
-
-//   mSingleTrainingVar["recoXiy"].hist_name = "Hist_log10XiY";
-//   mSingleTrainingVar["recoXiy"].xaxis_title = "log_{10}#xi_{y}";
-//   mSingleTrainingVar["recoXiy"].yaxis_title = "1/L dN/d(log_{10}#xi_{y}) [#mub^{-1}]";
-//   mSingleTrainingVar["recoXiy"].ratio_title = "MC / Data";
-//   mSingleTrainingVar["recoXiy"].canvas_title = "crecoXiy_";
-//   mSingleTrainingVar["recoXiy"].xmin = -11.5;
-//   mSingleTrainingVar["recoXiy"].xmax = 0.5;
-//   mSingleTrainingVar["recoXiy"].ymin = 1;
-//   mSingleTrainingVar["recoXiy"].ymax = 1e10;
-//   mSingleTrainingVar["recoXiy"].rmin = 0;
-//   mSingleTrainingVar["recoXiy"].rmax = 3;
-//   mSingleTrainingVar["recoXiy"].cms_alignment = 33;
-
-
-
-//   // mSingleTrainingVar["XiDD"].hist_name = "Hist_Reco_log10XiDD";
-//   // mSingleTrainingVar["XiDD"].xaxis_title = "log_{10}#xi_{DD}";
-//   // mSingleTrainingVar["XiDD"].yaxis_title = "1/L dN/d#xi [#mub^{-1}]";
-//   // mSingleTrainingVar["XiDD"].ratio_title = "MC / Data";
-//   // mSingleTrainingVar["XiDD"].canvas_title = "cXiDD_";
-//   // mSingleTrainingVar["XiDD"].xmin = -11.5;
-//   // mSingleTrainingVar["XiDD"].xmax = 0.5;
-//   // mSingleTrainingVar["XiDD"].ymin = 1;
-//   // mSingleTrainingVar["XiDD"].ymax = 1e6;
-//   // mSingleTrainingVar["XiDD"].rmin = 0;
-//   // mSingleTrainingVar["XiDD"].rmax = 3;
-//   // mSingleTrainingVar["XiDD"].cms_alignment = 33;
-
-
-
-//   return mSingleTrainingVar;
-// }
-
-
-
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -641,17 +387,12 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
 */
   std::map<TString, sSingleVar> mSingleTrainingVar = build_hist_parameters();
 
-
-  single_sample_compare_syst(mSample,mSingleTrainingVar,"Pythia8","Data");
-
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8","Data");
-
-
+  // vector<TString> sampleNames = {"Pythia8", "EPOS", "Data_sysHFPlus"};
+  vector<TString> sampleNames = {"Pythia8","EPOS"};
+  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,sampleNames,"Data");
+  // single_sample_compare_syst(mSample,mSingleTrainingVar,"Pythia8","Data"); // !!!!! icant run with "single_sample_compare_mc_data" scale problemfor systematic
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data",false);
-
-
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS","Data",false);
-
 
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1","Data",false);
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1","Data",false);
@@ -820,527 +561,388 @@ void draw_legend_for_diff_canvas(std::map<TString, TCanvas*>& mCanvas,
                                  std::map<TString, std::map<TString, TH1*> >& mDrawHists,
                                  std::map<TString, TLegend*>& mLegend,
                                  std::vector<TString>& vSuffix,
-                                 TString sample_name,
+                                 vector<TString> sample_names,
                                  TString data_sample_name)
 {
-  mCanvas["DeltaEta"]->cd(1);
-  mLegend["DeltaEta"] = new TLegend(0.37,0.50,0.72,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+  gStyle->SetLegendTextSize(0.05); //nosuffix
+  gStyle->SetLegendFont(42);
+
+  {
+    mCanvas["DeltaEta"]->cd(1);
+    mLegend["DeltaEta"] = new TLegend( 0.19,0.47,0.59,0.87);
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+        // define legend text for stacked hist
+        TString leg_text = vSuffix[iSuffix];
+        leg_text.Remove(0,1);
+        // add legend entry
+       mLegend["DeltaEta"]->AddEntry( mDrawHists["DeltaEta"][ vSuffix[iSuffix] ], leg_text, "f" );
+    }
+    TString print = figure_dir + "/DeltaEta_";
+    for (auto sample_name : sample_names) {
+      mLegend["DeltaEta"]->AddEntry( mDrawHists["DeltaEta"][sample_name], sample_name, "l" );
+      print += sample_name + "_";
+    }
+    mLegend["DeltaEta"]->AddEntry( mDrawHists["DeltaEta"][data_sample_name], "Data", "lep" );
+    mLegend["DeltaEta"]->Draw("same");
+    if(draw_figure) mCanvas["DeltaEta"]->Print(print +"." + figure_type );
+  } 
+
+   {
+  ///
+    mCanvas["ForwardEtaDelta"]->cd(1);
+    mLegend["ForwardEtaDelta"] = new TLegend(0.19,0.47,0.59,0.87); // 0.19,0.47,0.59,0.87 fornosuffix , for suffix0.37,0.50,0.72,0.87
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
       // define legend text for stacked hist
       TString leg_text = vSuffix[iSuffix];
       leg_text.Remove(0,1);
       // add legend entry
-      mLegend["DeltaEta"]->AddEntry( mDrawHists["DeltaEta"][ vSuffix[iSuffix] ], leg_text, "f" );
+      mLegend["ForwardEtaDelta"]->AddEntry( mDrawHists["ForwardEtaDelta"][ vSuffix[iSuffix] ], leg_text, "f" );
+    }
+    TString print = figure_dir + "/ForwardEtaDelta_";
+    for (auto sample_name : sample_names) {
+      mLegend["ForwardEtaDelta"]->AddEntry( mDrawHists["ForwardEtaDelta"][sample_name], sample_name, "l" );
+      print += sample_name + "_";
+    }  
+
+    mLegend["ForwardEtaDelta"]->AddEntry( mDrawHists["ForwardEtaDelta"][data_sample_name], "Data", "lep" );
+    mLegend["ForwardEtaDelta"]->Draw("same");
+    if(draw_figure) mCanvas["ForwardEtaDelta"]->Print(print +"." + figure_type );
+
   }
-  mLegend["DeltaEta"]->AddEntry( mDrawHists["DeltaEta"][sample_name], sample_name, "l" );
-  mLegend["DeltaEta"]->AddEntry( mDrawHists["DeltaEta"][data_sample_name], "Data", "lep" );
-  mLegend["DeltaEta"]->Draw("same");
-  if(draw_figure) mCanvas["DeltaEta"]->Print( figure_dir + "/DeltaEta_" + sample_name + "." + figure_type );
 
-
-
-  ///
-  mCanvas["ForwardEtaDelta"]->cd(1);
-  mLegend["ForwardEtaDelta"] = new TLegend(0.37,0.50,0.72,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["ForwardEtaDelta"]->AddEntry( mDrawHists["ForwardEtaDelta"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["ForwardEtaDelta"]->AddEntry( mDrawHists["ForwardEtaDelta"][sample_name], sample_name, "l" );
-  mLegend["ForwardEtaDelta"]->AddEntry( mDrawHists["ForwardEtaDelta"][data_sample_name], "Data", "lep" );
-  mLegend["ForwardEtaDelta"]->Draw("same");
-  if(draw_figure) mCanvas["ForwardEtaDelta"]->Print( figure_dir + "/ForwardEtaDelta_" + sample_name + "." + figure_type );
-
-
-
-
-  mCanvas["EtaDeltaZero"]->cd(1);
-  mLegend["EtaDeltaZero"] = new TLegend(0.37,0.50,0.72,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"][sample_name], sample_name, "l" );
-  mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"][data_sample_name], "Data", "lep" );
-  mLegend["EtaDeltaZero"]->Draw("same");
-  if(draw_figure) mCanvas["EtaDeltaZero"]->Print( figure_dir + "/EtaDeltaZero_" + sample_name + "." + figure_type );
-
-
-  mCanvas["EtaMin"]->cd(1);
-  mLegend["EtaMin"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["EtaMin"]->AddEntry( mDrawHists["EtaMin"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["EtaMin"]->AddEntry( mDrawHists["EtaMin"][sample_name], sample_name, "l" );
-  mLegend["EtaMin"]->AddEntry( mDrawHists["EtaMin"][data_sample_name], "Data", "lep" );
-  mLegend["EtaMin"]->Draw("same");
-  if(draw_figure) mCanvas["EtaMin"]->Print( figure_dir + "/EtaMin_" + sample_name + "." + figure_type );
-  
-  mCanvas["EtaMax"]->cd(1);
-  mLegend["EtaMax"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["EtaMax"]->AddEntry( mDrawHists["EtaMax"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["EtaMax"]->AddEntry( mDrawHists["EtaMax"][sample_name], sample_name, "l" );
-  mLegend["EtaMax"]->AddEntry( mDrawHists["EtaMax"][data_sample_name], "Data", "lep" );
-  mLegend["EtaMax"]->Draw("same");
-  if(draw_figure) mCanvas["EtaMax"]->Print( figure_dir + "/EtaMax_" + sample_name + "." + figure_type );
-
-  mCanvas["NTowHF_plus"]->cd(1);
-  mLegend["NTowHF_plus"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["NTowHF_plus"]->AddEntry( mDrawHists["NTowHF_plus"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["NTowHF_plus"]->AddEntry( mDrawHists["NTowHF_plus"][sample_name], sample_name, "l" );
-  mLegend["NTowHF_plus"]->AddEntry( mDrawHists["NTowHF_plus"][data_sample_name], "Data", "lep" );
-  mLegend["NTowHF_plus"]->Draw("same");
-  if(draw_figure) mCanvas["NTowHF_plus"]->Print( figure_dir + "/NTowHF_plus_" + sample_name + "." + figure_type );
-  
-  mCanvas["NTowHF_minus"]->cd(1);
-  mLegend["NTowHF_minus"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["NTowHF_minus"]->AddEntry( mDrawHists["NTowHF_minus"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["NTowHF_minus"]->AddEntry( mDrawHists["NTowHF_minus"][sample_name], sample_name, "l" );
-  mLegend["NTowHF_minus"]->AddEntry( mDrawHists["NTowHF_minus"][data_sample_name], "Data", "lep" );
-  mLegend["NTowHF_minus"]->Draw("same");
-  if(draw_figure) mCanvas["NTowHF_minus"]->Print( figure_dir + "/NTowHF_minus_" + sample_name + "." + figure_type );
-
-  mCanvas["NTowCastor"]->cd(1);
-  mLegend["NTowCastor"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["NTowCastor"]->AddEntry( mDrawHists["NTowCastor"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["NTowCastor"]->AddEntry( mDrawHists["NTowCastor"][sample_name], sample_name, "l" );
-  mLegend["NTowCastor"]->AddEntry( mDrawHists["NTowCastor"][data_sample_name], "Data", "lep" );
-  mLegend["NTowCastor"]->Draw("same");
-  if(draw_figure) mCanvas["NTowCastor"]->Print( figure_dir + "/NTowCastor_" + sample_name + "." + figure_type );
-
- 
-  mCanvas["NTow"]->cd(1);
-  mLegend["NTow"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["NTow"]->AddEntry( mDrawHists["NTow"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["NTow"]->AddEntry( mDrawHists["NTow"][sample_name], sample_name, "l" );
-  mLegend["NTow"]->AddEntry( mDrawHists["NTow"][data_sample_name], "Data", "lep" );
-  mLegend["NTow"]->Draw("same");
-  if(draw_figure) mCanvas["NTow"]->Print( figure_dir + "/NTow_" + sample_name + "." + figure_type );
-
-
-  mCanvas["NTowMaxHF"]->cd(1);
-  mLegend["NTowMaxHF"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["NTowMaxHF"]->AddEntry( mDrawHists["NTowMaxHF"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["NTowMaxHF"]->AddEntry( mDrawHists["NTowMaxHF"][sample_name], sample_name, "l" );
-  mLegend["NTowMaxHF"]->AddEntry( mDrawHists["NTowMaxHF"][data_sample_name], "Data", "lep" );
-  mLegend["NTowMaxHF"]->Draw("same");
-  if(draw_figure) mCanvas["NTowMaxHF"]->Print( figure_dir + "/NTowMaxHF_" + sample_name + "." + figure_type );
-
-  mCanvas["SumEnergyHF"]->cd(1);
-  mLegend["SumEnergyHF"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["SumEnergyHF"]->AddEntry( mDrawHists["SumEnergyHF"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["SumEnergyHF"]->AddEntry( mDrawHists["SumEnergyHF"][sample_name], sample_name, "l" );
-  mLegend["SumEnergyHF"]->AddEntry( mDrawHists["SumEnergyHF"][data_sample_name], "Data", "lep" );
-  mLegend["SumEnergyHF"]->Draw("same");
-  if(draw_figure) mCanvas["SumEnergyHF"]->Print( figure_dir + "/SumEnergyHF_" + sample_name + "." + figure_type );
-
-  mCanvas["SumEnergyCastor"]->cd(1);
-  mLegend["SumEnergyCastor"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["SumEnergyCastor"]->AddEntry( mDrawHists["SumEnergyCastor"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["SumEnergyCastor"]->AddEntry( mDrawHists["SumEnergyCastor"][sample_name], sample_name, "l" );
-  mLegend["SumEnergyCastor"]->AddEntry( mDrawHists["SumEnergyCastor"][data_sample_name], "Data", "lep" );
-  mLegend["SumEnergyCastor"]->Draw("same");
-  if(draw_figure) mCanvas["SumEnergyCastor"]->Print( figure_dir + "/SumEnergyCastor_" + sample_name + "." + figure_type );
-
-
-
-
-  mCanvas["NTowMaxCastor"]->cd(1);
-  mLegend["NTowMaxCastor"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["NTowMaxCastor"]->AddEntry( mDrawHists["NTowMaxCastor"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["NTowMaxCastor"]->AddEntry( mDrawHists["NTowMaxCastor"][sample_name], sample_name, "l" );
-  mLegend["NTowMaxCastor"]->AddEntry( mDrawHists["NTowMaxCastor"][data_sample_name], "Data", "lep" );
-  mLegend["NTowMaxCastor"]->Draw("same");
-  if(draw_figure) mCanvas["NTowMaxCastor"]->Print( figure_dir + "/NTowMaxCastor_" + sample_name + "." + figure_type );
-
-
-
-
-
-  mCanvas["NTracks"]->cd(1);
-  mLegend["NTracks"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["NTracks"]->AddEntry( mDrawHists["NTracks"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["NTracks"]->AddEntry( mDrawHists["NTracks"][sample_name], sample_name, "l" );
-  mLegend["NTracks"]->AddEntry( mDrawHists["NTracks"][data_sample_name], "Data", "lep" );
-  mLegend["NTracks"]->Draw("same");
-  if(draw_figure) mCanvas["NTracks"]->Print( figure_dir + "/NTracks_" + sample_name + "." + figure_type );
-  
-  mCanvas["recoXix"]->cd(1);
-  mLegend["recoXix"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["recoXix"]->AddEntry( mDrawHists["recoXix"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["recoXix"]->AddEntry( mDrawHists["recoXix"][sample_name], sample_name, "l" );
-  mLegend["recoXix"]->AddEntry( mDrawHists["recoXix"][data_sample_name], "Data", "lep" );
-  mLegend["recoXix"]->Draw("same");
-  if(draw_figure) mCanvas["recoXix"]->Print( figure_dir + "/recoXix_" + sample_name + "." + figure_type );
-
-  mCanvas["recoXiy"]->cd(1);
-  mLegend["recoXiy"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["recoXiy"]->AddEntry( mDrawHists["recoXiy"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["recoXiy"]->AddEntry( mDrawHists["recoXiy"][sample_name], sample_name, "l" );
-  mLegend["recoXiy"]->AddEntry( mDrawHists["recoXiy"][data_sample_name], "Data", "lep" );
-  mLegend["recoXiy"]->Draw("same");
-  if(draw_figure) mCanvas["recoXiy"]->Print( figure_dir + "/recoXiy_" + sample_name + "." + figure_type );
-}
-
-
-
-
-void draw_legend_for_diff_canvas_diffMC(std::map<TString, TCanvas*>& mCanvas,
-                                        std::map<TString, std::map<TString, TH1*> >& mDrawHists,
-                                        std::map<TString, TLegend*>& mLegend,
-                                        std::vector<TString>& vSuffix,
-                                        TString sample_name,
-                                        TString data_sample_name)
-{
-
-
-  mCanvas["DeltaEta"]->cd(1);
-  mLegend["DeltaEta"] = new TLegend(0.37,0.50,0.72,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+  {  
+    mCanvas["EtaDeltaZero"]->cd(1);
+    mLegend["EtaDeltaZero"] = new TLegend(0.19,0.47,0.59,0.87);
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
       // define legend text for stacked hist
       TString leg_text = vSuffix[iSuffix];
-      // leg_text.Remove(0,1);
+      leg_text.Remove(0,1);
       // add legend entry
-      mLegend["DeltaEta"]->AddEntry( mDrawHists["DeltaEta"][ vSuffix[iSuffix] ], leg_text, "l" );
+      mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"][ vSuffix[iSuffix] ], leg_text, "f" );
+    }
+    
+    TString print = figure_dir + "/EtaDeltaZero_";
+    for (auto sample_name : sample_names) {
+      mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"][sample_name], sample_name, "l" );
+      print += sample_name + "_"; 
+    }
+
+    mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"][data_sample_name], "Data", "lep" );
+    mLegend["EtaDeltaZero"]->Draw("same");
+    if(draw_figure) mCanvas["EtaDeltaZero"]->Print(print +"." + figure_type );
+
   }
-  mLegend["DeltaEta"]->AddEntry( mDrawHists["DeltaEta"][sample_name], sample_name, "l" );
-  mLegend["DeltaEta"]->AddEntry( mDrawHists["DeltaEta"][data_sample_name], "Data", "lep" );
-  mLegend["DeltaEta"]->Draw("same");
-  if(draw_figure) mCanvas["DeltaEta"]->Print( figure_dir + "/DeltaEta_" + sample_name + "." + figure_type );
 
+  {  
+    mCanvas["EtaMin"]->cd(1);
+    mLegend["EtaMin"] = new TLegend(0.19,0.47,0.59,0.87);
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+      // define legend text for stacked hist
+      TString leg_text = vSuffix[iSuffix];
+      leg_text.Remove(0,1);
+      // add legend entry
+      mLegend["EtaMin"]->AddEntry( mDrawHists["EtaMin"][ vSuffix[iSuffix] ], leg_text, "f" );
+    }
+    TString print = figure_dir + "/EtaMin";
+    for (auto sample_name : sample_names){
+      mLegend["EtaMin"]->AddEntry( mDrawHists["EtaMin"][sample_name], sample_name, "l" );
+      print += sample_name + "_";
+    }
 
+    mLegend["EtaMin"]->AddEntry( mDrawHists["EtaMin"][data_sample_name], "Data", "lep" );
+    mLegend["EtaMin"]->Draw("same");
+    if(draw_figure) mCanvas["EtaMin"]->Print(print +"." + figure_type );
 
-  ///
-  mCanvas["ForwardEtaDelta"]->cd(1);
-  mLegend["ForwardEtaDelta"] = new TLegend(0.37,0.50,0.72,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["ForwardEtaDelta"]->AddEntry( mDrawHists["ForwardEtaDelta"][ vSuffix[iSuffix] ], leg_text, "f" );
+    
   }
-  mLegend["ForwardEtaDelta"]->AddEntry( mDrawHists["ForwardEtaDelta"][sample_name], sample_name, "l" );
-  mLegend["ForwardEtaDelta"]->AddEntry( mDrawHists["ForwardEtaDelta"][data_sample_name], "Data", "lep" );
-  mLegend["ForwardEtaDelta"]->Draw("same");
-  if(draw_figure) mCanvas["ForwardEtaDelta"]->Print( figure_dir + "/ForwardEtaDelta_" + sample_name + "." + figure_type );
 
+  {  
+    mCanvas["EtaMax"]->cd(1);
+    mLegend["EtaMax"] = new TLegend(0.19,0.47,0.59,0.87);
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+      // define legend text for stacked hist
+      TString leg_text = vSuffix[iSuffix];
+      leg_text.Remove(0,1);
+      // add legend entry
+      mLegend["EtaMax"]->AddEntry( mDrawHists["EtaMax"][ vSuffix[iSuffix] ], leg_text, "f" );
+    }
+    TString print = figure_dir + "/EtaMax";
+    for (auto sample_name : sample_names) {
+      mLegend["EtaMax"]->AddEntry( mDrawHists["EtaMax"][sample_name], sample_name, "l" );
+      print += sample_name + "_";
+    } 
 
-
-
-  mCanvas["EtaDeltaZero"]->cd(1);
-  mLegend["EtaDeltaZero"] = new TLegend(0.37,0.50,0.72,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"][ vSuffix[iSuffix] ], leg_text, "f" );
+    mLegend["EtaMax"]->AddEntry( mDrawHists["EtaMax"][data_sample_name], "Data", "lep" );
+    mLegend["EtaMax"]->Draw("same");
+    if(draw_figure) mCanvas["EtaMax"]->Print(print +"." + figure_type );
   }
-  mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"][sample_name], sample_name, "l" );
-  mLegend["EtaDeltaZero"]->AddEntry( mDrawHists["EtaDeltaZero"][data_sample_name], "Data", "lep" );
-  mLegend["EtaDeltaZero"]->Draw("same");
-  if(draw_figure) mCanvas["EtaDeltaZero"]->Print( figure_dir + "/EtaDeltaZero_" + sample_name + "." + figure_type );
-
-
-  mCanvas["EtaMin"]->cd(1);
-  mLegend["EtaMin"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["EtaMin"]->AddEntry( mDrawHists["EtaMin"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["EtaMin"]->AddEntry( mDrawHists["EtaMin"][sample_name], sample_name, "l" );
-  mLegend["EtaMin"]->AddEntry( mDrawHists["EtaMin"][data_sample_name], "Data", "lep" );
-  mLegend["EtaMin"]->Draw("same");
-  if(draw_figure) mCanvas["EtaMin"]->Print( figure_dir + "/EtaMin_" + sample_name + "." + figure_type );
-  
-  mCanvas["EtaMax"]->cd(1);
-  mLegend["EtaMax"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["EtaMax"]->AddEntry( mDrawHists["EtaMax"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["EtaMax"]->AddEntry( mDrawHists["EtaMax"][sample_name], sample_name, "l" );
-  mLegend["EtaMax"]->AddEntry( mDrawHists["EtaMax"][data_sample_name], "Data", "lep" );
-  mLegend["EtaMax"]->Draw("same");
-  if(draw_figure) mCanvas["EtaMax"]->Print( figure_dir + "/EtaMax_" + sample_name + "." + figure_type );
-
-  mCanvas["NTowHF_plus"]->cd(1);
-  mLegend["NTowHF_plus"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["NTowHF_plus"]->AddEntry( mDrawHists["NTowHF_plus"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["NTowHF_plus"]->AddEntry( mDrawHists["NTowHF_plus"][sample_name], sample_name, "l" );
-  mLegend["NTowHF_plus"]->AddEntry( mDrawHists["NTowHF_plus"][data_sample_name], "Data", "lep" );
-  mLegend["NTowHF_plus"]->Draw("same");
-  if(draw_figure) mCanvas["NTowHF_plus"]->Print( figure_dir + "/NTowHF_plus_" + sample_name + "." + figure_type );
-  
-  mCanvas["NTowHF_minus"]->cd(1);
-  mLegend["NTowHF_minus"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["NTowHF_minus"]->AddEntry( mDrawHists["NTowHF_minus"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["NTowHF_minus"]->AddEntry( mDrawHists["NTowHF_minus"][sample_name], sample_name, "l" );
-  mLegend["NTowHF_minus"]->AddEntry( mDrawHists["NTowHF_minus"][data_sample_name], "Data", "lep" );
-  mLegend["NTowHF_minus"]->Draw("same");
-  if(draw_figure) mCanvas["NTowHF_minus"]->Print( figure_dir + "/NTowHF_minus_" + sample_name + "." + figure_type );
-
-  mCanvas["NTowCastor"]->cd(1);
-  mLegend["NTowCastor"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["NTowCastor"]->AddEntry( mDrawHists["NTowCastor"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["NTowCastor"]->AddEntry( mDrawHists["NTowCastor"][sample_name], sample_name, "l" );
-  mLegend["NTowCastor"]->AddEntry( mDrawHists["NTowCastor"][data_sample_name], "Data", "lep" );
-  mLegend["NTowCastor"]->Draw("same");
-  if(draw_figure) mCanvas["NTowCastor"]->Print( figure_dir + "/NTowCastor_" + sample_name + "." + figure_type );
-
  
-  mCanvas["NTow"]->cd(1);
-  mLegend["NTow"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["NTow"]->AddEntry( mDrawHists["NTow"][ vSuffix[iSuffix] ], leg_text, "f" );
+  {
+    mCanvas["NTowHF_plus"]->cd(1);
+    mLegend["NTowHF_plus"] = new TLegend(0.19,0.47,0.59,0.87);
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+      // define legend text for stacked hist
+      TString leg_text = vSuffix[iSuffix];
+      leg_text.Remove(0,1);
+      // add legend entry
+      mLegend["NTowHF_plus"]->AddEntry( mDrawHists["NTowHF_plus"][ vSuffix[iSuffix] ], leg_text, "f" );
+    }
+    
+    TString print = figure_dir + "/NTowHF_plus";
+    for (auto sample_name : sample_names){
+      mLegend["NTowHF_plus"]->AddEntry( mDrawHists["NTowHF_plus"][sample_name], sample_name, "l" );
+       print += sample_name + "_";
+    } 
+
+    mLegend["NTowHF_plus"]->AddEntry( mDrawHists["NTowHF_plus"][data_sample_name], "Data", "lep" );
+    mLegend["NTowHF_plus"]->Draw("same");
+    if(draw_figure) mCanvas["NTowHF_plus"]->Print(print +"." + figure_type );
+    
   }
-  mLegend["NTow"]->AddEntry( mDrawHists["NTow"][sample_name], sample_name, "l" );
-  mLegend["NTow"]->AddEntry( mDrawHists["NTow"][data_sample_name], "Data", "lep" );
-  mLegend["NTow"]->Draw("same");
-  if(draw_figure) mCanvas["NTow"]->Print( figure_dir + "/NTow_" + sample_name + "." + figure_type );
+  {
+    mCanvas["NTowHF_minus"]->cd(1);
+    mLegend["NTowHF_minus"] = new TLegend(0.19,0.47,0.59,0.87);
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+      // define legend text for stacked hist
+      TString leg_text = vSuffix[iSuffix];
+      leg_text.Remove(0,1);
+      // add legend entry
+      mLegend["NTowHF_minus"]->AddEntry( mDrawHists["NTowHF_minus"][ vSuffix[iSuffix] ], leg_text, "f" );
+    }
+    TString print = figure_dir + "/NTowHF_minus";
+    for (auto sample_name : sample_names){
+      mLegend["NTowHF_minus"]->AddEntry( mDrawHists["NTowHF_minus"][sample_name], sample_name, "l" );
+      print += sample_name + "_";
+    }  
 
-
-  mCanvas["NTowMaxHF"]->cd(1);
-  mLegend["NTowMaxHF"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["NTowMaxHF"]->AddEntry( mDrawHists["NTowMaxHF"][ vSuffix[iSuffix] ], leg_text, "f" );
+    mLegend["NTowHF_minus"]->AddEntry( mDrawHists["NTowHF_minus"][data_sample_name], "Data", "lep" );
+    mLegend["NTowHF_minus"]->Draw("same");
+    if(draw_figure) mCanvas["NTowHF_minus"]->Print(print +"." + figure_type );
   }
-  mLegend["NTowMaxHF"]->AddEntry( mDrawHists["NTowMaxHF"][sample_name], sample_name, "l" );
-  mLegend["NTowMaxHF"]->AddEntry( mDrawHists["NTowMaxHF"][data_sample_name], "Data", "lep" );
-  mLegend["NTowMaxHF"]->Draw("same");
-  if(draw_figure) mCanvas["NTowMaxHF"]->Print( figure_dir + "/NTowMaxHF_" + sample_name + "." + figure_type );
+  {
+    mCanvas["NTowCastor"]->cd(1);
+    mLegend["NTowCastor"] = new TLegend(0.19,0.47,0.59,0.87);
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+      // define legend text for stacked hist
+      TString leg_text = vSuffix[iSuffix];
+      leg_text.Remove(0,1);
+      // add legend entry
+      mLegend["NTowCastor"]->AddEntry( mDrawHists["NTowCastor"][ vSuffix[iSuffix] ], leg_text, "f" );
+    }
+    
+    TString print = figure_dir + "/NTowCastor";
+    for (auto sample_name : sample_names){
+      mLegend["NTowCastor"]->AddEntry( mDrawHists["NTowCastor"][sample_name], sample_name, "l" );
+      print += sample_name + "_";
+    } 
 
-  mCanvas["SumEnergyHF"]->cd(1);
-  mLegend["SumEnergyHF"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["SumEnergyHF"]->AddEntry( mDrawHists["SumEnergyHF"][ vSuffix[iSuffix] ], leg_text, "f" );
+    mLegend["NTowCastor"]->AddEntry( mDrawHists["NTowCastor"][data_sample_name], "Data", "lep" );
+    mLegend["NTowCastor"]->Draw("same");
+    if(draw_figure) mCanvas["NTowCastor"]->Print(print +"." + figure_type );
+    
+    // mCanvas["NTowCastor_sys"]->cd(1);
+    // mLegend["NTowCastor_sys"]->AddEntry( mDrawHists["NTowCastor_sys"][sample_name], sample_name, "l" );
+    // mLegend["NTowCastor_sys"]->AddEntry( mDrawHists["NTowCastor_sys"][data_sample_name], "Data", "lep" );
+    // mLegend["NTowCastor_sys"]->Draw("same");
+    // if(draw_figure) mCanvas["NTowCastor_sys"]->Print( figure_dir + "/NTowCastor_sys" + sample_name + "." + figure_type );
   }
-  mLegend["SumEnergyHF"]->AddEntry( mDrawHists["SumEnergyHF"][sample_name], sample_name, "l" );
-  mLegend["SumEnergyHF"]->AddEntry( mDrawHists["SumEnergyHF"][data_sample_name], "Data", "lep" );
-  mLegend["SumEnergyHF"]->Draw("same");
-  if(draw_figure) mCanvas["SumEnergyHF"]->Print( figure_dir + "/SumEnergyHF_" + sample_name + "." + figure_type );
 
-  mCanvas["SumEnergyCastor"]->cd(1);
-  mLegend["SumEnergyCastor"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["SumEnergyCastor"]->AddEntry( mDrawHists["SumEnergyCastor"][ vSuffix[iSuffix] ], leg_text, "f" );
+  { 
+    mCanvas["NTow"]->cd(1);
+    mLegend["NTow"] = new TLegend(0.19,0.47,0.59,0.87);
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+      // define legend text for stacked hist
+      TString leg_text = vSuffix[iSuffix];
+      leg_text.Remove(0,1);
+      // add legend entry
+      mLegend["NTow"]->AddEntry( mDrawHists["NTow"][ vSuffix[iSuffix] ], leg_text, "f" );
+    }
+    TString print = figure_dir + "/NTow";
+    for (auto sample_name : sample_names){
+      mLegend["NTow"]->AddEntry( mDrawHists["NTow"][sample_name], sample_name, "l" );
+      print += sample_name + "_";
+    }
+    mLegend["NTow"]->AddEntry( mDrawHists["NTow"][data_sample_name], "Data", "lep" );
+    mLegend["NTow"]->Draw("same");
+   if(draw_figure) mCanvas["NTow"]->Print(print +"." + figure_type );
+
   }
-  mLegend["SumEnergyCastor"]->AddEntry( mDrawHists["SumEnergyCastor"][sample_name], sample_name, "l" );
-  mLegend["SumEnergyCastor"]->AddEntry( mDrawHists["SumEnergyCastor"][data_sample_name], "Data", "lep" );
-  mLegend["SumEnergyCastor"]->Draw("same");
-  if(draw_figure) mCanvas["SumEnergyCastor"]->Print( figure_dir + "/SumEnergyCastor_" + sample_name + "." + figure_type );
+ 
+  {  
+    mCanvas["NTowMaxHF"]->cd(1);
+    mLegend["NTowMaxHF"] = new TLegend(0.19,0.47,0.59,0.87);
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+      // define legend text for stacked hist
+      TString leg_text = vSuffix[iSuffix];
+      leg_text.Remove(0,1);
+      // add legend entry
+      mLegend["NTowMaxHF"]->AddEntry( mDrawHists["NTowMaxHF"][ vSuffix[iSuffix] ], leg_text, "f" );
+    }
+    TString print = figure_dir + "/NTowMaxHF";
+    for (auto sample_name : sample_names){
+      mLegend["NTowMaxHF"]->AddEntry( mDrawHists["NTowMaxHF"][sample_name], sample_name, "l" );
+      print += sample_name + "_";
+    } 
 
-
-
-
-  mCanvas["NTowMaxCastor"]->cd(1);
-  mLegend["NTowMaxCastor"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["NTowMaxCastor"]->AddEntry( mDrawHists["NTowMaxCastor"][ vSuffix[iSuffix] ], leg_text, "f" );
+    mLegend["NTowMaxHF"]->AddEntry( mDrawHists["NTowMaxHF"][data_sample_name], "Data", "lep" );
+    mLegend["NTowMaxHF"]->Draw("same");
+    if(draw_figure) mCanvas["NTowMaxHF"]->Print(print +"." + figure_type );
   }
-  mLegend["NTowMaxCastor"]->AddEntry( mDrawHists["NTowMaxCastor"][sample_name], sample_name, "l" );
-  mLegend["NTowMaxCastor"]->AddEntry( mDrawHists["NTowMaxCastor"][data_sample_name], "Data", "lep" );
-  mLegend["NTowMaxCastor"]->Draw("same");
-  if(draw_figure) mCanvas["NTowMaxCastor"]->Print( figure_dir + "/NTowMaxCastor_" + sample_name + "." + figure_type );
-
-
-
-
-
-  mCanvas["NTracks"]->cd(1);
-  mLegend["NTracks"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["NTracks"]->AddEntry( mDrawHists["NTracks"][ vSuffix[iSuffix] ], leg_text, "f" );
-  }
-  mLegend["NTracks"]->AddEntry( mDrawHists["NTracks"][sample_name], sample_name, "l" );
-  mLegend["NTracks"]->AddEntry( mDrawHists["NTracks"][data_sample_name], "Data", "lep" );
-  mLegend["NTracks"]->Draw("same");
-  if(draw_figure) mCanvas["NTracks"]->Print( figure_dir + "/NTracks_" + sample_name + "." + figure_type );
   
-  mCanvas["recoXix"]->cd(1);
-  mLegend["recoXix"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["recoXix"]->AddEntry( mDrawHists["recoXix"][ vSuffix[iSuffix] ], leg_text, "f" );
+  {
+    mCanvas["SumEnergyHF"]->cd(1);
+    mLegend["SumEnergyHF"] = new TLegend(0.19,0.47,0.59,0.87);
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+      // define legend text for stacked hist
+      TString leg_text = vSuffix[iSuffix];
+      leg_text.Remove(0,1);
+      // add legend entry
+      mLegend["SumEnergyHF"]->AddEntry( mDrawHists["SumEnergyHF"][ vSuffix[iSuffix] ], leg_text, "f" );
+    }
+    TString print = figure_dir + "/SumEnergyHF";
+    for (auto sample_name : sample_names){
+      mLegend["SumEnergyHF"]->AddEntry( mDrawHists["SumEnergyHF"][sample_name], sample_name, "l" );
+      print += sample_name + "_";
+    }  
+    mLegend["SumEnergyHF"]->AddEntry( mDrawHists["SumEnergyHF"][data_sample_name], "Data", "lep" );
+    mLegend["SumEnergyHF"]->Draw("same");
+    if(draw_figure) mCanvas["SumEnergyHF"]->Print(print +"." + figure_type );
   }
-  mLegend["recoXix"]->AddEntry( mDrawHists["recoXix"][sample_name], sample_name, "l" );
-  mLegend["recoXix"]->AddEntry( mDrawHists["recoXix"][data_sample_name], "Data", "lep" );
-  mLegend["recoXix"]->Draw("same");
-  if(draw_figure) mCanvas["recoXix"]->Print( figure_dir + "/recoXix_" + sample_name + "." + figure_type );
+  {
+    mCanvas["SumEnergyCastor"]->cd(1);
+    mLegend["SumEnergyCastor"] = new TLegend(0.19,0.47,0.59,0.87);
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+      // define legend text for stacked hist
+      TString leg_text = vSuffix[iSuffix];
+      leg_text.Remove(0,1);
+      // add legend entry
+      mLegend["SumEnergyCastor"]->AddEntry( mDrawHists["SumEnergyCastor"][ vSuffix[iSuffix] ], leg_text, "f" );
+    }
+    TString print = figure_dir + "/SumEnergyCastor";
+    for (auto sample_name : sample_names){
+      mLegend["SumEnergyCastor"]->AddEntry( mDrawHists["SumEnergyCastor"][sample_name], sample_name, "l" );
+      print += sample_name + "_";
+    }  
+    mLegend["SumEnergyCastor"]->AddEntry( mDrawHists["SumEnergyCastor"][data_sample_name], "Data", "lep" );
+    mLegend["SumEnergyCastor"]->Draw("same");
+    if(draw_figure) mCanvas["SumEnergyCastor"]->Print(print +"." + figure_type );
 
-  mCanvas["recoXiy"]->cd(1);
-  mLegend["recoXiy"] = new TLegend(0.19,0.47,0.59,0.87);
-  for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
-    // define legend text for stacked hist
-    TString leg_text = vSuffix[iSuffix];
-    leg_text.Remove(0,1);
-    // add legend entry
-    mLegend["recoXiy"]->AddEntry( mDrawHists["recoXiy"][ vSuffix[iSuffix] ], leg_text, "f" );
   }
-  mLegend["recoXiy"]->AddEntry( mDrawHists["recoXiy"][sample_name], sample_name, "l" );
-  mLegend["recoXiy"]->AddEntry( mDrawHists["recoXiy"][data_sample_name], "Data", "lep" );
-  mLegend["recoXiy"]->Draw("same");
-  if(draw_figure) mCanvas["recoXiy"]->Print( figure_dir + "/recoXiy_" + sample_name + "." + figure_type );
-}
+  
+  { 
+    mCanvas["NTowMaxCastor"]->cd(1);
+    mLegend["NTowMaxCastor"] = new TLegend(0.19,0.47,0.59,0.87);
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+      // define legend text for stacked hist
+      TString leg_text = vSuffix[iSuffix];
+      leg_text.Remove(0,1);
+      // add legend entry
+      mLegend["NTowMaxCastor"]->AddEntry( mDrawHists["NTowMaxCastor"][ vSuffix[iSuffix] ], leg_text, "f" );
+    }
+    
+    TString print = figure_dir + "/NTowMaxCastor";
+    for (auto sample_name : sample_names){
+      mLegend["NTowMaxCastor"]->AddEntry( mDrawHists["NTowMaxCastor"][sample_name], sample_name, "l" );
+      print += sample_name + "_";
+    }  
+    mLegend["NTowMaxCastor"]->AddEntry( mDrawHists["NTowMaxCastor"][data_sample_name], "Data", "lep" );
+    mLegend["NTowMaxCastor"]->Draw("same");
+    if(draw_figure) mCanvas["NTowMaxCastor"]->Print(print +"." + figure_type );
 
+  }
+  {
+    mCanvas["NTracks"]->cd(1);
+    mLegend["NTracks"] = new TLegend(0.19,0.47,0.59,0.87);
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+      // define legend text for stacked hist
+      TString leg_text = vSuffix[iSuffix];
+      leg_text.Remove(0,1);
+      // add legend entry
+      mLegend["NTracks"]->AddEntry( mDrawHists["NTracks"][ vSuffix[iSuffix] ], leg_text, "f" );
+    }
+    TString print = figure_dir + "/NTracks";
+    for (auto sample_name : sample_names){
+      mLegend["NTracks"]->AddEntry( mDrawHists["NTracks"][sample_name], sample_name, "l" );
+      print += sample_name + "_";
+    }   
+    mLegend["NTracks"]->AddEntry( mDrawHists["NTracks"][data_sample_name], "Data", "lep" );
+    mLegend["NTracks"]->Draw("same");
+    if(draw_figure) mCanvas["NTracks"]->Print(print +"." + figure_type );
 
+  }
+  
+  {
+    mCanvas["recoXix"]->cd(1);
+    mLegend["recoXix"] = new TLegend(0.19,0.47,0.59,0.87);
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+      // define legend text for stacked hist
+      TString leg_text = vSuffix[iSuffix];
+      leg_text.Remove(0,1);
+      // add legend entry
+      mLegend["recoXix"]->AddEntry( mDrawHists["recoXix"][ vSuffix[iSuffix] ], leg_text, "f" );
+    }
+    
+    TString print = figure_dir + "/recoXix";
+    for (auto sample_name : sample_names){
+      mLegend["recoXix"]->AddEntry( mDrawHists["recoXix"][sample_name], sample_name, "l" );
+      print += sample_name + "_";
+    } 
 
+    mLegend["recoXix"]->AddEntry( mDrawHists["recoXix"][data_sample_name], "Data", "lep" );
+    mLegend["recoXix"]->Draw("same");
+    if(draw_figure) mCanvas["recoXix"]->Print(print +"." + figure_type );
+
+  }
+ 
+  {  
+
+    mCanvas["recoXiy"]->cd(1);
+    mLegend["recoXiy"] = new TLegend(0.19,0.47,0.59,0.87);
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+      // define legend text for stacked hist
+      TString leg_text = vSuffix[iSuffix];
+      leg_text.Remove(0,1);
+      // add legend entry
+      mLegend["recoXiy"]->AddEntry( mDrawHists["recoXiy"][ vSuffix[iSuffix] ], leg_text, "f" );
+    }
+    TString print = figure_dir + "/recoXiy";
+    for (auto sample_name : sample_names){
+      mLegend["recoXiy"]->AddEntry( mDrawHists["recoXiy"][sample_name], sample_name, "l" );
+      print += sample_name + "_";
+    }
+      
+    mLegend["recoXiy"]->AddEntry( mDrawHists["recoXiy"][data_sample_name], "Data", "lep" );
+    mLegend["recoXiy"]->Draw("same");
+    if(draw_figure) mCanvas["recoXiy"]->Print(print +"." + figure_type );
+  }
+
+ }
 
 void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSample,
                                    std::vector<TString>& vSuffix,
                                    std::map<TString, sSingleVar>& mSingleTrainingVar,
-                                   TString sample_name,
+                                   std::vector<TString> sample_names,
                                    TString data_sample_name,
                                    bool scale_data) 
 {
-
-  if( mSample.find(sample_name) == mSample.end() ) {
-    std::cout << "In single_sample_compare_mc_data(): map mSample has no Sample with name: "
-              << sample_name << " !!!" << std::endl;
-    throw;
+  {
+  for (auto sample_name : sample_names)
+   if( mSample.find(sample_name) == mSample.end() ) {
+     std::cout << "In single_sample_compare_mc_data(): map mSample has no Sample with name: "
+               << sample_name << " !!!" << std::endl;
+     throw;
+    }
   }
 
+  const bool showStack = false; // false to draw different MCs
+//  vector<TString> models = {""};
   
   std::map<TString, TCanvas*> mCanvas;
   std::map<TString, std::map<TString, TH1*> > mDrawHists;
   std::map<TString, TLegend*> mLegend;
 
   for(std::map<TString, sSingleVar>::iterator it = mSingleTrainingVar.begin(); it != mSingleTrainingVar.end(); it++) {
-    CanvasHelper ch(it->second.canvas_title + sample_name);
+    CanvasHelper ch(it->second.canvas_title);
     mCanvas[it->first] = ch.initRatioCanvas(it->second.xmin,it->second.xmax,
                                             it->second.ymin,it->second.ymax,
                                             it->second.rmin,it->second.rmax,
@@ -1348,42 +950,54 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
                                             it->second.yaxis_title,
                                             it->second.ratio_title);
 
-    mDrawHists[it->first] = single_figure_compare_mc_data(ch,mSample,vSuffix,sample_name,data_sample_name,it->second.hist_name,scale_data);
+    for (auto sample_name : sample_names) {
+      if (showStack) {
+        mDrawHists[it->first] = single_figure_addstack(ch,mSample,vSuffix,sample_name,it->second.hist_name);
+      }
+    }
+    std::map<TString, TH1*> moreHists = single_figure_compare_mc_data(ch,mSample,vSuffix,sample_names,data_sample_name,it->second.hist_name,scale_data);
+    mDrawHists[it->first].insert(moreHists.begin(), moreHists.end());
     ch.DrawCMSPreliminary(true,it->second.cms_alignment,"3.86 #mub^{-1} (13 TeV)");
   }
 
+ 
   //////////////////////////////////////////////////////////////////////////LEGENDStack0
   // Draw Legends for different Hists
-  draw_legend_for_diff_canvas(mCanvas,mDrawHists,mLegend,vSuffix,sample_name,data_sample_name);
-/////////////////////////////////////////////////////////////////////////////LEGENDStack0
+  if (showStack)
+     draw_legend_for_diff_canvas(mCanvas,mDrawHists,mLegend,vSuffix,sample_names,data_sample_name);
+   else {
+    std::vector<TString> noSuffix;
+    draw_legend_for_diff_canvas(mCanvas,mDrawHists,mLegend,noSuffix,sample_names,data_sample_name);
+   }
+  /////////////////////////////////////////////////////////////////////////////LEGENDStack0
   // add different MC samples to compare
-  vector<TString> sample_name_diffMC;
-  sample_name_diffMC.push_back("Pythia8");
-  // sample_name_diffMC.push_back("EPOS");
-  // draw_legend_for_diff_canvas_diffMC(mCanvas,mDrawHists,mLegend,sample_name_diffMC,sample_name,data_sample_name); // add different MC samples0
+  //vector<TString> sample_name_diffMC;
+  //ssample_name_diffMC.push_back("EPOS" );
+  // sample_name_diffMC.push_back("EPOS"); //if want to add
+ 
+ /////////////////Diffrent MC
+ // draw_legend_for_diff_canvas_diffMC(mCanvas,mDrawHists,mLegend,sample_name_diffMC,sample_name,data_sample_name); // add different MC samples0
+
+ ///////////////////////////////
+
 }
 
 
-
-
+////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
 std::map<TString, TH1*>
-single_figure_compare_mc_data(CanvasHelper& ch,
+single_figure_addstack(CanvasHelper& ch,
                               std::map<TString, SampleList::sSample>& mSample,
                               std::vector<TString>& vSuffix,
                               TString sample_name,
-                              TString data_sample_name,
-                              TString hist_var_name,
-                              // TLegend* leg,
-                              bool scale_data) 
+                              TString hist_var_name) 
 {
   //////////////////////////////////////////////////////////////////////////
   // hist pointer container to return pointer to drawn hists
   std::map<TString, TH1*> mDrawHists;
 
   double lumi_mc   = mSample[sample_name].lumi;
-  double lumi_data = mSample[data_sample_name].lumi;
 
   //////////////////////////////////////////////////////////////////////////
   // stack the hists together
@@ -1399,20 +1013,14 @@ single_figure_compare_mc_data(CanvasHelper& ch,
               << " has no hist: " << err << std::endl;
   }
 
-  TH1F* hMC = (TH1F*)mSample[sample_name].file->Get(mSample[sample_name].tree_name + "/" + hist_var_name);
-  TH1F* hData = (TH1F*)mSample[data_sample_name].file->Get(mSample[data_sample_name].tree_name + "/" + hist_var_name);
-
-  // lumi_mc = hMC->GetEntries();
-  // lumi_data = hData->GetEntries();
+  //////////////////////////// color code for the different hists////////////////////////////////////////////////
   
-
-  //////////////////////////////////////////////////////////////////////////
-  // color code for the different hists
-  Color_t col[5] = {29, kGreen, kGreen+1, kYellow+1, 24}; //stacked hists1
-  // Color_t col_diffMC[5] = {29, kGreen, kGreen+1, kYellow+1, 24};comparision MCs1
-
-  /////////////////////////////////////////////////////////////i/////////////stacked hists2
-  // access the stacked hists and add it to the canvas helper
+  Color_t col[5] = {29, kGreen, kGreen+2, kYellow+1, 24}; //stacked hists1
+ ////////////////////////// color code for the different hists
+ 
+ 
+  ////////////////////////////// access the stacked hists and add it to the canvas helper/////////////////////////////i/////////////stacked hists2
+ 
   for(unsigned int iHist=0; iHist<shh.getHistSize(); iHist++) {
     shh.getHist(iHist)->Scale( 1/lumi_mc, "width" );
     ch.addHist( shh.getHist(iHist), "HIST", col[iHist], kSolid, 20, 1001 );
@@ -1421,40 +1029,57 @@ single_figure_compare_mc_data(CanvasHelper& ch,
     mDrawHists[hist_text] = shh.getHist(iHist);
   }
 
-  //////////////////////////////////////////////////////////////////////stacked hists2
+  return mDrawHists;
+}
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
+std::map<TString, TH1*>
+single_figure_compare_mc_data(CanvasHelper& ch,
+                              std::map<TString, SampleList::sSample>& mSample,
+                              std::vector<TString>& vSuffix,
+                              std::vector<TString> sample_names,
+                              TString data_sample_name,
+                              TString hist_var_name,
+                              // TLegend* leg,
+                              bool scale_data) 
+{
+  //////////////////////////////////////////////////////////////////////////
+  // hist pointer container to return pointer to drawn hists
+  std::map<TString, TH1*> mDrawHists;
+
+  double lumi_data = mSample[data_sample_name].lumi;
+
+  TH1F* hData = (TH1F*)mSample[data_sample_name].file->Get(mSample[data_sample_name].tree_name + "/" + hist_var_name);
+
  
-  hMC->Scale( 1/lumi_mc, "width" );
-  ch.addHist( hMC, "HIST", kBlue+2);
-  // mDrawHists[sample_name] = hMC;
-
-
+   ///comparision MCs1
+   Color_t col_diffMC[3] = {kBlue+2,kOrange+2, 24};
 
   // ///////////////////////////////////////////////////////////// comparision MCs2
   // // add different MC samples to compare
-  // vector<TString> sample_name_diffMC;
-  // sample_name_diffMC.push_back("Pythia8");
-  // // sample_name_diffMC.push_back("EPOS");
-  // for(unsigned int iHist=0; iHist<sample_name_diffMC.size(); iHist++) {
-  //   double lumi_data_diffMC = mSample[sample_name_diffMC[iHist]].lumi;
-  //   mDrawHists[sample_name_diffMC[iHist]] = (TH1F*)mSample[sample_name_diffMC[iHist]].file->Get(mSample[sample_name_diffMC[iHist]].tree_name + "/" + hist_var_name);
-  //   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  //   #warning LUMI
-  //   // mDrawHists[sample_name_diffMC[iHist]]->Scale( 1./lumi_data_diffMC, "width");
-  //   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  //   ch.addHist( mDrawHists[sample_name_diffMC[iHist]], "HIST", col_diffMC[iHist] );
+ 
+  for(unsigned int iHist=0; iHist<sample_names.size(); iHist++) {
+    double lumi_sample = mSample[sample_names[iHist]].lumi;
+    mDrawHists[sample_names[iHist]] = (TH1F*)mSample[sample_names[iHist]].file->Get(mSample[sample_names[iHist]].tree_name + "/" + hist_var_name);
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    #warning LUMI
+    mDrawHists[sample_names[iHist]]->Scale( 1./lumi_sample, "width");
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    ch.addHist( mDrawHists[sample_names[iHist]], "HIST", col_diffMC[iHist] );
 
-  //   ch.addRatioHist( get_Ratio(mDrawHists[sample_name_diffMC[iHist]],hData), "HIST", col_diffMC[iHist] );
-  // }
+    ch.addRatioHist( get_Ratio(mDrawHists[sample_names[iHist]],hData), "HIST", col_diffMC[iHist] );
+  }
+  
   // //////////////////////////////////////////////////////////////////////// comparision MCs2
-
-
-  //////////////////////////////////////////////////////////////////////////
   // access data hist
   if(scale_data) hData->Scale( 1/lumi_data , "width" );
   ch.addDataHist( hData );
   mDrawHists[data_sample_name] = hData;
 
-  ch.addRatioHist( get_Ratio(hMC,hData), "HIST", kBlue+2 );
   ch.addRatioHist( get_Ratio(hData,hData), "EP", kBlack );
 
   // draw stacked hists
@@ -1989,12 +1614,19 @@ void single_sample_compare_syst(std::map<TString, SampleList::sSample>& mSample,
 
   //////////////////////////////////////////////////////////////////////////
   // acces hist with systematics
-  //TString HFPlus_sample_name = "Data_sysHFPlus";
-
-  //const vector<TString> SysList = {"Data_sysHFPlus"};
-  // const vector<TString> SysList = {"Data_sysTrackPlus", "Data_sysTrackMinus"};
-  const vector<TString> SysList = {"Data_sysCastorPlus", "Data_sysCastorMinus"};
-  const vector<TString> ParList = {"DeltaEta"};
+ 
+   ///////////////HF Pluss//////////////////////////
+  // const vector<TString> SysList = {"Data_sysHFPlus"};
+  // const vector<TString> ParList = {"NTowHF_plus_sys", "NTowHF_minus_sys"};
+ 
+  //////////////////////////Castor//////////////////////////////
+  // const vector<TString> SysList = {"Data_sysCastorPlus", "Data_sysCastorMinus"};
+  // const vector<TString> ParList = {"NTowCastor_sys", "NTowMaxCastor_sys"};
+  
+  ///////////////////////Track////////////////////////////////////////////
+  const vector<TString> SysList = {"Data_sysTrackPlus", "Data_sysTrackMinus"};
+  const vector<TString> ParList = {"NTracks_sys"};
+ 
 
   for (unsigned int ipar = 0; ipar<ParList.size(); ipar++){
 
@@ -2088,8 +1720,16 @@ void single_sample_compare_syst(std::map<TString, SampleList::sSample>& mSample,
                        mSingleTrainingVar[ParList[ipar]].ratio_title);
 
     ch.getCanvas()->cd(1);
+    
+    gStyle->SetLegendTextSize(0.05); //nosuffix
+    gStyle->SetLegendFont(42);
+    TLegend * leg = new TLegend(0.59,0.75,0.99,0.9);
+    leg->AddEntry( hMC, mSample[sample_name].legend_name , "l");
+    leg->AddEntry( hData, mSample[data_sample_name].legend_name , "p");
+    //ch.DrawHist(); //systematic draw stacked hists
     grData_Sys->Draw("same 2");
-
+    leg->Draw("same");
+    ch.DrawCMSPreliminary(true,10,"0.34 #mub^{-1} (13 TeV)");
     ch.getCanvas()->cd(2);
     grData_Sys_Ratio->Draw("same 2");
 
@@ -2104,10 +1744,7 @@ void single_sample_compare_syst(std::map<TString, SampleList::sSample>& mSample,
     ch.addDataHist( hData );
     ch.addRatioHist( get_Ratio(hMC,hData), "HIST", kBlue+2 );
     ch.addRatioHist( get_Ratio(hData,hData), "EP", kBlack );
-
-
-    // draw stacked hists
-    ch.DrawHist();
+    ch.DrawHist(); //systematic
 
     
   }
@@ -2115,6 +1752,5 @@ void single_sample_compare_syst(std::map<TString, SampleList::sSample>& mSample,
 
 
   // draw legend
-  // ch.getCanvas()->cd(1);
   // leg->Draw("same");
 }
