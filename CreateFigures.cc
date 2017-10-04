@@ -136,6 +136,10 @@ void draw_legend_for_diff_canvas(std::map<TString, TCanvas*>& mCanvas,
 // plot discriminant value for different proccess
 void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSample);
 
+//////////////////////////////////////////////////////////////////////////
+// plot discriminant value for different proccess
+void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSample);
+
 
 //////////////////////////////////////////////////////////////////////////
 // find optimal cut value on discriminant distribution
@@ -184,9 +188,10 @@ int main( int argc, char** argv )
 
   //////////////////////////////////////////////////////////////////////////
   // // compare training variables MC with DATA
-  training_variables_compare_mc_data(mSample);
-  discriminant_compare_mc_data(mSample);
-  discriminant_results(mSample);
+  // training_variables_compare_mc_data(mSample);
+  // discriminant_compare_mc_data(mSample);
+  discriminant_compare_data_syst(mSample);
+  // discriminant_results(mSample);
 
 
 
@@ -308,7 +313,7 @@ void exampleCode()
   // draw stacked hists
   ch2.DrawHist();
   // plot CMS Preliminary
-  ch2.DrawCMSPreliminary(true,33,"0.34 #mub^{-1} (13 TeV)");
+  ch2.DrawCMSPreliminary(true,33,"3.86 #mub^{-1} (13 TeV)");
   // or CMS Simulation 
   // ch2.DrawCMSSimulation(true,11);
   // or CMS Own Work
@@ -388,74 +393,7 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
   // single_sample_compare_syst(mSample,mSingleTrainingVar,"Pythia8","Data");
   // single_sample_compare_syst(mSample,mSingleTrainingVar,"Pythia8","Data"); // !!!!!
    // !!!!! icant run with "single_sample_compare_mc_data" scale problemfor systematic
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS","Data",false);
-
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1","Data",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1","Data",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2","Data",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD2","Data",false); 
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8Rest","Data",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data",false); 
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1_sysplus","Data",false); 
- 
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8","Data_sysHFPlus");
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data_sysHFPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS","Data_sysHFPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1","Data_sysHFPlus",true);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1","Data_sysHFPlus",true);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2","Data_sysHFPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD2","Data_sysHFPlus",false); 
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8Rest","Data_sysHFPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data_sysHFPlus",false); 
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1_sysplus","Data_sysHFPlus",false); 
- 
-
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8","DATA_sysCastorPlus");
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","DATA_sysCastorPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS","DATA_sysCastorPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1","DATA_sysCastorPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1","DATA_sysCastorPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2","DATA_sysCastorPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD2","DATA_sysCastorPlus",false); 
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8Rest","DATA_sysCastorPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","DATA_sysCastorPlus",false); 
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1_sysplus","DATA_sysCastorPlus",false); 
-
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8","Data_sysCastorMinus");
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data_sysCastorMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS","Data_sysCastorMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1","Data_sysCastorMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1","Data_sysCastorMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2","Data_sysCastorMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD2","Data_sysCastorMinus",false); 
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8Rest","Data_sysCastorMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data_sysCastorMinus",false); 
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1_sysplus","Data_sysCastorMinus",false); 
-
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8","Data_sysCastorPlus");
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data_sysTrackPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS","Data_sysTrackPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1","Data_sysTrackPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1","Data_sysTrackPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2","Data_sysTrackPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD2","Data_sysTrackPlus",false); 
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8Rest","Data_sysTrackPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data_sysTrackPlus",false); 
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1_sysplus","Data_sysTrackPlus",false); 
-
-
-
- // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8","Data_sysTrackMinus");
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data_sysTrackMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOS","Data_sysTrackMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD1","Data_sysTrackMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD1","Data_sysTrackMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8SD2","Data_sysTrackMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"EPOSSD2","Data_sysTrackMinus",false); 
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"Pythia8Rest","Data_sysTrackMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1","Data_sysTrackMinus",false); 
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,"CUETP8M1_sysplus","Data_sysTrackMinus",false); 
+  
 
 
 
@@ -487,6 +425,8 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
   mSingleTrainingVar["NTracks"].hist_name = "Hist_eventXiID_NbrTracks";
   mSingleTrainingVar["recoXix"].hist_name = "Hist_eventXiID_log10XiX";
   mSingleTrainingVar["recoXiy"].hist_name = "Hist_eventXiID_log10XiY";
+ 
+ 
   // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8","Data",true);
   // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOS","Data",false);
   // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD1","Data",false);
@@ -1111,10 +1051,10 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
   TString mc_sample_name = "XiCutEPOSSD2";
   TString data_sample_name = "Data";
   TString sSignal ="SD2";
-
-
   TString training_sample_name = "XiCutEPOSSD2";
   TString training_method = "BDTG";
+
+  
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
 
@@ -1229,6 +1169,167 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
   if(draw_figure)ch.getCanvas()->Print( figure_dir + "/hDisciminant_" + training_sample_name + "." + figure_type );
   ch.DrawCMSPreliminary(true,11,"0.34 #mub^{-1} (13 TeV)");
 }
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
+void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSample)
+{
+
+  std::vector<TString> vSuffix;
+  // vSuffix.push_back("_NONE");
+  vSuffix.push_back("_DD");
+  vSuffix.push_back("_Rest");
+  vSuffix.push_back("_SD2"); 
+
+  vSuffix.push_back("_SD1");//Signal:DD,SD you need to switch
+  
+  TString mc_sample_name = "XiCutEPOSSD1";
+  TString data_sample_name = "Data";
+  const std::vector<TString> vData_Syst = {"Data_sysCastorPlus", "Data_sysCastorMinus"};
+
+  TString sSignal ="SD1";
+  TString training_method = "BDTG";
+
+  TString hist_name = TString("hDisciminant_") + mc_sample_name + "_" + training_method;
+  
+  TString data_dir = "data";
+  TFile* mc_file = TFile::Open(data_dir + "/" + mSample[mc_sample_name].app_output_file_name);
+  TFile* data_file = TFile::Open(data_dir + "/" + mSample[data_sample_name].app_output_file_name);
+
+
+  TLegend * leg = new TLegend(0.5,0.7,0.9,0.9);
+  //////////////////////////////////////////////////////////////////////////
+  // stack the hists together
+  StackHistHelper shh;
+  try {
+    shh.addHistFromFileWithSuffix(mc_file,hist_name,vSuffix,
+                                  mc_sample_name + "_Stack");
+  } catch(TString err) {
+    std::cout << "In function discriminant_compare_mc_data:" << std::endl;
+    std::cout << "!!! Sample: " << mc_sample_name 
+              << " has no hist: " << err << std::endl;
+  }
+
+
+  /////////////////////////////////////////////////////////////
+  // init canvas helper
+  CanvasHelper ch("cDiscriminant" + mc_sample_name + training_method);
+  ch.initRatioCanvas(-1,1,
+                     // 0,3e5,
+                     1e3,1e6,
+                     0.8,1.2,
+                     "Classifier X",
+                     // "1/N_{evt} dN/dX",
+                     "1/L dN/dX [#mub]",
+                     "MC / Data");
+
+
+  /////////////////////////////////////////////////////////////
+  // get lumi for mc sample
+  double lumi_mc = mSample[mc_sample_name].lumi;
+  // double events_mc = ((TH1F*)mc_file->Get("hNentries"))->GetBinContent(1);
+
+  //////////////////////////////////////////////////////////////////////////
+  // color code for the different hists
+  // Color_t col[5] = {29, kGreen-1, kGreen, kYellow, 24};
+  Color_t BkgColor = kGreen-1;
+  Color_t col[5] = {kYellow, BkgColor, BkgColor, BkgColor, BkgColor};
+
+  ////////////////////////
+  /////////////////////////////////////////////////////////////i/////////////
+  // access the stacked hists and add it to the canvas helper
+  for(unsigned int iHist=0; iHist<shh.getHistSize(); iHist++) {
+    // shh.getHist(iHist)->Scale( 1/events_mc, "width" );
+    shh.getHist(iHist)->Scale( 1/lumi_mc, "width" );
+    // ch.addHist( shh.getHist(iHist), "HIST", col[iHist], kSolid, 20, 1001 );
+
+    // define legend text for stacked hist
+    TString leg_text = vSuffix[shh.getHistSize()-iHist-1];
+    leg_text.Remove(0,1);
+    // add legend entry
+    // leg->AddEntry( shh.getHist(iHist), leg_text, "f" );
+    if( leg_text == "Rest" ) {
+      leg_text = "Background";
+      // leg->AddEntry( shh.getHist(iHist), leg_text, "f" );
+    } else if( leg_text== sSignal ) {
+      // leg->AddEntry( shh.getHist(iHist), leg_text, "f" );
+    }
+  }
+
+  TH1F* hMC = (TH1F*)mc_file->Get(hist_name);
+  if (!hMC) {
+    cout << "cannot read " << hist_name << " from file " << mc_file->GetName() << endl;
+    exit(1);
+  }
+  // hMC->Scale( 1./events_mc, "width" );
+  hMC->Scale( 1./lumi_mc, "width" );
+  // ch.addHist( hMC, "HIST", kBlue+2 );
+  // leg->AddEntry( hMC, mSample[mc_sample_name].legend_name , "l");
+
+  //////////////////////////////////////////////////////////////////////////
+  // access data hist
+  TH1F* hData = (TH1F*)data_file->Get(hist_name);
+  if (!hData) {
+    cout << "cannot read " << hist_name << " from file " << data_file->GetName() << endl;
+    exit(1);
+  }
+
+
+
+
+  //////////////////////////////////////////////////////////////////////////
+  // access data hist with systematics
+  Color_t col_syst[5] = {kRed, kYellow-2, kGreen, kMagenta, kGreen-3};
+  std::vector<TH1F*> vHist_Data_Syst;
+  for(unsigned int iHist=0; iHist<vData_Syst.size(); iHist++ ) {
+    const TString data_sys_name = vData_Syst[iHist];
+
+    TFile* fData_Syst = TFile::Open(data_dir + "/" + mSample[data_sys_name].app_output_file_name);
+
+    TH1F* hData_Syst_tmp = (TH1F*)fData_Syst->Get(hist_name);
+    if(!hData_Syst_tmp) {
+      cout << "cannot read " << hist_name << " from file " << fData_Syst->GetName() << endl;
+      exit(1);
+    }
+
+    double lumi_data_syst = mSample[data_sys_name].lumi;
+    hData_Syst_tmp->Scale( 1./lumi_data_syst , "width" );
+
+    ch.addHist( hData_Syst_tmp, "HIST", col_syst[(iHist%5)] );
+    vHist_Data_Syst.push_back( hData_Syst_tmp );
+
+    leg->AddEntry( hData_Syst_tmp, mSample[data_sys_name].legend_name , "l" );
+  }
+
+
+
+  //////////////////////////////////////////////////////////////////////////
+  // get data lumi
+  double lumi_data = mSample[data_sample_name].lumi;
+  hData->Scale( 1./lumi_data , "width" );
+
+  ch.addDataHist( hData );
+  // add legend entry
+  leg->AddEntry( hData, mSample[data_sample_name].legend_name , "lep" );
+
+  // ch.addRatioHist( get_Ratio(hMC,hData), "HIST", kBlue );
+  for(unsigned int iHist=0; iHist<vHist_Data_Syst.size(); iHist++ ) {
+    ch.addRatioHist( get_Ratio(vHist_Data_Syst[iHist],hData), "HIST", col_syst[(iHist%5)] );
+  }
+  ch.addRatioHist( get_Ratio(hData,hData), "EP", kBlack );
+
+  // draw stacked hists
+  ch.DrawHist();
+
+  // draw legend
+  ch.getCanvas()->cd(1);
+  leg->Draw("same");
+  if(draw_figure)ch.getCanvas()->Print( figure_dir + "/hDisciminant_" + mc_sample_name + "." + figure_type );
+  ch.DrawCMSPreliminary(true,11,"0.34 #mub^{-1} (13 TeV)");
+}
+
 
 
 void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
@@ -1435,11 +1536,6 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
   chROCurve.DrawCMSSimulation();
   leg->Draw("same");
 
-  
-
-
-  
-
   cSdivSqrtSplusB->cd();
   chSdivSqrtSplusB.SetUpHist((TH1*)gr_SdivSqrtSplusB,kGreen+2);
   chSdivSqrtSplusB.SetUpHist((TH1*)gr_sig_purity_tims_eff,kBlue);
@@ -1574,11 +1670,10 @@ void calc_signal_cross_section(double& result_cross_section, double& standartErr
   std::cout << "eff_PU_data: " << eff_PU_data << std::endl;
 
 
-
   double prob_sig = Entry_sig / (Entry_bkg + Entry_sig);
-  
+  double standartError_probsig = std::sqrt(prob_sig);  
   double eff_sig = (Entry_sig * Fsplit )/ Entry_sig_all; //MC signal efficiency
-
+  double standartError_eff_sig = std::sqrt(prob_sig);  
   double eff_number_of_signal_events_in_data = (Entry_data * prob_sig)/eff_sig; //effictive lumi data
 
   result_cross_section = eff_number_of_signal_events_in_data/(lumi_data/eff_PU_data);
@@ -1594,7 +1689,9 @@ void calc_signal_cross_section(double& result_cross_section, double& standartErr
   std::cout << "======================================================================" << std::endl;
   std::cout << "cut at classifier value = " << classifier_cut << std::endl;
   std::cout << "--- signal efficiency = " << eff_sig << std::endl;
+  std::cout << "--- Standart Error for signal efficiency = " << standartError_eff_sig << std::endl;
   std::cout << "--- signal probability = " << prob_sig << std::endl;
+  std::cout << "--- Standart Error for signal probability = " << standartError_probsig << std::endl;
   std::cout << "--- number of selected data events = " << Entry_data << std::endl;
   std::cout << "--- !!! Effective Number of Signal Events in Data = " << eff_number_of_signal_events_in_data << " !!! ---" << std::endl;
   std::cout << "--- !!! Standart Error = " << standartError << " !!! ---" << std::endl;
