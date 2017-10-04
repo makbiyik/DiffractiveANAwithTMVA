@@ -18,6 +18,8 @@ struct sSingleVar
 };
 
 
+
+
 //////////////////////////////////////////////////////////////////////////
 std::map<TString, sSingleVar> build_hist_parameters() 
 {
@@ -93,7 +95,59 @@ std::map<TString, sSingleVar> build_hist_parameters()
   mSingleTrainingVar["EtaMax"].rmin = 0;
   mSingleTrainingVar["EtaMax"].rmax = 3;
   mSingleTrainingVar["EtaMax"].cms_alignment = 33;
+  
+  mSingleTrainingVar["NTowCastor"].hist_name = "Hist_numberoftowerebovenoise_castor";
+  mSingleTrainingVar["NTowCastor"].xaxis_title = "N_{tow}";
+  mSingleTrainingVar["NTowCastor"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
+  mSingleTrainingVar["NTowCastor"].ratio_title = "MC / Data";
+  mSingleTrainingVar["NTowCastor"].canvas_title = "cNTowCastor_";
+  mSingleTrainingVar["NTowCastor"].xmin = 0;
+  mSingleTrainingVar["NTowCastor"].xmax = 16;
+  mSingleTrainingVar["NTowCastor"].ymin = 1;
+  mSingleTrainingVar["NTowCastor"].ymax = 1e8;
+  mSingleTrainingVar["NTowCastor"].rmin = 0;
+  mSingleTrainingVar["NTowCastor"].rmax = 3;
+ 
+  mSingleTrainingVar["NTowCastor"].cms_alignment = 33;
+  mSingleTrainingVar["NTowMaxCastor"].hist_name = "Hist_MaxCastorEnergy";
+  mSingleTrainingVar["NTowMaxCastor"].xaxis_title = "Max_{energytow}";
+  mSingleTrainingVar["NTowMaxCastor"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
+  mSingleTrainingVar["NTowMaxCastor"].ratio_title = "MC / Data";
+  mSingleTrainingVar["NTowMaxCastor"].canvas_title = "cEnergyMaxTowCastor_";
+  mSingleTrainingVar["NTowMaxCastor"].xmin = 0;
+  mSingleTrainingVar["NTowMaxCastor"].xmax = 600;
+  mSingleTrainingVar["NTowMaxCastor"].ymin = 1;
+  mSingleTrainingVar["NTowMaxCastor"].ymax = 1e8;
+  mSingleTrainingVar["NTowMaxCastor"].rmin = 0;
+  mSingleTrainingVar["NTowMaxCastor"].rmax = 3;
+  mSingleTrainingVar["NTowMaxCastor"].cms_alignment = 33;
 
+
+  mSingleTrainingVar["NTracks"].hist_name = "Hist_NbrTracks";
+  mSingleTrainingVar["NTracks"].xaxis_title = "N_{trk}";
+  mSingleTrainingVar["NTracks"].yaxis_title = "1/L dN/dN_{trk} [#mub^{-1}]";
+  mSingleTrainingVar["NTracks"].ratio_title = "MC / Data";
+  mSingleTrainingVar["NTracks"].canvas_title = "cNTracks_";
+  mSingleTrainingVar["NTracks"].xmin = 0;
+  mSingleTrainingVar["NTracks"].xmax = 50;
+  mSingleTrainingVar["NTracks"].ymin = 1;
+  mSingleTrainingVar["NTracks"].ymax = 1e8;
+  mSingleTrainingVar["NTracks"].rmin = 0;
+  mSingleTrainingVar["NTracks"].rmax = 3;
+  mSingleTrainingVar["NTracks"].cms_alignment = 33;
+
+  mSingleTrainingVar["NTowHF_minus"].hist_name = "Hist_numberoftowerebovenoise_forwardminus";
+  mSingleTrainingVar["NTowHF_minus"].xaxis_title = "N_{tow}";
+  mSingleTrainingVar["NTowHF_minus"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
+  mSingleTrainingVar["NTowHF_minus"].ratio_title = "MC / Data";
+  mSingleTrainingVar["NTowHF_minus"].canvas_title = "cNTowHF_minus_";
+  mSingleTrainingVar["NTowHF_minus"].xmin = -0.5;
+  mSingleTrainingVar["NTowHF_minus"].xmax = 100.5;
+  mSingleTrainingVar["NTowHF_minus"].ymin = 1;
+  mSingleTrainingVar["NTowHF_minus"].ymax = 1e8;
+  mSingleTrainingVar["NTowHF_minus"].rmin = 0;
+  mSingleTrainingVar["NTowHF_minus"].rmax = 3;
+  mSingleTrainingVar["NTowHF_minus"].cms_alignment = 33;
   
   mSingleTrainingVar["NTowHF_plus"].hist_name = "Hist_numberoftowerebovenoise_forwardplus";
   mSingleTrainingVar["NTowHF_plus"].xaxis_title = "N_{tow}";
@@ -108,34 +162,83 @@ std::map<TString, sSingleVar> build_hist_parameters()
   mSingleTrainingVar["NTowHF_plus"].rmax = 3;
   mSingleTrainingVar["NTowHF_plus"].cms_alignment = 33;
 
+ 
+
+
+/// SYSTematic//////////////////////
+  // mSingleTrainingVar["NTowHF_plus_sys"].hist_name = "Hist_numberoftowerebovenoise_forwardplus";
+  // mSingleTrainingVar["NTowHF_plus_sys"].xaxis_title = "N_{tow}";
+  // mSingleTrainingVar["NTowHF_plus_sys"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
+  // mSingleTrainingVar["NTowHF_plus_sys"].ratio_title = "MC / Data";
+  // mSingleTrainingVar["NTowHF_plus_sys"].canvas_title = "cNTowHF_plus_sys_";
+  // mSingleTrainingVar["NTowHF_plus_sys"].xmin = -0.5;
+  // mSingleTrainingVar["NTowHF_plus_sys"].xmax = 100.5;
+  // mSingleTrainingVar["NTowHF_plus_sys"].ymin = 1;
+  // mSingleTrainingVar["NTowHF_plus_sys"].ymax = 1e5;
+  // mSingleTrainingVar["NTowHF_plus_sys"].rmin = 0;
+  // mSingleTrainingVar["NTowHF_plus_sys"].rmax = 3;
+  // mSingleTrainingVar["NTowHF_plus_sys"].cms_alignment = 33;
+
+
+  // mSingleTrainingVar["NTowHF_minus_sys"].hist_name = "Hist_numberoftowerebovenoise_forwardminus";
+  // mSingleTrainingVar["NTowHF_minus_sys"].xaxis_title = "N_{tow}";
+  // mSingleTrainingVar["NTowHF_minus_sys"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
+  // mSingleTrainingVar["NTowHF_minus_sys"].ratio_title = "MC / Data";
+  // mSingleTrainingVar["NTowHF_minus_sys"].canvas_title = "cNTowHF_minus_sys_";
+  // mSingleTrainingVar["NTowHF_minus_sys"].xmin = -0.5;
+  // mSingleTrainingVar["NTowHF_minus_sys"].xmax = 100.5;
+  // mSingleTrainingVar["NTowHF_minus_sys"].ymin = 1;
+  // mSingleTrainingVar["NTowHF_minus_sys"].ymax = 1e5;
+  // mSingleTrainingVar["NTowHF_minus_sys"].rmin = 0;
+  // mSingleTrainingVar["NTowHF_minus_sys"].rmax = 3;
+  // mSingleTrainingVar["NTowHF_minus_sys"].cms_alignment = 33;
 
  
-  mSingleTrainingVar["NTowHF_minus"].hist_name = "Hist_numberoftowerebovenoise_forwardminus";
-  mSingleTrainingVar["NTowHF_minus"].xaxis_title = "N_{tow}";
-  mSingleTrainingVar["NTowHF_minus"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-  mSingleTrainingVar["NTowHF_minus"].ratio_title = "MC / Data";
-  mSingleTrainingVar["NTowHF_minus"].canvas_title = "cNTowHF_minus_";
-  mSingleTrainingVar["NTowHF_minus"].xmin = -0.5;
-  mSingleTrainingVar["NTowHF_minus"].xmax = 100.5;
-  mSingleTrainingVar["NTowHF_minus"].ymin = 1;
-  mSingleTrainingVar["NTowHF_minus"].ymax = 1e8;
-  mSingleTrainingVar["NTowHF_minus"].rmin = 0;
-  mSingleTrainingVar["NTowHF_minus"].rmax = 3;
-  mSingleTrainingVar["NTowHF_minus"].cms_alignment = 33;
+  // mSingleTrainingVar["NTowMaxCastor_sys"].hist_name = "Hist_MaxCastorEnergy";
+  // mSingleTrainingVar["NTowMaxCastor_sys"].xaxis_title = "Max_{energytow}";
+  // mSingleTrainingVar["NTowMaxCastor_sys"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
+  // mSingleTrainingVar["NTowMaxCastor_sys"].ratio_title = "MC / Data";
+  // mSingleTrainingVar["NTowMaxCastor_sys"].canvas_title = "cEnergyMaxTowCastor_";
+  // mSingleTrainingVar["NTowMaxCastor_sys"].xmin = 0;
+  // mSingleTrainingVar["NTowMaxCastor_sys"].xmax = 600;
+  // mSingleTrainingVar["NTowMaxCastor_sys"].ymin = 1;
+  // mSingleTrainingVar["NTowMaxCastor_sys"].ymax = 1e5;
+  // mSingleTrainingVar["NTowMaxCastor_sys"].rmin = 0;
+  // mSingleTrainingVar["NTowMaxCastor_sys"].rmax = 3;
+  // mSingleTrainingVar["NTowMaxCastor_sys"].cms_alignment = 33;
+ 
+
+  // mSingleTrainingVar["NTowCastor_sys"].hist_name = "Hist_numberoftowerebovenoise_castor";
+  // mSingleTrainingVar["NTowCastor_sys"].xaxis_title = "N_{tow}";
+  // mSingleTrainingVar["NTowCastor_sys"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
+  // mSingleTrainingVar["NTowCastor_sys"].ratio_title = "MC / Data";
+  // mSingleTrainingVar["NTowCastor_sys"].canvas_title = "cNTowCastor_";
+  // mSingleTrainingVar["NTowCastor_sys"].xmin = 0;
+  // mSingleTrainingVar["NTowCastor_sys"].xmax = 16;
+  // mSingleTrainingVar["NTowCastor_sys"].ymin = 500;
+  // mSingleTrainingVar["NTowCastor_sys"].ymax = 1e5;
+  // mSingleTrainingVar["NTowCastor_sys"].rmin = 0;
+  // mSingleTrainingVar["NTowCastor_sys"].rmax = 2.2;
+  // mSingleTrainingVar["NTowCastor_sys"].cms_alignment = 33;
+
+ 
+  // mSingleTrainingVar["NTracks_sys"].hist_name = "Hist_NbrTracks";
+  // mSingleTrainingVar["NTracks_sys"].xaxis_title = "N_{trk}";
+  // mSingleTrainingVar["NTracks_sys"].yaxis_title = "1/L dN/dN_{trk} [#mub^{-1}]";
+  // mSingleTrainingVar["NTracks_sys"].ratio_title = "MC / Data";
+  // mSingleTrainingVar["NTracks_sys"].canvas_title = "cNTracks_sys_";
+  // mSingleTrainingVar["NTracks_sys"].xmin = 0;
+  // mSingleTrainingVar["NTracks_sys"].xmax = 50;
+  // mSingleTrainingVar["NTracks_sys"].ymin = 700;
+  // mSingleTrainingVar["NTracks_sys"].ymax = 1e4;
+  // mSingleTrainingVar["NTracks_sys"].rmin = 0;
+  // mSingleTrainingVar["NTracks_sys"].rmax = 1.5;
+  // mSingleTrainingVar["NTracks_sys"].cms_alignment = 33;
+
+  
+  ////////////////////////////////////////////////////////////////////////
 
 
-  mSingleTrainingVar["NTowCastor"].hist_name = "Hist_numberoftowerebovenoise_castor";
-  mSingleTrainingVar["NTowCastor"].xaxis_title = "N_{tow}";
-  mSingleTrainingVar["NTowCastor"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-  mSingleTrainingVar["NTowCastor"].ratio_title = "MC / Data";
-  mSingleTrainingVar["NTowCastor"].canvas_title = "cNTowCastor_";
-  mSingleTrainingVar["NTowCastor"].xmin = 0;
-  mSingleTrainingVar["NTowCastor"].xmax = 16;
-  mSingleTrainingVar["NTowCastor"].ymin = 1;
-  mSingleTrainingVar["NTowCastor"].ymax = 1e8;
-  mSingleTrainingVar["NTowCastor"].rmin = 0;
-  mSingleTrainingVar["NTowCastor"].rmax = 3;
-  mSingleTrainingVar["NTowCastor"].cms_alignment = 33;
 
  
   mSingleTrainingVar["NTow"].hist_name = "Hist_CaloReducedenergyClass";
@@ -198,34 +301,6 @@ std::map<TString, sSingleVar> build_hist_parameters()
 
 
 
-  mSingleTrainingVar["NTowMaxCastor"].hist_name = "Hist_MaxCastorEnergy";
-  mSingleTrainingVar["NTowMaxCastor"].xaxis_title = "Max_{energytow}";
-  mSingleTrainingVar["NTowMaxCastor"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
-  mSingleTrainingVar["NTowMaxCastor"].ratio_title = "MC / Data";
-  mSingleTrainingVar["NTowMaxCastor"].canvas_title = "cEnergyMaxTowCastor_";
-  mSingleTrainingVar["NTowMaxCastor"].xmin = 0;
-  mSingleTrainingVar["NTowMaxCastor"].xmax = 600;
-  mSingleTrainingVar["NTowMaxCastor"].ymin = 1;
-  mSingleTrainingVar["NTowMaxCastor"].ymax = 1e8;
-  mSingleTrainingVar["NTowMaxCastor"].rmin = 0;
-  mSingleTrainingVar["NTowMaxCastor"].rmax = 3;
-  mSingleTrainingVar["NTowMaxCastor"].cms_alignment = 33;
-
- 
-
-
-  mSingleTrainingVar["NTracks"].hist_name = "Hist_NbrTracks";
-  mSingleTrainingVar["NTracks"].xaxis_title = "N_{trk}";
-  mSingleTrainingVar["NTracks"].yaxis_title = "1/L dN/dN_{trk} [#mub^{-1}]";
-  mSingleTrainingVar["NTracks"].ratio_title = "MC / Data";
-  mSingleTrainingVar["NTracks"].canvas_title = "cNTracks_";
-  mSingleTrainingVar["NTracks"].xmin = 0;
-  mSingleTrainingVar["NTracks"].xmax = 50;
-  mSingleTrainingVar["NTracks"].ymin = 1;
-  mSingleTrainingVar["NTracks"].ymax = 1e8;
-  mSingleTrainingVar["NTracks"].rmin = 0;
-  mSingleTrainingVar["NTracks"].rmax = 3;
-  mSingleTrainingVar["NTracks"].cms_alignment = 33;
 
   mSingleTrainingVar["recoXix"].hist_name = "Hist_log10XiX";
   mSingleTrainingVar["recoXix"].xaxis_title = "log_{10}#xi_{x}";
