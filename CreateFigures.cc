@@ -189,9 +189,9 @@ int main( int argc, char** argv )
   //////////////////////////////////////////////////////////////////////////
   // // compare training variables MC with DATA
   // training_variables_compare_mc_data(mSample);
-  // discriminant_compare_mc_data(mSample);
-  discriminant_compare_data_syst(mSample);
-  // discriminant_results(mSample);
+  discriminant_compare_mc_data(mSample);
+  // discriminant_compare_data_syst(mSample);
+  discriminant_results(mSample);
 
 
 
@@ -203,24 +203,38 @@ int main( int argc, char** argv )
   TCanvas* ctest_clcut = new TCanvas("ctest_clcut");
   ctest_clcut->cd();
   TH1F* htest_clcut = new TH1F("htest_clcut","",21,-1.05,1.05);
+  TLegend* leg = new TLegend(0.1,0.83,0.5,0.92);
+  leg->SetFillColor(0);
+  leg->SetBorderSize(0);
+  leg->SetFillStyle(0);
+  leg->SetTextFont(42);
+  leg->SetTextSize(0.05);
   
 
   for(double clcut = -1.0; clcut < 0.99; clcut += 0.1) {
     calc_signal_cross_section(cross_section_result, standartError,
-                              mSample, "SD2", clcut); ////Burasi cok onemli degistir !!
+                              mSample, "SD1", clcut); ////Burasi cok onemli degistir !!
      #warning Signal:?
-    htest_clcut->GetXaxis()->SetTitle("Cuts are at Discriminant Value");
-    htest_clcut->GetYaxis()->SetTitle("#sigma");
     htest_clcut->Fill(clcut, cross_section_result);
-    // gStyle->SetLegendTextSize(0.05); //nosuffix
-    // gStyle->SetLegendFont(42);
     htest_clcut->SetBinError( htest_clcut->FindBin(clcut), standartError );
-   
-  
-
   }
-
+   
+  htest_clcut->GetXaxis()->SetTitle("Classifier Threshold");
+  htest_clcut->GetYaxis()->SetTitle("#sigma [mb]");
+  htest_clcut->GetYaxis()->SetTitleOffset(1.5);
+  // htest_clcut->SetMaximum(15000); // 600 single
+  htest_clcut->SetMaximum(6000); // 600 
+  ctest_clcut->cd()->SetRightMargin(0.1);
+  
+  leg->AddEntry(htest_clcut,"CMS preliminery","");
+  // leg->AddEntry(htest_clcut,"2015 pp; #sqrt{s} = 13 TeV","lep");
   htest_clcut->Draw();
+  
+  leg->Draw();
+  // htest_clcut->Print( figure_dir + "/htest_clcut_" + "." + figure_type );  
+    
+
+
   //////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////
   // freeze program
@@ -387,10 +401,10 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
 */
   std::map<TString, sSingleVar> mSingleTrainingVar = build_hist_parameters();
 
-  vector<TString> sampleNames = {"Pythia8", "EPOS"};
+  // vector<TString> sampleNames = {"EPOS","Pythia8"};
   // vector<TString> sampleNames = {"Pythia8","EPOS"};
-  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,sampleNames,"Data");
-  // single_sample_compare_syst(mSample,mSingleTrainingVar,"Pythia8","Data");
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,sampleNames,"Data");
+  single_sample_compare_syst(mSample,mSingleTrainingVar,"EPOS","Data");
   // single_sample_compare_syst(mSample,mSingleTrainingVar,"Pythia8","Data"); // !!!!!
    // !!!!! icant run with "single_sample_compare_mc_data" scale problemfor systematic
   
@@ -871,7 +885,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     }
   }
 
-  const bool showStack = true; // false to draw different MCs
+  const bool showStack = false; // false to draw different MCs
 //  vector<TString> models = {""};
   
   std::map<TString, TCanvas*> mCanvas;
@@ -1044,14 +1058,14 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
   // vSuffix.push_back("_NONE");
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
-  vSuffix.push_back("_SD1"); 
+  vSuffix.push_back("_SD2"); 
   
-  vSuffix.push_back("_SD2");//Signal:DD,SD you need to switch
+  vSuffix.push_back("_SD1");//Signal:DD,SD you need to switch
   
-  TString mc_sample_name = "XiCutEPOSSD2";
+  TString mc_sample_name = "XiCutEPOSSD1";
   TString data_sample_name = "Data";
-  TString sSignal ="SD2";
-  TString training_sample_name = "XiCutEPOSSD2";
+  TString sSignal ="SD1";
+  TString training_sample_name = "XiCutEPOSSD1";
   TString training_method = "BDTG";
 
   
@@ -1179,26 +1193,32 @@ void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSam
 
   std::vector<TString> vSuffix;
   // vSuffix.push_back("_NONE");
-  vSuffix.push_back("_DD");
+  vSuffix.push_back("_SD1");
   vSuffix.push_back("_Rest");
-  vSuffix.push_back("_SD2"); 
+  vSuffix.push_back("_DD"); 
 
-  vSuffix.push_back("_SD1");//Signal:DD,SD you need to switch
+  vSuffix.push_back("_SD2");//Signal:DD,SD you need to switch
   
-  TString mc_sample_name = "XiCutEPOSSD1";
+  TString mc_sample_name = "XiCutPythia8SD2";
   TString data_sample_name = "Data";
-  const std::vector<TString> vData_Syst = {"Data_sysCastorPlus", "Data_sysCastorMinus"};
+  const std::vector<TString> vData_Syst = {"Data_sysCastorPlus", "Data_sysCastorMinus","Data_sysHFPlus", "Data_sysTrackMinus" };
 
   TString sSignal ="SD1";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + mc_sample_name + "_" + training_method;
   
+
   TString data_dir = "data";
   TFile* mc_file = TFile::Open(data_dir + "/" + mSample[mc_sample_name].app_output_file_name);
   TFile* data_file = TFile::Open(data_dir + "/" + mSample[data_sample_name].app_output_file_name);
-
-
+  // TGraphAsymmErrors* grDis_Sys = new TGraphAsymmErrors(hData->GetNbinsX());
+  // grDis_Sys->SetFillColor(kYellow+2);
+  // TGraphAsymmErrors* grDis_Sys_Ratio = new TGraphAsymmErrors(hData->GetNbinsX());
+  // grDis_Sys_Ratio->SetFillColor(kYellow+2);
+ 
+    
+ 
   TLegend * leg = new TLegend(0.5,0.7,0.9,0.9);
   //////////////////////////////////////////////////////////////////////////
   // stack the hists together
@@ -1244,7 +1264,7 @@ void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSam
     // shh.getHist(iHist)->Scale( 1/events_mc, "width" );
     shh.getHist(iHist)->Scale( 1/lumi_mc, "width" );
     // ch.addHist( shh.getHist(iHist), "HIST", col[iHist], kSolid, 20, 1001 );
-
+     
     // define legend text for stacked hist
     TString leg_text = vSuffix[shh.getHistSize()-iHist-1];
     leg_text.Remove(0,1);
@@ -1296,7 +1316,6 @@ void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSam
 
     double lumi_data_syst = mSample[data_sys_name].lumi;
     hData_Syst_tmp->Scale( 1./lumi_data_syst , "width" );
-
     ch.addHist( hData_Syst_tmp, "HIST", col_syst[(iHist%5)] );
     vHist_Data_Syst.push_back( hData_Syst_tmp );
 
@@ -1326,7 +1345,7 @@ void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSam
   // draw legend
   ch.getCanvas()->cd(1);
   leg->Draw("same");
-  if(draw_figure)ch.getCanvas()->Print( figure_dir + "/hDisciminant_" + mc_sample_name + "." + figure_type );
+  if(draw_figure)ch.getCanvas()->Print( figure_dir + "/hDisciminantsys_" + mc_sample_name + "." + figure_type );
   ch.DrawCMSPreliminary(true,11,"0.34 #mub^{-1} (13 TeV)");
 }
 
@@ -1343,10 +1362,10 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
-  TString mc_sample_name = "XiCutEPOSSD2";
+  TString mc_sample_name = "XiCutEPOSSD1";
   TString data_sample_name = "Data";
 
-  TString training_sample_name = "XiCutEPOSSD2";
+  TString training_sample_name = "XiCutEPOSSD1";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
@@ -1357,7 +1376,7 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
 
   TH1F* hMC   = (TH1F*)mc_file->Get(hist_name);
 
-  TString sSignal ="SD2";
+  TString sSignal ="SD1";
   TH1F* hsig = (TH1F*)mc_file->Get(hist_name+"_"+sSignal);
 
   std::map<TString,TH1F*> hbkg;
@@ -1520,21 +1539,24 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
 
   c2->cd();
   CanvasHelper::SetUpHist((TH1*)gr_dist_aim_point,kBlue);
-  gr_dist_aim_point->GetXaxis()->SetTitle("discriminant_cut_value");
+  gr_dist_aim_point->GetXaxis()->SetTitle("Classifier X");
   gr_dist_aim_point->GetYaxis()->SetTitle("distance to eff=1;bkg=0");
   gr_dist_aim_point->SetMarkerSize(1);
   TLegend * leg = new TLegend(0.3,0.7,0.7,0.9);
   leg->SetFillColor(0);
   leg->SetBorderSize(0);
   leg->SetFillStyle(0);
-  leg->SetTextFont(23);
-  leg->SetTextSize(20);
+  leg->SetTextFont(42);
+  leg->SetTextSize(0.05);
   
   leg->AddEntry(gr_dist_aim_point,"distance to eff=1;bkg=0","lep");
   
   gr_dist_aim_point->Draw("ALP");
   chROCurve.DrawCMSSimulation();
   leg->Draw("same");
+  if(draw_figure)chROCurve.getCanvas()->Print( figure_dir + "/chROCurve_" + mc_sample_name + "." + figure_type );
+
+
 
   cSdivSqrtSplusB->cd();
   chSdivSqrtSplusB.SetUpHist((TH1*)gr_SdivSqrtSplusB,kGreen+2);
@@ -1545,8 +1567,8 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
   legSdivSqrtSplusB->SetFillColor(0);
   legSdivSqrtSplusB->SetBorderSize(0);
   legSdivSqrtSplusB->SetFillStyle(0);
-  legSdivSqrtSplusB->SetTextFont(23);
-  legSdivSqrtSplusB->SetTextSize(20);
+  legSdivSqrtSplusB->SetTextFont(42);
+  legSdivSqrtSplusB->SetTextSize(0.05);
 
 
 
@@ -1561,8 +1583,11 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
   gr_prob_bkg->Draw("P");
   // gr_mark_point->Draw("P same");
   chSdivSqrtSplusB.DrawCMSSimulation();
-  legSdivSqrtSplusB->Draw("");
-
+  chSdivSqrtSplusB.DrawHist(true);//logscale
+  gr_sig_purity_tims_eff->GetXaxis()->SetTitle("Classifier");
+  gr_sig_purity_tims_eff->GetYaxis()->SetTitle("Values");
+  legSdivSqrtSplusB->Draw();
+   if(draw_figure)chSdivSqrtSplusB.getCanvas()->Print( figure_dir + "/hSdivSqrtSplusB_" + mc_sample_name + "." + figure_type );
 }  
   
 
@@ -1579,10 +1604,10 @@ void calc_signal_cross_section(double& result_cross_section, double& standartErr
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
-  TString mc_sample_name = "XiCutEPOSSD2";
+  TString mc_sample_name = "XiCutEPOSSD1";
   TString data_sample_name = "Data";
 
-  TString training_sample_name = "XiCutEPOSSD2";
+  TString training_sample_name = "XiCutEPOSSD1";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
@@ -1714,16 +1739,16 @@ void single_sample_compare_syst(std::map<TString, SampleList::sSample>& mSample,
   // acces hist with systematics
  
   //  /////////////HF Pluss//////////////////////////
-  // const vector<TString> SysList = {"Data_sysHFPlus"};
-  // const vector<TString> ParList = {"NTowHF_plus_sys", "NTowHF_minus_sys"};
+  const vector<TString> SysList = {"Data_sysHFPlus"};
+  const vector<TString> ParList = {"NTowHF_plus_sys", "NTowHF_minus_sys"};
  
   // ////////////////////////Castor//////////////////////////////
   // const vector<TString> SysList = {"Data_sysCastorPlus", "Data_sysCastorMinus"};
   // const vector<TString> ParList = {"NTowCastor_sys", "NTowMaxCastor_sys"};
   
   ///////////////////////Track////////////////////////////////////////////
-  const vector<TString> SysList = {"Data_sysTrackPlus", "Data_sysTrackMinus"};
-  const vector<TString> ParList = {"NTracks_sys"};
+  // const vector<TString> SysList = { "Data_sysTrackMinus"};
+  // const vector<TString> ParList = {"NTracks_sys"};
  
 
   for (unsigned int ipar = 0; ipar<ParList.size(); ipar++){
@@ -1770,7 +1795,7 @@ void single_sample_compare_syst(std::map<TString, SampleList::sSample>& mSample,
 
       for(int iBin=1; iBin<=hData->GetXaxis()->GetNbins(); iBin++) {
         cout << "Bin Center: " << hData->GetBinCenter(iBin) << endl;
-        cout << "hData: " << hData->GetBinContent(iBin) << endl;
+
         cout << "hData_Sys: " << hData_Sys->GetBinContent(iBin) << endl;
         cout << "hData_Sys_Ratio: " << hData_Sys_Ratio->GetBinContent(iBin) << endl;
 
@@ -1827,7 +1852,7 @@ void single_sample_compare_syst(std::map<TString, SampleList::sSample>& mSample,
     //ch.DrawHist(); //systematic draw stacked hists
     grData_Sys->Draw("same 2");
     leg->Draw("same");
-    ch.DrawCMSPreliminary(true,10,"0.34 3.86 #mub^{-1} (13 TeV)");
+    ch.DrawCMSPreliminary(true,10,"3.86 #mub^{-1} (13 TeV)");
     ch.getCanvas()->cd(2);
     grData_Sys_Ratio->Draw("same 2");
 
@@ -1843,7 +1868,7 @@ void single_sample_compare_syst(std::map<TString, SampleList::sSample>& mSample,
     ch.addRatioHist( get_Ratio(hMC,hData), "HIST", kBlue+2 );
     ch.addRatioHist( get_Ratio(hData,hData), "EP", kBlack );
     ch.DrawHist(); //systematic
-
+   
     
   }
 
