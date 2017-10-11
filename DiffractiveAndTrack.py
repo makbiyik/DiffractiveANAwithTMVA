@@ -169,8 +169,8 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
         DetaMin = 0
         DetaMax = 11
         
-        self.hist["Hist_GP_forwardgendelta"] = ROOT.TH1F("Hist_GP_forwardgendelta", "Hist_GP_forwardgendelta", NbrDetaBins, 0,9)
-        self.hist["Hist_GP_eventXiID_forwardgendelta"] = ROOT.TH1F("Hist_GP_eventXiID_forwardgendelta", "Hist_GP_eventXiID_forwardgendelta", NbrDetaBins, 0,9)
+        self.hist["Hist_GP_forwardgendelta"] = ROOT.TH1F("Hist_GP_forwardgendelta", "Hist_GP_forwardgendelta", NbrDetaBins, 0,12)
+        self.hist["Hist_GP_eventXiID_forwardgendelta"] = ROOT.TH1F("Hist_GP_eventXiID_forwardgendelta", "Hist_GP_eventXiID_forwardgendelta", NbrDetaBins, 0,12)
         self.hist["Hist_GP_eventXiID_Min"] = ROOT.TH1F("Hist_GP_eventXiID_Min", "Hist_GP_eventXiID_Min", NbrEtaBins, BinEtaMin, BinEtaMax)
         self.hist["Hist_GP_eventXiID_Max"] = ROOT.TH1F("Hist_GP_eventXiID_Max", "Hist_GP_eventXiID_Max", NbrEtaBins, BinEtaMin, BinEtaMax)
         self.hist["Hist_GP_eventXiID_DeltaMax"] = ROOT.TH1F("Hist_GP_eventXiID_DeltaMax", "Hist_GP_eventXiID_DeltaMax", NbrDetaBins, DetaMin, DetaMax)
@@ -186,8 +186,8 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
         self.hist["Hist_Eta_Min"] = ROOT.TH1F("Hist_Eta_Min", "Hist_Eta_Min", NbrEtaBins, BinEtaMin, BinEtaMax)
         self.hist["Hist_Eta_Max"] = ROOT.TH1F("Hist_Eta_Max", "Hist_Eta_Max", NbrEtaBins, BinEtaMin, BinEtaMax)
         self.hist["Hist_Eta_Delta"] = ROOT.TH1F("Hist_Eta_Delta", "Hist_Eta_Delta", NbrDetaBins, DetaMin, DetaMax)
-        self.hist["Hist_forwarddelta"] = ROOT.TH1F("Hist_forwarddelta", "Hist_forwarddelta", NbrDetaBins, 0,9)
-        self.hist["Hist_eventXiID_forwarddelta"] = ROOT.TH1F("Hist_eventXiID_forwarddelta", "Hist_eventXiID_forwarddelta", NbrDetaBins, 0,9)
+        self.hist["Hist_forwarddelta"] = ROOT.TH1F("Hist_forwarddelta", "Hist_forwarddelta", NbrDetaBins, 0,12)
+        self.hist["Hist_eventXiID_forwarddelta"] = ROOT.TH1F("Hist_eventXiID_forwarddelta", "Hist_eventXiID_forwarddelta", NbrDetaBins, 0,12)
         self.hist["Hist_Eta_DeltaZero"] = ROOT.TH1F("Hist_Eta_DeltaZero", "Hist_Eta_DeltaZero", NbrDetaBins, DetaMin, DetaMax)
         self.hist["Hist_Eta_DeltaMax"] = ROOT.TH1F("Hist_Eta_DeltaMax", "Hist_Eta_DeltaMax", NbrDetaBins, DetaMin, DetaMax)
         self.hist["Hist_2D_genreco_Deltapos"] = ROOT.TH2D("Hist_2D_genreco_Deltapos", "Hist_2D_genreco_Deltapos", NbrEtaBins, BinEtaMin, BinEtaMax,NbrEtaBins, BinEtaMin, BinEtaMax)
@@ -203,7 +203,7 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
         self.hist["Hist_2D_recogen_DeltaMax"] = ROOT.TH2D("Hist_2D_recogen_DeltaMax","Hist_2D_recogen_DeltaMax", NbrDetaBins, DetaMin, DetaMax,NbrDetaBins, DetaMin, DetaMax);
         self.hist["Hist_2D_recogen_EtaMiniumum"] = ROOT.TH2D("Hist_2D_recogen_EtaMiniumum","Hist_2D_recogen_EtaMiniumum",NbrEtaBins, BinEtaMin, BinEtaMax,NbrEtaBins, BinEtaMin, BinEtaMax)
         
-        self.hist["Hist_2D_recogen_forwarddeltaEtaMiniumum"] = ROOT.TH2D("Hist_2D_recogen_forwarddeltaEtaMiniumum", "Hist_2D_recogen_forwarddeltaEtaMiniumum", NbrDetaBins, 0,9,NbrDetaBins, 0,9)
+        self.hist["Hist_2D_recogen_forwarddelta"] = ROOT.TH2D("Hist_2D_recogen_forwarddelta", "Hist_2D_recogen_forwarddelta", NbrDetaBins, 0,12,NbrDetaBins, 0,12)
         self.hist["Hist_2D_recogen_EtaMax"]= ROOT.TH2D("Hist_2D_recogen_EtaMax","Hist_2D_recogen_EtaMax",NbrEtaBins, BinEtaMin, BinEtaMax,NbrEtaBins, BinEtaMin, BinEtaMax)
         
 
@@ -299,7 +299,7 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
         XiMax = 5
         NbrLogXiBins = 100
         LogXiMin = -11.5
-       
+        
         
         self.hist["Hist_XiX"] =  ROOT.TH1F("Hist_XiX", "Hist_XiX", NbrXiBins, XiMin, XiMax)
         self.hist["Hist_XiY"] =  ROOT.TH1F("Hist_XiY", "Hist_XiY", NbrXiBins, XiMin, XiMax)
@@ -348,7 +348,7 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
             self.hist["Hist_Eta_Delta"+str(ip)] = ROOT.TH1D("Hist_Eta_Delta"+str(ip),"Hist_Eta_Delta ", NbrDetaBins, DetaMin, DetaMax)
             self.hist["Hist_Eta_DeltaZero"+str(ip)] = ROOT.TH1D("Hist_Eta_DeltaZero"+str(ip),"Hist_Eta_DeltaZero ", NbrDetaBins, DetaMin, DetaMax)
             self.hist["Hist_Eta_DeltaMax"+str(ip)] =  ROOT.TH1F("Hist_Eta_DeltaMax"+str(ip), "Hist_Eta_DeltaMax"+str(ip), NbrDetaBins, DetaMin, DetaMax)               
-            self.hist["Hist_forwarddelta"+str(ip)] = ROOT.TH1F("Hist_forwarddelta"+str(ip), "Hist_forwarddelta"+str(ip), NbrDetaBins, 0,9)
+            self.hist["Hist_forwarddelta"+str(ip)] = ROOT.TH1F("Hist_forwarddelta"+str(ip), "Hist_forwarddelta"+str(ip), NbrDetaBins, 0,12)
 
             self.hist["Hist_Eta"+str(ip)] =  ROOT.TH1F("Hist_Eta"+str(ip), "Hist_Eta"+str(ip), nEtaBins, EtaBins)
             self.hist["Hist_reducedEta"+str(ip)] =  ROOT.TH1F("Hist_reducedEta"+str(ip), "Hist_reducedEta"+str(ip), nEtaBins, EtaBins)
@@ -430,7 +430,9 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
             self.hist["Hist_MaxHFEnergy"+str(ip)] = ROOT.TH1F("Hist_MaxHFEnergy"+str(ip),"Hist_MaxHFEnergy"+str(ip),nBinSumE,MinSumE, MaxSumE) 
             self.hist["Hist_MaxCastorEnergy"+str(ip)] = ROOT.TH1F("Hist_MaxCastorEnergy"+str(ip),"Hist_MaxCastorEnergy"+str(ip),nBinSumE,MinSumE, MaxSumE) 
             
-
+            self.hist["Hist_2D_recogen_forwarddelta"+str(ip)] = ROOT.TH2D("Hist_2D_recogen_forwarddelta"+str(ip), "Hist_2D_recogen_forwarddelta"+str(ip), NbrDetaBins, 0,12,NbrDetaBins, 0,12) 
+            
+            self.hist["Hist_2D_recogen_forwarddelta_eventselection"+str(ip)] = ROOT.TH2D("Hist_2D_recogen_forwarddelta_eventselection"+str(ip), "Hist_2D_recogen_forwarddelta_eventselection"+str(ip), NbrDetaBins, 0,12,NbrDetaBins, 0,12) 
             
 
              # eventID is process Id which is defined by the cuts that are applied on Xi , no using process ID from Pythi8
@@ -441,7 +443,7 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
             self.hist["Hist_GP_eventXiID_DeltaMax"+str(ip)] =  ROOT.TH1F("Hist_GP_eventXiID_DeltaMax"+str(ip), "Hist_GP_eventXiID_DeltaMax"+str(ip), NbrDetaBins, DetaMin, DetaMax)
             self.hist["Hist_GP_eventXiID_DeltaZero"+str(ip)] =  ROOT.TH1F("Hist_GP_eventXiID_DeltaZero"+str(ip), "Hist_GP_eventXiID_DeltaZero"+str(ip), NbrDetaBins, DetaMin, DetaMax)
             
-            self.hist["Hist_eventXiID_forwarddelta"+str(ip)] = ROOT.TH1F("Hist_eventXiID_forwarddelta"+str(ip), "Hist_eventXiID_forwarddelta"+str(ip), NbrDetaBins, 0,9)
+            self.hist["Hist_eventXiID_forwarddelta"+str(ip)] = ROOT.TH1F("Hist_eventXiID_forwarddelta"+str(ip), "Hist_eventXiID_forwarddelta"+str(ip), NbrDetaBins, 0,12)
             self.hist["Hist_eventXiID_Min"+str(ip)] = ROOT.TH1D("Hist_eventXiID_Min"+str(ip),"Hist_eventXiID_Min ", NbrEtaBins, BinEtaMin, BinEtaMax)
             self.hist["Hist_eventXiID_Max"+str(ip)] = ROOT.TH1D("Hist_eventXiID_Max"+str(ip),"Hist_eventXiID_Max ", NbrEtaBins, BinEtaMin, BinEtaMax) 
             self.hist["Hist_eventXiID_DeltaMax"+str(ip)] = ROOT.TH1F("Hist_eventXiID_DeltaMax"+str(ip), "Hist_eventXiID_DeltaMax"+str(ip), NbrDetaBins, DetaMin, DetaMax)
@@ -1020,7 +1022,6 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
 
             if [caloieta,caloiphi] in bad_channels_eta_phi: continue
 
-            if [caloieta,caloiphi] in bad_channels_eta_phi: continue
             CaloCandClass.append([calop4,caloem,calohad])
             
            
@@ -1163,7 +1164,7 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
                 if(CaloTwriEta == -45): self.hist["Castortower2D_Energy_sec"].Fill(icalo[0].e(),CaloTwrsiPhi)
 
         
-                self.hist["hNentriesWithEventSelectionCuts"].Fill("Nbrtracks&Towers Cut",1)
+        self.hist["hNentriesWithEventSelectionCuts"].Fill("Nbrtracks&Towers Cut",1)
 
         for EventSelectionXiProcess_ID in  EventSelectionXiProcess_IDs:
 
@@ -1431,7 +1432,8 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
         self.hist["Hist_2D_recogen_DeltaZero"].Fill(delta_zero, delta_zero_gen)
         self.hist["Hist_2D_recogen_DeltaMax"].Fill(deltaetamax, delta_max_gen) 
         self.hist["Hist_2D_recogen_EtaMiniumum"].Fill(mineta,mingeneta)
-        self.hist["Hist_2D_recogen_forwarddeltaEtaMiniumum"].Fill(forwarddelta,forwardgendelta)
+        self.hist["Hist_2D_recogen_forwarddelta"].Fill(forwarddelta,forwardgendelta)
+        self.hist["Hist_2D_recogen_forwarddelta"+ Pythia_Process_ID].Fill(forwarddelta,forwardgendelta)
         self.hist["Hist_2D_recogen_EtaMax"].Fill(maxeta,maxgeneta)
             # self.hist["hNentries"].Fill("CaloReducedenergyClass2",1) 
 
@@ -1450,7 +1452,7 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
             self.hist["Hist_eventXiID_Min"+ EventSelectionXiProcess_ID].Fill(mineta)
             self.hist["Hist_eventXiID_Max"+ EventSelectionXiProcess_ID].Fill(maxeta)  
             self.hist["Hist_eventXiID_forwarddelta"+ EventSelectionXiProcess_ID].Fill(forwarddelta)
-               
+            self.hist["Hist_2D_recogen_forwarddelta_eventselection"+ EventSelectionXiProcess_ID].Fill(forwarddelta,forwardgendelta)          
         XEtot =  0
         XPxtot = 0
         XPytot = 0
