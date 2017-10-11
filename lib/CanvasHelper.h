@@ -388,8 +388,8 @@ CanvasHelper::SetUpLegend(TLegend* leg)
   leg->SetFillColor(0);
   leg->SetBorderSize(0);
   leg->SetFillStyle(0);
-  leg->SetTextFont(23);
-  leg->SetTextSize(21);
+  leg->SetTextFont(42);
+  leg->SetTextSize(0.05);
 }
 //////////////////////////////////////////////////////////////////////////
 
