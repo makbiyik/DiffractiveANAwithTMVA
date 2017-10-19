@@ -62,6 +62,11 @@ def compareGenrapidity(first,second):
 
 class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProofReader):
 
+    def getIEtaIPhifromTower():
+        pass
+
+
+
     def CreateTree(self,tree):
         tree.Branch('EventselectionXiprocessDD', self.OUTEventselectionXiprocessDD,'EventselectionXiprocessDD/I')
         tree.Branch('EventselectionXiprocessSD1', self.OUTEventselectionXiprocessSD1,'EventselectionXiprocessSD1/I')
@@ -225,6 +230,8 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
         self.hist["Hist_2D_Calotower_eta_phi_withnoisytowers"] =  ROOT.TH2D("Hist_2D_Calotower_eta_phi_withnoisytowers","Hist_2D_Calotower_eta_phi_withnoisytowers",101,-50.5,50.5,81, -0.5, 80.5)
         self.hist["Hist_2D_Calotower_Energy_eta_phi"] =  ROOT.TProfile2D("Hist_2D_Calotower_Energy_eta_phi","Hist_2D_Calotower_Energy_eta_phi",101,-50.5,50.5,81, -0.5, 80.5)
         self.hist["Castortower2D_Energy_sec"] = ROOT.TH2D("Castortower2D_Energy_sec","Castortower2D_Energy_sec", 100, 0, 100, 81, -0.5, 80.5)
+        self.hist["Hist_2D_Calotower_Phi_Ieta_Iphi"] =  ROOT.TProfile2D("Hist_2D_Calotower_Phi_Ieta_Iphi","Hist_2D_Calotower_Phi_Ieta_Iphi",101,-50.5,50.5,81, -0.5, 80.5)
+        self.hist["Hist_2D_Calotower_Eta_Ieta_Iphi"] =  ROOT.TProfile2D("Hist_2D_Calotower_Eta_Ieta_Iphi","Hist_2D_Calotower_Eta_Ieta_Iphi",101,-50.5,50.5,81, -0.5, 80.5)
        
         self.hist["Hist_2D_Calotower_noiseTower_eta_phi"] =  ROOT.TH2D("Hist_2D_Calotower_noiseTower_eta_phi","Hist_2D_Calotower_noiseTower_eta_phi",101,-50.5,50.5,81, -0.5, 80.5)
         self.hist["Hist_2D_Calotower_noiseTower_Energy_eta_phi"] =  ROOT.TProfile2D("Hist_2D_Calotower_noiseTower_Energy_eta_phi","Hist_2D_Calotower_noiseTower_Energy_eta_phi",101,-50.5,50.5,81, -0.5, 80.5)
@@ -618,6 +625,15 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
 
 
     def analyze(self):
+
+        if self.isData:
+            if self.ParameterSet == 'Melike_dNdEta'.lower() or self.ParameterSet == 'Seb_dNdEta_LHCf'.lower():
+                if not self.fChain.run == 247324: return 1
+            else:
+                if not self.fChain.run == 247934: return 1 #247934   
+                if self.fChain.lumi<26 or self.fChain.lumi>570: return 1    
+            
+
         Nbrvertex = 1 
 
         self.hist["hNentries"].Fill("all",1)
@@ -626,8 +642,6 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
         vVertexZ = 0
         if self.ParameterSet == 'Seb_LHCf_Run247934'.lower() or self.ParameterSet == 'cuetplus'.lower():
             vVertexZ = self.fChain.ZeroTeslaTracking_PixelnoPreSplitting_VtxZ
-       
-         
         else:
             vVertexZ = self.fChain.ZeroTeslaPixelnoPreSplittingVtx_vrtxZ
 
@@ -641,17 +655,11 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
             deltavertex = (abs(vVertexZ[0] - vVertexZ[1]))
             self.hist["Hist_NrVtxdelta"].Fill(deltavertex)
 
+        self.hist["Hist_NrVtx"].Fill(Nbrvertex)
 
-        if self.isData:
-            if self.ParameterSet == 'Melike_dNdEta'.lower() or self.ParameterSet == 'Seb_dNdEta_LHCf'.lower():
-                if not self.fChain.run == 247324: return 1
-            else:
-                if not self.fChain.run == 247934 : return 1 #247934   
-            # if not self.fChain.run == 247324 and not self.fChain.run == 247934: return 1 
-            
+        if self.isData:           
             if Nbrvertex > 2:  return 0
 
-        self.hist["Hist_NrVtx"].Fill(Nbrvertex)
         self.hist["hNentries"].Fill("runcut",1)
         self.hist["hNentriesWithEventSelectionCuts"].Fill("run",1)  
 
@@ -659,11 +667,13 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
             self.hist["Hist_NrVtxdeltacut"].Fill(deltavertex)
             if self.isData and abs(deltavertex)> 0.5 : return 0
             if not self.isData and abs(deltavertex)> 0.5 :
+                self.hist["hNentries"].Fill("mc_vtxcut",1)
                 self.hist["hNentriesWithEventSelectionCuts"].Fill("mc_vtxcut",1)
             # if abs(vVertexZ[0] - vVertexZ[1])> 0.5 : return 0
             # if abs(self.fChain.ZeroTeslaPixelnoPreSplittingVtx_vrtxZ[0] - self.fChain.ZeroTeslaPixelnoPreSplittingVtx_vrtxZ[1])> 0.5 : return 0
             # Nbrvertex = 1
         
+        self.hist["hNentries"].Fill("vtxcut",1)
         self.hist["hNentriesWithEventSelectionCuts"].Fill("vtxcut",1)          
 
         weight = 1
@@ -1018,6 +1028,9 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
             calohad = self.fChain.CaloTowershadEnergy[icalo]
             caloieta = self.fChain.CaloTowersieta[icalo]  # Sebastian version has ieta and iphi
             caloiphi = self.fChain.CaloTowersiphi[icalo] #Sebastian version has ieta and iphi
+
+            self.hist["Hist_2D_Calotower_Phi_Ieta_Iphi"].Fill(caloieta, caloiphi, calop4.phi())
+            self.hist["Hist_2D_Calotower_Eta_Ieta_Iphi"].Fill(caloieta, caloiphi, calop4.eta())
 
 
             if [caloieta,caloiphi] in bad_channels_eta_phi: continue
@@ -1746,13 +1759,12 @@ if __name__ == "__main__":
     elif ParameterSet == 'cuetplus'.lower():
         sampleList.append("MinBias_CUETP8M1_13TeV-pythia8_MagnetOff_CASTORmeasured")
         Outputname = Outputname + "_cuetplus" 
-  
-
-
 
     else:
         print("ParameterSet unkonwn")
         sys.exit(1)
+
+    # Outputname += '_TEST'
 
 
     mode=str(sys.argv[2]).lower()
@@ -1793,7 +1805,7 @@ if __name__ == "__main__":
     # sampleList.append("data_ZeroBias1_CASTOR")
     maxFilesMC = None# run through all ffiles found
     maxFilesData =None # same
-    nWorkers = 10# Use all cpu cores
+    nWorkers = 15# Use all cpu cores
    
    
     slaveParams = {}
@@ -1818,6 +1830,6 @@ if __name__ == "__main__":
            maxFilesMC = maxFilesMC,
            maxFilesData = maxFilesData,
            nWorkers= nWorkers,
-           maxNevents = 5000,
+           # maxNevents = 50000,
            verbosity = 2,
            outFile = Outputname) 
