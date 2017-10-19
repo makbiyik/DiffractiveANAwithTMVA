@@ -146,7 +146,7 @@ void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSam
 void discriminant_results(std::map<TString, SampleList::sSample>& mSample);
 
 
-void calc_signal_cross_section(double& result_cross_section, double& standartError,
+void calc_signal_cross_section(double& result_cross_section, double& totalcrossectionError,
                                std::map<TString, SampleList::sSample>& mSample,
                                const TString& sSignal,
                                double classifier_cut);
@@ -188,17 +188,17 @@ int main( int argc, char** argv )
 
   //////////////////////////////////////////////////////////////////////////
   // // compare training variables MC with DATA
-  // training_variables_compare_mc_data(mSample);
-  discriminant_compare_mc_data(mSample);
+  training_variables_compare_mc_data(mSample);
+  // discriminant_compare_mc_data(mSample);
   // discriminant_compare_data_syst(mSample);
-  discriminant_results(mSample);
+  // discriminant_results(mSample);
 
 
 
 
   //////////////////////////////////////////////////////////////////////////
   double cross_section_result = 0;
-  double standartError = 0;
+  double totalcrossectionError = 0;
 
   TCanvas* ctest_clcut = new TCanvas("ctest_clcut");
   ctest_clcut->cd();
@@ -212,18 +212,18 @@ int main( int argc, char** argv )
   
 
   for(double clcut = -1.0; clcut < 0.99; clcut += 0.1) {
-    calc_signal_cross_section(cross_section_result, standartError,
-                              mSample, "SD1", clcut); ////Burasi cok onemli degistir !!
+    calc_signal_cross_section(cross_section_result, totalcrossectionError,
+                              mSample, "DD", clcut); ////Burasi cok onemli degistir !!
      #warning Signal:?
     htest_clcut->Fill(clcut, cross_section_result);
-    htest_clcut->SetBinError( htest_clcut->FindBin(clcut), standartError );
+    htest_clcut->SetBinError( htest_clcut->FindBin(clcut), totalcrossectionError );
   }
    
   htest_clcut->GetXaxis()->SetTitle("Classifier Threshold");
   htest_clcut->GetYaxis()->SetTitle("#sigma [mb]");
   htest_clcut->GetYaxis()->SetTitleOffset(1.5);
-  // htest_clcut->SetMaximum(15000); // 600 single
-  htest_clcut->SetMaximum(6000); // 600 
+  htest_clcut->SetMaximum(15000); // 600 single
+  // htest_clcut->SetMaximum(6000); // 600 
   ctest_clcut->cd()->SetRightMargin(0.1);
   
   leg->AddEntry(htest_clcut,"CMS preliminery","");
@@ -401,10 +401,10 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
 */
   std::map<TString, sSingleVar> mSingleTrainingVar = build_hist_parameters();
 
-  // vector<TString> sampleNames = {"EPOS","Pythia8"};
+  vector<TString> sampleNames = {"EPOS","Pythia8"};
   // vector<TString> sampleNames = {"Pythia8","EPOS"};
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,sampleNames,"Data");
-  single_sample_compare_syst(mSample,mSingleTrainingVar,"EPOS","Data");
+  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,sampleNames,"Data");
+  // single_sample_compare_syst(mSample,mSingleTrainingVar,"EPOS","Data");
   // single_sample_compare_syst(mSample,mSingleTrainingVar,"Pythia8","Data"); // !!!!!
    // !!!!! icant run with "single_sample_compare_mc_data" scale problemfor systematic
   
@@ -1056,16 +1056,16 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
 
   std::vector<TString> vSuffix;
   // vSuffix.push_back("_NONE");
-  vSuffix.push_back("_DD");
+  vSuffix.push_back("_SD2");
   vSuffix.push_back("_Rest");
-  vSuffix.push_back("_SD2"); 
+  vSuffix.push_back("_SD1"); 
   
-  vSuffix.push_back("_SD1");//Signal:DD,SD you need to switch
+  vSuffix.push_back("_DD");//Signal:DD,SD you need to switch
   
-  TString mc_sample_name = "XiCutEPOSSD1";
-  TString data_sample_name = "Data";
-  TString sSignal ="SD1";
-  TString training_sample_name = "XiCutEPOSSD1";
+  TString mc_sample_name = "XiCutEPOS";
+  TString data_sample_name = "Data_sysTrackMinus";
+  TString sSignal ="DD";
+  TString training_sample_name = "XiCutEPOS";
   TString training_method = "BDTG";
 
   
@@ -1199,11 +1199,11 @@ void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSam
 
   vSuffix.push_back("_SD2");//Signal:DD,SD you need to switch
   
-  TString mc_sample_name = "XiCutPythia8SD2";
-  TString data_sample_name = "Data";
+  TString mc_sample_name = "XiCutEPOS";
+  TString data_sample_name = "Data_sysTrackMinus";
   const std::vector<TString> vData_Syst = {"Data_sysCastorPlus", "Data_sysCastorMinus","Data_sysHFPlus", "Data_sysTrackMinus" };
 
-  TString sSignal ="SD1";
+  TString sSignal ="DD";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + mc_sample_name + "_" + training_method;
@@ -1362,10 +1362,10 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
-  TString mc_sample_name = "XiCutEPOSSD1";
-  TString data_sample_name = "Data";
+  TString mc_sample_name = "XiCutEPOS";
+  TString data_sample_name = "Data_sysTrackMinus";
 
-  TString training_sample_name = "XiCutEPOSSD1";
+  TString training_sample_name = "XiCutEPOS";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
@@ -1376,7 +1376,7 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
 
   TH1F* hMC   = (TH1F*)mc_file->Get(hist_name);
 
-  TString sSignal ="SD1";
+  TString sSignal ="DD";
   TH1F* hsig = (TH1F*)mc_file->Get(hist_name+"_"+sSignal);
 
   std::map<TString,TH1F*> hbkg;
@@ -1591,7 +1591,7 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
 }  
   
 
-void calc_signal_cross_section(double& result_cross_section, double& standartError,
+void calc_signal_cross_section(double& result_cross_section, double& totalcrossectionError,
                                std::map<TString, SampleList::sSample>& mSample,
                                const TString& sSignal,
                                double classifier_cut)
@@ -1604,10 +1604,10 @@ void calc_signal_cross_section(double& result_cross_section, double& standartErr
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
-  TString mc_sample_name = "XiCutEPOSSD1";
-  TString data_sample_name = "Data";
+  TString mc_sample_name = "XiCutEPOS";
+  TString data_sample_name = "Data_sysTrackMinus";
 
-  TString training_sample_name = "XiCutEPOSSD1";
+  TString training_sample_name = "XiCutEPOS";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
@@ -1680,29 +1680,30 @@ void calc_signal_cross_section(double& result_cross_section, double& standartErr
   std::cout << hentry_mc << std::endl;
 
   double Allevents_mc = hentry_mc->GetBinContent(hentry_mc->GetXaxis()->FindBin("all"));
-  
   double Allevents_data = hentry_data->GetBinContent(hentry_data->GetXaxis()->FindBin("run"));
- 
   double eventswithvrtzcut_data = hentry_data->GetBinContent(hentry_data->GetXaxis()->FindBin("vtxcut") );
-  
   double eventswithvrtzcut_mc = hentry_mc->GetBinContent(hentry_mc->GetXaxis()->FindBin("mc_vtxcut") );
-  
+
   double Fsplit = 1 - (eventswithvrtzcut_mc / Allevents_mc);
-  
-  std::cout << "Fsplit: " << Fsplit << std::endl;
+  double Error_Fsplit =  std::sqrt(1/ pow(Allevents_mc,2)*(Allevents_mc-eventswithvrtzcut_mc) + pow(((Allevents_mc-eventswithvrtzcut_mc)/pow(Allevents_mc,2)),2)*(Allevents_mc));  
   
   double eff_PU_data = Allevents_data / eventswithvrtzcut_data;
-  std::cout << "eff_PU_data: " << eff_PU_data << std::endl;
-
-
+  double Error_eff_PU_data = std::sqrt(1/ pow(eventswithvrtzcut_data,2)*Allevents_data+ pow((Allevents_data/pow(eventswithvrtzcut_data,2)),2)*(eventswithvrtzcut_data)); 
+  
   double prob_sig = Entry_sig / (Entry_bkg + Entry_sig);
-  double standartError_probsig = std::sqrt(prob_sig);  
+  double Error_probsig = std::sqrt(1/ pow(Entry_bkg + Entry_sig,2)*Entry_sig+ pow((Entry_sig/pow(Entry_bkg + Entry_sig,2)),2)*(Entry_bkg + Entry_sig));  
+ 
   double eff_sig = (Entry_sig * Fsplit )/ Entry_sig_all; //MC signal efficiency
-  double standartError_eff_sig = std::sqrt(prob_sig);  
+  double Error_eff_sig = std::sqrt(1/ pow(Entry_sig_all,2)*(Entry_sig * Fsplit)+ pow(((Entry_sig * Fsplit )/pow(Entry_sig_all,2)),2)*(Entry_sig_all));  
   double eff_number_of_signal_events_in_data = (Entry_data * prob_sig)/eff_sig; //effictive lumi data
-
+  
+  
   result_cross_section = eff_number_of_signal_events_in_data/(lumi_data/eff_PU_data);
-  standartError = std::sqrt(Entry_data) * prob_sig / (lumi_data/eff_PU_data) / eff_sig ;
+  totalcrossectionError = std::sqrt(Entry_data) * prob_sig / (lumi_data/eff_PU_data) / eff_sig ;
+  
+  
+  double standartError = std::sqrt(totalcrossectionError) * Error_probsig / (Error_Lumi/Error_eff_PU_data) / Error_eff_sig ;
+  
 
   std::cout << std::endl;
   std::cout << std::endl;
@@ -1714,14 +1715,23 @@ void calc_signal_cross_section(double& result_cross_section, double& standartErr
   std::cout << "======================================================================" << std::endl;
   std::cout << "cut at classifier value = " << classifier_cut << std::endl;
   std::cout << "--- signal efficiency = " << eff_sig << std::endl;
-  std::cout << "--- Standart Error for signal efficiency = " << standartError_eff_sig << std::endl;
   std::cout << "--- signal probability = " << prob_sig << std::endl;
-  std::cout << "--- Standart Error for signal probability = " << standartError_probsig << std::endl;
   std::cout << "--- number of selected data events = " << Entry_data << std::endl;
   std::cout << "--- !!! Effective Number of Signal Events in Data = " << eff_number_of_signal_events_in_data << " !!! ---" << std::endl;
-  std::cout << "--- !!! Standart Error = " << standartError << " !!! ---" << std::endl;
+  std::cout << "--- !!! totalcrossectionError = " << totalcrossectionError << " !!! ---" << std::endl;
   std::cout << "--- !!! Effective Signal CROSS SECTION = " << result_cross_section << " ub !!! ---" << std::endl;
+  std::cout << "Fsplit: " << Fsplit << std::endl;
+  std::cout << "eff_PU_data: " << eff_PU_data << std::endl;
   std::cout << "======================================================================" << std::endl;
+
+  std::cout << "==============================Standart Error========================================" << std::endl;
+  std::cout << "--- Standart Error for signal efficiency = " << Error_eff_sig << std::endl;
+  std::cout << "--- Standart Error for signal probability = " << Error_probsig << std::endl;
+  std::cout << "Error_eff_PU_data: " << Error_eff_PU_data << std::endl; 
+  
+  std::cout << "Error_Fsplit: " << Error_Fsplit << std::endl; 
+  std::cout << "STANDART ERROR: " <<standartError << std::endl; 
+
   std::cout << std::endl;
   std::cout << std::endl;
 }
