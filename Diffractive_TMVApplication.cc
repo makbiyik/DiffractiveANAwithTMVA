@@ -155,10 +155,10 @@ void Diffractive_TMVApplication()
    // - the variable names MUST corresponds in name and type to those given in the weight file(s) used
    
    Float_t deltaeta, deltazero, etamax, etamin;
-   Float_t  log10XixReco, log10XiyReco;//log10XiDD;
+   // Float_t  log10XixReco, log10XiyReco;//log10XiDD;
    Float_t HFminusNtowers, HFplusNtowers ,CastorNtowers,Ntracks;//RGmean;// ,Pythia8processid,EventselectionXiprocessid;
    Float_t MaxCastorEnergy,CaloReducedenergyClass; //CastorSumEnergy,CaloReducedenergyClass, HFSumEnergy;//;//MaxHFEnergy;
-   
+   Float_t CastorSumEnergy,HFSumEnergy;
    
    reader->AddVariable("deltaeta", &deltaeta );
    reader->AddVariable( "deltazero", &deltazero );
@@ -169,11 +169,12 @@ void Diffractive_TMVApplication()
    reader->AddVariable( "CastorNtowers" , &CastorNtowers);
    reader->AddVariable( "Ntracks" ,&Ntracks );
    reader->AddVariable( "CaloReducedenergyClass",&CaloReducedenergyClass);
-   // reader->AddVariable( "CastorSumEnergy",&CastorSumEnergy);
-   // reader->AddVariable( "HFSumEnergy",&HFSumEnergy);
    reader->AddVariable( "MaxCastorEnergy",&MaxCastorEnergy);
-   reader->AddVariable( "log10XixReco" , &log10XixReco );
-   reader->AddVariable( "log10XiyReco" , &log10XiyReco );
+  
+   reader->AddVariable( "CastorSumEnergy",&CastorSumEnergy);
+   reader->AddVariable( "HFSumEnergy",&HFSumEnergy);
+   // reader->AddVariable( "log10XixReco" , &log10XixReco );
+   // reader->AddVariable( "log10XiyReco" , &log10XiyReco );
    // reader->AddVariable( "MaxHFEnergy",&MaxHFEnergy);
    // reader->AddVariable( "RGmean",&RGmean);
    
@@ -262,8 +263,8 @@ void Diffractive_TMVApplication()
    theTree->SetBranchAddress("deltazero", &deltazero);
    theTree->SetBranchAddress("etamax", &etamax);
    theTree->SetBranchAddress("etamin", &etamin);
-   theTree->SetBranchAddress("log10XixReco", &log10XixReco);
-   theTree->SetBranchAddress("log10XiyReco", &log10XiyReco);
+   // theTree->SetBranchAddress("log10XixReco", &log10XixReco);
+   // theTree->SetBranchAddress("log10XiyReco", &log10XiyReco);
    theTree->SetBranchAddress("HFminusNtowers", &HFminusNtowers_tree);
    theTree->SetBranchAddress("HFplusNtowers", &HFplusNtowers_tree);
    theTree->SetBranchAddress("CastorNtowers", &CastorNtowers_tree);
@@ -275,8 +276,9 @@ void Diffractive_TMVApplication()
    theTree->SetBranchAddress("EventselectionXiprocessSD2",&EventselectionXiprocessSD2_tree);
    theTree->SetBranchAddress("EventselectionXiprocessRest",&EventselectionXiprocessRest_tree);
    theTree->SetBranchAddress("CaloReducedenergyClass", &CaloReducedenergyClass_tree);
+   
    // theTree->SetBranchAddress( "CastorSumEnergy",&CastorSumEnergy);
-   // theTree->SetBranchAddress( "HFSumEnergy",&HFSumEnergy);
+   theTree->SetBranchAddress( "HFSumEnergy",&HFSumEnergy);
    theTree->SetBranchAddress( "MaxCastorEnergy",&MaxCastorEnergy);
    // theTree->SetBranchAddress( "RGmean",&RGmean );
    // theTree->SetBranchAddress( "MaxHFEnergy",&MaxHFEnergy);

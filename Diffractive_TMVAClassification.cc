@@ -83,7 +83,7 @@ int Diffractive_TMVAClassification()
    std::map<TString, SampleList::sSample> mSample = SampleList::read_data_mc_files();
    ////////////////////////////////////////////////////////////////////////////
    // Create a ROOT output file where TMVA will store ntuples, histograms, etc.
-   TString outfileName( "data/TMVA_XiCutEPOSSD2.root" );
+   TString outfileName( "data/TMVAClassification_XiCutEPOSSD2.root" );
    TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
    TMVA::Factory *factory = new TMVA::Factory( "TMVAClassification", outputFile,
                                                "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification" );
@@ -98,12 +98,13 @@ int Diffractive_TMVAClassification()
    factory->AddVariable( "CastorNtowers","CastorNtowers", "units", 'I' );
    factory->AddVariable( "Ntracks","Ntracks", "units", 'I' );
    factory->AddVariable( "CaloReducedenergyClass","CaloReducedenergyClass", "units", 'F' );
-   // factory->AddVariable( "CastorSumEnergy","CastorSumEnergy", "units", 'F' );
-   // factory->AddVariable( "HFSumEnergy","HFSumEnergy", "units", 'F' );
-   // factory->AddVariable( "MaxHFEnergy","MaxHFEnergy", "units", 'F' );
    factory->AddVariable( "MaxCastorEnergy","MaxCastorEnergy", "units", 'F' );
-   factory->AddVariable( "log10XixReco","log10XixReco", "units", 'F' );
-   factory->AddVariable( "log10XiyReco","log10XiyReco", "units", 'F' );//Log->logdegistirdin
+   factory->AddVariable( "CastorSumEnergy","CastorSumEnergy", "units", 'F' );
+   factory->AddVariable( "HFSumEnergy","HFSumEnergy", "units", 'F' );
+  
+   // factory->AddVariable( "MaxHFEnergy","MaxHFEnergy", "units", 'F' );
+   // factory->AddVariable( "log10XixReco","log10XixReco", "units", 'F' );
+   // factory->AddVariable( "log10XiyReco","log10XiyReco", "units", 'F' );//Log->logdegistirdin
    // factory->AddVariable( "RGmean","RGmean", "units", 'F' );
 
 
@@ -145,10 +146,12 @@ int Diffractive_TMVAClassification()
    TCut mycutb = "deltazero>=0"; // for example: TCut mycutb = "abs(var1)<0.5";
    // 
    factory->PrepareTrainingAndTestTree( mycuts, mycutb,
-                                        // "nTrain_Signal=24000:nTest_Signal=8000:nTrain_Background=24000:nTest_Background=8000:SplitMode=Random:NormMode=NumEvents:!V" );
-                                       "nTrain_Signal=1000:nTest_Signal=500:nTrain_Background=1000:nTest_Background=500:SplitMode=Random:NormMode=NumEvents:!V" );
+                                        //DD "nTrain_Signal= 300000:nTest_Signal=100000:nTrain_Background=300000:nTest_Background=100000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                       //SD1// "nTrain_Signal=100000:nTest_Signal=50000:nTrain_Background=100000:nTest_Background=50000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                       "nTrain_Signal=7000:nTest_Signal=4000:nTrain_Background=7000:nTest_Background=4000:SplitMode=Random:NormMode=NumEvents:!V" );
 
-                                          //100000
+                                      //EposSD2 //"nTrain_Signal=7000:nTest_Signal=4000:nTrain_Background=7000:nTest_Background=4000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                       
 
    
    
