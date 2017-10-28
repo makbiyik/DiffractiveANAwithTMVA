@@ -79,10 +79,6 @@ std::map<TString, sSingleVar> build_hist_parameters()
   mSingleTrainingVar["EtaMin"].rmax = 3;
   mSingleTrainingVar["EtaMin"].cms_alignment = 33;
 
-  
-
-
-
   mSingleTrainingVar["EtaMax"].hist_name = "Hist_Eta_Max";
   mSingleTrainingVar["EtaMax"].xaxis_title = "#eta_{max}";
   mSingleTrainingVar["EtaMax"].yaxis_title = "1/L dN/d#eta [#mub^{-1}]";
@@ -95,7 +91,8 @@ std::map<TString, sSingleVar> build_hist_parameters()
   mSingleTrainingVar["EtaMax"].rmin = 0;
   mSingleTrainingVar["EtaMax"].rmax = 3;
   mSingleTrainingVar["EtaMax"].cms_alignment = 33;
-  
+ ////////////////////////////////////////////////////////////////// 
+ 
   mSingleTrainingVar["NTowCastor"].hist_name = "Hist_numberoftowerebovenoise_castor";
   mSingleTrainingVar["NTowCastor"].xaxis_title = "N_{tow}";
   mSingleTrainingVar["NTowCastor"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";
@@ -166,6 +163,7 @@ std::map<TString, sSingleVar> build_hist_parameters()
 
 
 /// SYSTematic//////////////////////
+ 
   // mSingleTrainingVar["NTowHF_plus_sys"].hist_name = "Hist_numberoftowerebovenoise_forwardplus";
   // mSingleTrainingVar["NTowHF_plus_sys"].xaxis_title = "N_{tow}";
   // mSingleTrainingVar["NTowHF_plus_sys"].yaxis_title = "1/L dN/dN_{tow} [#mub^{-1}]";

@@ -11,11 +11,11 @@ def writeListToFile(chfile,list,nbr_bad_ch):
         chfile.write( "    [{},{}],".format(list[ich][1],list[ich][2]) )
         chfile.write( "\n" )
 
-file = TFile.Open("trackanddiffractive_data.root")
-hist = file.Get("data_ZeroBias1_CASTOR/Calotower2D_eta_phi_withnoisytowers")
+# file = TFile.Open("trackanddiffractive_data.root")
+# hist = file.Get("data_ZeroBias1_CASTOR/Calotower2D_eta_phi_withnoisytowers")
 
-# file = TFile.Open("data/trackanddiffractive_sigSDD_data_247934.root")
-# hist = file.Get("data_ZeroBias_27Jan2016_LHCf/Calotower2D_eta_phi_withnoisytowers")
+file = TFile.Open("data/trackanddiffractive_data_247934.root")
+hist = file.Get("data_ZeroBias1_CASTOR247934/Calotower2D_eta_phi_withnoisytowers")
 
 # hist.Draw("colz")
 

@@ -40,7 +40,7 @@ namespace SampleList {
 
     mSample["Pythia8"].isData = false;
     mSample["Pythia8"].procesesID_pythia8 = true;
-    mSample["Pythia8"].xs = 79948.200000;//71390.000000; // ub 79948.200000; // ub
+    mSample["Pythia8"].xs = 77561.8;//;71390.0;//77.5618;//71390.000000; // ub 79948.200000; // ub
     mSample["Pythia8"].file = TFile::Open("data/trackanddiffractive_mbr.root");
     mSample["Pythia8"].legend_name = "Pythia8 MBR";
     mSample["Pythia8"].tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
@@ -59,7 +59,7 @@ namespace SampleList {
     mSample["XiCutPythia8"].isData = false;
     mSample["XiCutPythia8"].procesesID_pythia8 = false;
     mSample["XiCutPythia8"].lumi = 0;
-    mSample["XiCutPythia8"].xs = 79948.200000; // ub
+    mSample["XiCutPythia8"].xs = 77561.8; // 79948.200000; // ub
     mSample["XiCutPythia8"].file = TFile::Open("data/trackanddiffractive_mbr.root");
     mSample["XiCutPythia8"].legend_name = "PYTHIA8 Tune4C MBR";
     mSample["XiCutPythia8"].tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
@@ -77,7 +77,7 @@ namespace SampleList {
     mSample["EPOS"].isData = false;
     mSample["EPOS"].procesesID_pythia8 = true;
     mSample["EPOS"].lumi = 0;
-    mSample["EPOS"].xs = 79948.200000; // ub
+    mSample["EPOS"].xs = 80057.9;//80.0579;//79948.200000; // ub
     mSample["EPOS"].file = TFile::Open("data/trackanddiffractive_epos.root");
     mSample["EPOS"].legend_name = "EPOS";
     mSample["EPOS"].tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
@@ -93,7 +93,7 @@ namespace SampleList {
     mSample["XiCutEPOS"].isData = false;
     mSample["XiCutEPOS"].procesesID_pythia8 = false;
     mSample["XiCutEPOS"].lumi = 0;
-    mSample["XiCutEPOS"].xs = 79948.200000; // ub
+    mSample["XiCutEPOS"].xs = 80057.9; // ub
     mSample["XiCutEPOS"].file = TFile::Open("data/trackanddiffractive_epos.root");
     mSample["XiCutEPOS"].legend_name = "EPOS";
     mSample["XiCutEPOS"].tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
@@ -119,7 +119,7 @@ namespace SampleList {
     
     mSample["Data"].isData = true;
     // effective lumi; already divided by prescale
-    mSample["Data"].lumi = 3.86; // 1/ub
+    mSample["Data"].lumi = 4.58088; // 1/ub
     mSample["Data"].xs = 0;
     mSample["Data"].legend_name = "DATA";
     mSample["Data"].file = TFile::Open("data/trackanddiffractive_data_247934.root");
@@ -131,7 +131,7 @@ namespace SampleList {
 
     mSample["Data_sysHFPlus"].isData = true;
     // effective lumi; already divided by prescale
-    mSample["Data_sysHFPlus"].lumi = 3.86; // 1/ub
+    mSample["Data_sysHFPlus"].lumi = 4.58088; // 1/ub
     mSample["Data_sysHFPlus"].xs = 0;
     mSample["Data_sysHFPlus"].legend_name = "DATA_sysHFPlus";
     mSample["Data_sysHFPlus"].file = TFile::Open("data/trackanddiffractive_data_247934_sysHFPlus.root");
@@ -142,7 +142,7 @@ namespace SampleList {
 
     mSample["Data_sysCastorPlus"].isData = true;
     // effective lumi; already divided by prescale
-    mSample["Data_sysCastorPlus"].lumi = 3.86; // 1/ub
+    mSample["Data_sysCastorPlus"].lumi = 4.58088; // 1/ub
     mSample["Data_sysCastorPlus"].xs = 0;
     mSample["Data_sysCastorPlus"].legend_name = "DATA_sysCastorPlus";
     mSample["Data_sysCastorPlus"].file = TFile::Open("data/trackanddiffractive_data_247934_sysCastorPlus.root");
@@ -154,7 +154,7 @@ namespace SampleList {
 
     mSample["Data_sysCastorMinus"].isData = true;
     // effective lumi; already divided by prescale
-    mSample["Data_sysCastorMinus"].lumi = 3.86; // 1/ub
+    mSample["Data_sysCastorMinus"].lumi = 4.58088; // 1/ub
     mSample["Data_sysCastorMinus"].xs = 0;
     mSample["Data_sysCastorMinus"].legend_name = "DATA_sysCastorMinus";
     mSample["Data_sysCastorMinus"].file = TFile::Open("data/trackanddiffractive_data_247934_sysCastorMinus.root");
@@ -166,7 +166,7 @@ namespace SampleList {
 
     mSample["Data_sysTrackPlus"].isData = true;
     // effective lumi; already divided by prescale
-    mSample["Data_sysTrackPlus"].lumi = 3.86; // 1/ub
+    mSample["Data_sysTrackPlus"].lumi = 4.58088; // 1/ub
     mSample["Data_sysTrackPlus"].xs = 0;
     mSample["Data_sysTrackPlus"].legend_name = "DATA_sysTrackPlus";
     mSample["Data_sysTrackPlus"].file = TFile::Open("data/trackanddiffractive_data_247934_sysTrackPlus.root");
@@ -177,7 +177,7 @@ namespace SampleList {
 
     mSample["Data_sysTrackMinus"].isData = true;
     // effective lumi; already divided by prescale
-    mSample["Data_sysTrackMinus"].lumi = 3.86; // 1/ub
+    mSample["Data_sysTrackMinus"].lumi = 4.58088; // 1/ub
     mSample["Data_sysTrackMinus"].xs = 0;
     mSample["Data_sysTrackMinus"].legend_name = "DATA_sysTrackMinus";
     mSample["Data_sysTrackMinus"].file = TFile::Open("data/trackanddiffractive_data_247934_sysTrackMinus.root");
@@ -198,7 +198,7 @@ namespace SampleList {
 
     mSample["Pythia8SD1"].isData = false;
     mSample["Pythia8SD1"].procesesID_pythia8 = true;
-    mSample["Pythia8SD1"].xs = 71390.000000; // ub
+    mSample["Pythia8SD1"].xs = 77561.8; // ub
     mSample["Pythia8SD1"].file = TFile::Open("data/trackanddiffractive_mbr.root");
     mSample["Pythia8SD1"].legend_name = "Pythia8 MBR";
     mSample["Pythia8SD1"].tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
@@ -215,7 +215,7 @@ namespace SampleList {
     mSample["XiCutPythia8SD1"].isData = false;
     mSample["XiCutPythia8SD1"].procesesID_pythia8 = false;
     mSample["XiCutPythia8SD1"].lumi = 0;
-    mSample["XiCutPythia8SD1"].xs = 79948.200000; // ub
+    mSample["XiCutPythia8SD1"].xs = 77561.80; // ub
     mSample["XiCutPythia8SD1"].file = TFile::Open("data/trackanddiffractive_mbr.root");
     mSample["XiCutPythia8SD1"].legend_name = "Pythia8 MBR";
     mSample["XiCutPythia8SD1"].tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
@@ -231,7 +231,7 @@ namespace SampleList {
     mSample["EPOSSD1"].isData = false;
     mSample["EPOSSD1"].procesesID_pythia8 = true;
     mSample["EPOSSD1"].lumi = 0;
-    mSample["EPOSSD1"].xs = 79948.200000; // ub
+    mSample["EPOSSD1"].xs = 80057.9; // ub
     mSample["EPOSSD1"].file = TFile::Open("data/trackanddiffractive_epos.root");
     mSample["EPOSSD1"].legend_name = "EPOS";
     mSample["EPOSSD1"].tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
@@ -247,7 +247,7 @@ namespace SampleList {
     mSample["XiCutEPOSSD1"].isData = false;
     mSample["XiCutEPOSSD1"].procesesID_pythia8 = false;
     mSample["XiCutEPOSSD1"].lumi = 0;
-    mSample["XiCutEPOSSD1"].xs = 79948.200000; // ub
+    mSample["XiCutEPOSSD1"].xs = 80057.9; // ub
     mSample["XiCutEPOSSD1"].file = TFile::Open("data/trackanddiffractive_epos.root");
     mSample["XiCutEPOSSD1"].legend_name = "EPOS";
     mSample["XiCutEPOSSD1"].tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
@@ -265,7 +265,7 @@ namespace SampleList {
 
     mSample["Pythia8SD2"].isData = false;
     mSample["Pythia8SD2"].procesesID_pythia8 = true;
-    mSample["Pythia8SD2"].xs = 71390.000000; // ub
+    mSample["Pythia8SD2"].xs = 77561.8; // ub
     mSample["Pythia8SD2"].file = TFile::Open("data/trackanddiffractive_mbr.root");
     mSample["Pythia8SD2"].legend_name = "Pythia8 MBR";
     mSample["Pythia8SD2"].tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
@@ -282,7 +282,7 @@ namespace SampleList {
     mSample["XiCutPythia8SD2"].isData = false;
     mSample["XiCutPythia8SD2"].procesesID_pythia8 = false;
     mSample["XiCutPythia8SD2"].lumi = 0;
-    mSample["XiCutPythia8SD2"].xs = 79948.200000; // ub
+    mSample["XiCutPythia8SD2"].xs = 77561.8; // ub
     mSample["XiCutPythia8SD2"].file = TFile::Open("data/trackanddiffractive_mbr.root");
     mSample["XiCutPythia8SD2"].legend_name = "Pythia8 MBR";
     mSample["XiCutPythia8SD2"].tree_name = "MinBias_TuneMBR_13TeV-pythia8_MagnetOff_CASTORmeasured_newNoise";
@@ -298,7 +298,7 @@ namespace SampleList {
     mSample["EPOSSD2"].isData = false;
     mSample["EPOSSD2"].procesesID_pythia8 = true;
     mSample["EPOSSD2"].lumi = 0;
-    mSample["EPOSSD2"].xs = 79948.200000; // ub
+    mSample["EPOSSD2"].xs = 80057.9; // ub
     mSample["EPOSSD2"].file = TFile::Open("data/trackanddiffractive_epos.root");
     mSample["EPOSSD2"].legend_name = "EPOS";
     mSample["EPOSSD2"].tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";
@@ -314,7 +314,7 @@ namespace SampleList {
     mSample["XiCutEPOSSD2"].isData = false;
     mSample["XiCutEPOSSD2"].procesesID_pythia8 = false;
     mSample["XiCutEPOSSD2"].lumi = 0;
-    mSample["XiCutEPOSSD2"].xs = 79948.200000; // ub
+    mSample["XiCutEPOSSD2"].xs = 80057.9; // ub
     mSample["XiCutEPOSSD2"].file = TFile::Open("data/trackanddiffractive_epos.root");
     mSample["XiCutEPOSSD2"].legend_name = "EPOS";
     mSample["XiCutEPOSSD2"].tree_name = "MinBias_EPOS_13TeV_MagnetOff_CASTORmeasured_newNoise";

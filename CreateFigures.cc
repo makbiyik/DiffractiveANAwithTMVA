@@ -109,6 +109,9 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
                                   vector<TString> sample_names,
                                    TString data_sample_name,
                                    bool scale_data = true);
+
+
+
 void single_sample_compare_syst(std::map<TString, SampleList::sSample>& mSample,
                                 std::map<TString, sSingleVar>& mSingleTrainingVar,
                                 TString sample_name,
@@ -151,6 +154,8 @@ void calc_signal_cross_section(double& result_cross_section, double& totalcrosse
                                const TString& sSignal,
                                double classifier_cut);
 
+
+//void calc_error_propagation(double x, double y);
 //////////////////////////////////////////////////////////////////////////
 // main function
 //////////////////////////////////////////////////////////////////////////
@@ -188,10 +193,10 @@ int main( int argc, char** argv )
 
   //////////////////////////////////////////////////////////////////////////
   // // compare training variables MC with DATA
-  training_variables_compare_mc_data(mSample);
-  // discriminant_compare_mc_data(mSample);
+  // training_variables_compare_mc_data(mSample);
+  discriminant_compare_mc_data(mSample);
   // discriminant_compare_data_syst(mSample);
-  // discriminant_results(mSample);
+  discriminant_results(mSample);
 
 
 
@@ -211,9 +216,11 @@ int main( int argc, char** argv )
   leg->SetTextSize(0.05);
   
 
+
+/////////////////////////////////////////////////////////////////////////////////////////
   for(double clcut = -1.0; clcut < 0.99; clcut += 0.1) {
     calc_signal_cross_section(cross_section_result, totalcrossectionError,
-                              mSample, "DD", clcut); ////Burasi cok onemli degistir !!
+                              mSample, "SD2", clcut); ////Burasi cok onemli degistir !!
      #warning Signal:?
     htest_clcut->Fill(clcut, cross_section_result);
     htest_clcut->SetBinError( htest_clcut->FindBin(clcut), totalcrossectionError );
@@ -233,10 +240,6 @@ int main( int argc, char** argv )
   leg->Draw();
   // htest_clcut->Print( figure_dir + "/htest_clcut_" + "." + figure_type );  
     
-
-
-  //////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////
   // freeze program
   app->Run();
   /////////////////////////////////////////////////
@@ -450,56 +453,7 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
   // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8Rest","Data",false);
   // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"CUETP8M1","Data",false); 
   
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8","Data_sysHFPlus",true);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOS","Data_sysHFPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD1","Data_sysHFPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD1","Data_sysHFPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD2","Data_sysHFPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD2","Data_sysHFPlus",false); 
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8Rest","Data_sysHFPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"CUETP8M1","Data_sysHFPlus",false); 
-
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8","DATA_sysCastorPlus",true);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOS","DATA_sysCastorPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD1","DATA_sysCastorPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD1","DATA_sysCastorPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD2","DATA_sysCastorPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD2","DATA_sysCastorPlus",false); 
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8Rest","DATA_sysCastorPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"CUETP8M1","DATA_sysCastorPlus",false); 
-
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8","Data_sysCastorMinus",true);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOS","Data_sysCastorMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD1","Data_sysCastorMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD1","Data_sysCastorMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD2","Data_sysCastorMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD2","Data_sysCastorMinus",false); 
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8Rest","Data_sysCastorMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"CUETP8M1","Data_sysCastorMinus",false); 
-
-   // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8","Data_sysTrackPlus",true);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOS","Data_sysTrackPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD1","Data_sysTrackPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD1","Data_sysTrackPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD2","Data_sysTrackPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD2","Data_sysTrackPlus",false); 
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8Rest","Data_sysTrackPlus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"CUETP8M1","Data_sysTrackPlus",false); 
-
-
-
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8","Data_sysTrackMinus",true);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOS","Data_sysTrackMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD1","Data_sysTrackMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD1","Data_sysTrackMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8SD2","Data_sysTrackMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutEPOSSD2","Data_sysTrackMinus",false); 
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"XiCutPythia8Rest","Data_sysTrackMinus",false);
-  // single_sample_compare_mc_data(mSample,vSuff_XiEventSel,mSingleTrainingVar,"CUETP8M1","Data_sysTrackMinus",false); 
-
-
-
-
+  
 
   // vSuffix.clear(); burasi detector icin
   // vSuffix.push_back("_Barrel");
@@ -1056,16 +1010,16 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
 
   std::vector<TString> vSuffix;
   // vSuffix.push_back("_NONE");
-  vSuffix.push_back("_SD2");
+  vSuffix.push_back("_SD1");
   vSuffix.push_back("_Rest");
-  vSuffix.push_back("_SD1"); 
+  vSuffix.push_back("_DD"); 
   
-  vSuffix.push_back("_DD");//Signal:DD,SD you need to switch
+  vSuffix.push_back("_SD2");//Signal:DD,SD you need to switch
   
-  TString mc_sample_name = "XiCutEPOS";
-  TString data_sample_name = "Data_sysTrackMinus";
-  TString sSignal ="DD";
-  TString training_sample_name = "XiCutEPOS";
+  TString mc_sample_name = "XiCutPythia8SD2";
+  TString data_sample_name = "Data";
+  TString sSignal ="SD2";
+  TString training_sample_name = "XiCutPythia8SD2";
   TString training_method = "BDTG";
 
   
@@ -1102,14 +1056,32 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
                      1e3,1e6,
                      0,3,
                      "Classifier X",
-                     // "1/N_{evt} dN/dX",
-                     "1/L dN/dX [#mub]",
+                     "1/N_{evt} dN/dX",
+                     // "1/L dN/dX [#mub]",
                      "MC / Data");
 
   /////////////////////////////////////////////////////////////
   // get lumi for mc sample
   double lumi_mc = mSample[mc_sample_name].lumi;
   // double events_mc = ((TH1F*)mc_file->Get("hNentries"))->GetBinContent(1);
+
+  //////////////////////////////////////////////////////////////////////////
+  // get data lumi
+  double lumi_data = mSample[data_sample_name].lumi;
+  TH1F* hMC = (TH1F*)mc_file->Get(hist_name);
+  if (!hMC) {
+    cout << "cannot read " << hist_name << " from file " << mc_file->GetName() << endl;
+    exit(1);
+  }
+  // hMC->Scale( 1./events_mc, "width" );
+//  hMC->Scale( 1./lumi_mc, "width" );
+  // access data hist
+  TH1F* hData = (TH1F*)data_file->Get(hist_name);
+  if (!hData) {
+    cout << "cannot read " << hist_name << " from file " << data_file->GetName() << endl;
+    exit(1);
+  }
+
 
   //////////////////////////////////////////////////////////////////////////
   // color code for the different hists
@@ -1122,7 +1094,7 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
   // access the stacked hists and add it to the canvas helper
   for(unsigned int iHist=0; iHist<shh.getHistSize(); iHist++) {
     // shh.getHist(iHist)->Scale( 1/events_mc, "width" );
-    shh.getHist(iHist)->Scale( 1/lumi_mc, "width" );
+    shh.getHist(iHist)->Scale(hData->GetEntries()/hMC->GetEntries(), "width" );
     ch.addHist( shh.getHist(iHist), "HIST", col[iHist], kSolid, 20, 1001 );
 
     // define legend text for stacked hist
@@ -1138,32 +1110,21 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
     }
   }
 
-  TH1F* hMC = (TH1F*)mc_file->Get(hist_name);
-  if (!hMC) {
-    cout << "cannot read " << hist_name << " from file " << mc_file->GetName() << endl;
-    exit(1);
-  }
-  // hMC->Scale( 1./events_mc, "width" );
-  hMC->Scale( 1./lumi_mc, "width" );
+
+  hMC->Scale( hData->GetEntries()/hMC->GetEntries(), "width" );
+  // hMC->Scale(1/hMC, "width" );
   ch.addHist( hMC, "HIST", kBlue+2 );
   leg->AddEntry( hMC, mSample[mc_sample_name].legend_name , "l");
 
   //////////////////////////////////////////////////////////////////////////
-  // access data hist
-  TH1F* hData = (TH1F*)data_file->Get(hist_name);
-  if (!hData) {
-    cout << "cannot read " << hist_name << " from file " << data_file->GetName() << endl;
-    exit(1);
-  }
 
-  //////////////////////////////////////////////////////////////////////////
-  // get data lumi
-  double lumi_data = mSample[data_sample_name].lumi;
+  
   // double events_data = ((TH1F*)data_file->Get("hNentries"))->GetBinContent(1);
   // as a hack
   // hData->Sumw2();
   // hData->Scale( 1./events_data , "width" );
-  hData->Scale( 1./lumi_data , "width" );
+  hData->Scale( 1. , "width" );
+  // hData->Scale( 1./lumi_data , "width" );
 
 
 
@@ -1181,7 +1142,7 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
   ch.getCanvas()->cd(1);
   leg->Draw("same");
   if(draw_figure)ch.getCanvas()->Print( figure_dir + "/hDisciminant_" + training_sample_name + "." + figure_type );
-  ch.DrawCMSPreliminary(true,11,"0.34 #mub^{-1} (13 TeV)");
+  ch.DrawCMSPreliminary(true,11,"4.58 #mub^{-1} (13 TeV)");
 }
 
 
@@ -1199,11 +1160,11 @@ void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSam
 
   vSuffix.push_back("_SD2");//Signal:DD,SD you need to switch
   
-  TString mc_sample_name = "XiCutEPOS";
-  TString data_sample_name = "Data_sysTrackMinus";
-  const std::vector<TString> vData_Syst = {"Data_sysCastorPlus", "Data_sysCastorMinus","Data_sysHFPlus", "Data_sysTrackMinus" };
+  TString mc_sample_name = "XiCutPythia8SD2";
+  TString data_sample_name = "Data";
+  const std::vector<TString> vData_Syst = {"Data_sysCastorPlus", "Data_sysCastorMinus","Data_sysHFPlus", "Data_sysTrackMinus"};
 
-  TString sSignal ="DD";
+  TString sSignal ="SD2";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + mc_sample_name + "_" + training_method;
@@ -1284,7 +1245,9 @@ void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSam
     exit(1);
   }
   // hMC->Scale( 1./events_mc, "width" );
-  hMC->Scale( 1./lumi_mc, "width" );
+  // hMC->Scale( 1./lumi_mc, "width" );
+     hMC->Scale( 1./lumi_mc, "width" );                  
+
   // ch.addHist( hMC, "HIST", kBlue+2 );
   // leg->AddEntry( hMC, mSample[mc_sample_name].legend_name , "l");
 
@@ -1328,7 +1291,7 @@ void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSam
   // get data lumi
   double lumi_data = mSample[data_sample_name].lumi;
   hData->Scale( 1./lumi_data , "width" );
-
+  
   ch.addDataHist( hData );
   // add legend entry
   leg->AddEntry( hData, mSample[data_sample_name].legend_name , "lep" );
@@ -1346,7 +1309,7 @@ void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSam
   ch.getCanvas()->cd(1);
   leg->Draw("same");
   if(draw_figure)ch.getCanvas()->Print( figure_dir + "/hDisciminantsys_" + mc_sample_name + "." + figure_type );
-  ch.DrawCMSPreliminary(true,11,"0.34 #mub^{-1} (13 TeV)");
+  ch.DrawCMSPreliminary(true,11,"4.58 #mub^{-1} (13 TeV)");
 }
 
 
@@ -1362,10 +1325,10 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
-  TString mc_sample_name = "XiCutEPOS";
-  TString data_sample_name = "Data_sysTrackMinus";
+  TString mc_sample_name = "XiCutPythia8SD2";
+  TString data_sample_name = "Data";
 
-  TString training_sample_name = "XiCutEPOS";
+  TString training_sample_name = "XiCutPythia8SD2";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
@@ -1376,7 +1339,7 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
 
   TH1F* hMC   = (TH1F*)mc_file->Get(hist_name);
 
-  TString sSignal ="DD";
+  TString sSignal ="SD2";
   TH1F* hsig = (TH1F*)mc_file->Get(hist_name+"_"+sSignal);
 
   std::map<TString,TH1F*> hbkg;
@@ -1591,6 +1554,14 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
 }  
   
 
+double calc_error_propagation (double x,double y) {    
+    return  std::sqrt(1/pow(y,2)*(x) + pow((x/ pow(y,2)),2)*y);
+
+}
+
+
+
+
 void calc_signal_cross_section(double& result_cross_section, double& totalcrossectionError,
                                std::map<TString, SampleList::sSample>& mSample,
                                const TString& sSignal,
@@ -1604,10 +1575,10 @@ void calc_signal_cross_section(double& result_cross_section, double& totalcrosse
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
-  TString mc_sample_name = "XiCutEPOS";
-  TString data_sample_name = "Data_sysTrackMinus";
+  TString mc_sample_name = "XiCutPythia8SD2";
+  TString data_sample_name = "Data";
 
-  TString training_sample_name = "XiCutEPOS";
+  TString training_sample_name = "XiCutPythia8SD2";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
@@ -1679,22 +1650,27 @@ void calc_signal_cross_section(double& result_cross_section, double& totalcrosse
 
   std::cout << hentry_mc << std::endl;
 
+  
+
   double Allevents_mc = hentry_mc->GetBinContent(hentry_mc->GetXaxis()->FindBin("all"));
   double Allevents_data = hentry_data->GetBinContent(hentry_data->GetXaxis()->FindBin("run"));
   double eventswithvrtzcut_data = hentry_data->GetBinContent(hentry_data->GetXaxis()->FindBin("vtxcut") );
   double eventswithvrtzcut_mc = hentry_mc->GetBinContent(hentry_mc->GetXaxis()->FindBin("mc_vtxcut") );
 
   double Fsplit = 1 - (eventswithvrtzcut_mc / Allevents_mc);
-  double Error_Fsplit =  std::sqrt(1/ pow(Allevents_mc,2)*(Allevents_mc-eventswithvrtzcut_mc) + pow(((Allevents_mc-eventswithvrtzcut_mc)/pow(Allevents_mc,2)),2)*(Allevents_mc));  
+  // calc_error_propagation( eventswithvrtzcut_mc ,Allevents_mc));
+  double Error_Fsplit =1- calc_error_propagation(eventswithvrtzcut_mc ,Allevents_mc);
   
   double eff_PU_data = Allevents_data / eventswithvrtzcut_data;
   double Error_eff_PU_data = std::sqrt(1/ pow(eventswithvrtzcut_data,2)*Allevents_data+ pow((Allevents_data/pow(eventswithvrtzcut_data,2)),2)*(eventswithvrtzcut_data)); 
   
   double prob_sig = Entry_sig / (Entry_bkg + Entry_sig);
-  double Error_probsig = std::sqrt(1/ pow(Entry_bkg + Entry_sig,2)*Entry_sig+ pow((Entry_sig/pow(Entry_bkg + Entry_sig,2)),2)*(Entry_bkg + Entry_sig));  
- 
+  double Error_probsig = calc_error_propagation(Entry_sig ,(Entry_bkg + Entry_sig)); 
+  
+  
   double eff_sig = (Entry_sig * Fsplit )/ Entry_sig_all; //MC signal efficiency
-  double Error_eff_sig = std::sqrt(1/ pow(Entry_sig_all,2)*(Entry_sig * Fsplit)+ pow(((Entry_sig * Fsplit )/pow(Entry_sig_all,2)),2)*(Entry_sig_all));  
+  // double Error_eff_sig = std::sqrt(1/ pow(Entry_sig_all,2)*(Entry_sig * Fsplit)+ pow(((Entry_sig * Fsplit )/pow(Entry_sig_all,2)),2)*(Entry_sig_all));  
+  double Error_eff_sig = calc_error_propagation((Entry_sig * Fsplit ) , Entry_sig_all); 
   double eff_number_of_signal_events_in_data = (Entry_data * prob_sig)/eff_sig; //effictive lumi data
   
   
@@ -1702,8 +1678,14 @@ void calc_signal_cross_section(double& result_cross_section, double& totalcrosse
   totalcrossectionError = std::sqrt(Entry_data) * prob_sig / (lumi_data/eff_PU_data) / eff_sig ;
   
   
-  double standartError = std::sqrt(totalcrossectionError) * Error_probsig / (Error_Lumi/Error_eff_PU_data) / Error_eff_sig ;
+  // double standartError = std::sqrt(totalcrossectionError) * Error_probsig / (Error_Lumi/Error_eff_PU_data) / Error_eff_sig ;
   
+  
+ //////////////////////////////////Error Propagation//////////////////////////////////// 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////    
+
 
   std::cout << std::endl;
   std::cout << std::endl;
@@ -1728,12 +1710,16 @@ void calc_signal_cross_section(double& result_cross_section, double& totalcrosse
   std::cout << "--- Standart Error for signal efficiency = " << Error_eff_sig << std::endl;
   std::cout << "--- Standart Error for signal probability = " << Error_probsig << std::endl;
   std::cout << "Error_eff_PU_data: " << Error_eff_PU_data << std::endl; 
-  
   std::cout << "Error_Fsplit: " << Error_Fsplit << std::endl; 
-  std::cout << "STANDART ERROR: " <<standartError << std::endl; 
+  
+  
+  
+  // std::cout << "STANDART ERROR: " <<standartError << std::endl; 
 
   std::cout << std::endl;
   std::cout << std::endl;
+
+
 }
 
 
@@ -1749,16 +1735,16 @@ void single_sample_compare_syst(std::map<TString, SampleList::sSample>& mSample,
   // acces hist with systematics
  
   //  /////////////HF Pluss//////////////////////////
-  const vector<TString> SysList = {"Data_sysHFPlus"};
-  const vector<TString> ParList = {"NTowHF_plus_sys", "NTowHF_minus_sys"};
+  // const vector<TString> SysList = {"Data_sysHFPlus"};
+  // const vector<TString> ParList = {"NTowHF_plus_sys", "NTowHF_minus_sys"};
  
   // ////////////////////////Castor//////////////////////////////
   // const vector<TString> SysList = {"Data_sysCastorPlus", "Data_sysCastorMinus"};
   // const vector<TString> ParList = {"NTowCastor_sys", "NTowMaxCastor_sys"};
   
   ///////////////////////Track////////////////////////////////////////////
-  // const vector<TString> SysList = { "Data_sysTrackMinus"};
-  // const vector<TString> ParList = {"NTracks_sys"};
+  const vector<TString> SysList = { "Data_sysTrackMinus"};
+  const vector<TString> ParList = {"NTracks_sys"};
  
 
   for (unsigned int ipar = 0; ipar<ParList.size(); ipar++){
@@ -1767,7 +1753,9 @@ void single_sample_compare_syst(std::map<TString, SampleList::sSample>& mSample,
 
     TH1F* hMC = (TH1F*)mSample[sample_name].file->Get(mSample[sample_name].tree_name + "/" + hist_var_name);
     TH1F* hData = (TH1F*)mSample[data_sample_name].file->Get(mSample[data_sample_name].tree_name + "/" + hist_var_name);
+    
     hData->Scale( 1/lumi_data , "width" );
+    
     TGraphAsymmErrors* grData_Sys = new TGraphAsymmErrors(hData->GetNbinsX());
     grData_Sys->SetFillColor(kYellow+2);
     TGraphAsymmErrors* grData_Sys_Ratio = new TGraphAsymmErrors(hData->GetNbinsX());

@@ -23,6 +23,7 @@ CXXFLAGS    +=-I./lib/
 
 # Add TMVA libraries WITHOUT -lTMVAGui (Hauke: not on my system older TMVA version)
 LDFLAGS     += -lMLP -lMinuit -lTreePlayer -lTMVA -lXMLIO -lMLP
+LDFLAGS		+= -lTMVAGui
 
 # Needed for ROOT TASImage in CMS_lumi.C
 LDFLAGS     += -lASImage
@@ -39,7 +40,7 @@ application:
 
 createfigures:
 		@$(CXX) $(CXXFLAGS) CreateFigures.cc $(LDFLAGS) -o CreateFigures
-
+        
 clean:
 		@rm -rfv Diffractive_TMVAClassification
 		@rm -rfv Diffractive_TMVApplication
