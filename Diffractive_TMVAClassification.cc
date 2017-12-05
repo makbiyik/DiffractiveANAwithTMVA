@@ -83,7 +83,7 @@ int Diffractive_TMVAClassification()
    std::map<TString, SampleList::sSample> mSample = SampleList::read_data_mc_files();
    ////////////////////////////////////////////////////////////////////////////
    // Create a ROOT output file where TMVA will store ntuples, histograms, etc.
-   TString outfileName( "data/TMVAClassification_XiCutEPOSSD2.root" );
+   TString outfileName( "data/TMVAClassification_XiCutEPOS.root" );
    TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
    TMVA::Factory *factory = new TMVA::Factory( "TMVAClassification", outputFile,
                                                "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification" );
@@ -100,15 +100,15 @@ int Diffractive_TMVAClassification()
    factory->AddVariable( "CaloReducedenergyClass","CaloReducedenergyClass", "units", 'F' );
    factory->AddVariable( "MaxCastorEnergy","MaxCastorEnergy", "units", 'F' );
    factory->AddVariable( "CastorSumEnergy","CastorSumEnergy", "units", 'F' );
-   factory->AddVariable( "HFSumEnergy","HFSumEnergy", "units", 'F' );
-  
+   factory->AddVariable( "HFPlusSumEnergy","HFPlusSumEnergy", "units", 'F' );
+   factory->AddVariable( "HFMinusSumEnergy","HFMinusSumEnergy", "units", 'F' );
    // factory->AddVariable( "MaxHFEnergy","MaxHFEnergy", "units", 'F' );
    // factory->AddVariable( "log10XixReco","log10XixReco", "units", 'F' );
    // factory->AddVariable( "log10XiyReco","log10XiyReco", "units", 'F' );//Log->logdegistirdin
    // factory->AddVariable( "RGmean","RGmean", "units", 'F' );
 
 
-   TString sample_name = "XiCutEPOSSD2";
+   TString sample_name = "XiCutEPOS";
    TFile *input = mSample[sample_name].file;
    std::cout << "--- TMVAClassification       : Using input file: " << input->GetName() << std::endl;
 
@@ -148,10 +148,10 @@ int Diffractive_TMVAClassification()
    factory->PrepareTrainingAndTestTree( mycuts, mycutb,
                                         //DD "nTrain_Signal= 300000:nTest_Signal=100000:nTrain_Background=300000:nTest_Background=100000:SplitMode=Random:NormMode=NumEvents:!V" );
                                        //SD1// "nTrain_Signal=100000:nTest_Signal=50000:nTrain_Background=100000:nTest_Background=50000:SplitMode=Random:NormMode=NumEvents:!V" );
-                                       "nTrain_Signal=7000:nTest_Signal=4000:nTrain_Background=7000:nTest_Background=4000:SplitMode=Random:NormMode=NumEvents:!V" );
-
-                                      //EposSD2 //"nTrain_Signal=7000:nTest_Signal=4000:nTrain_Background=7000:nTest_Background=4000:SplitMode=Random:NormMode=NumEvents:!V" );
-                                       
+                                      // "nTrain_Signal=6000:nTest_Signal=3000:nTrain_Background=6000:nTest_Background=3000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                      // "nTrain_Signal=80000:nTest_Signal=40000:nTrain_Background=80000:nTest_Background=40000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                    //EposSD2 //"nTrain_Signal=7000:nTest_Signal=4000:nTrain_Background=7000:nTest_Background=4000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                       "nTrain_Signal= 300000:nTest_Signal=100000:nTrain_Background=300000:nTest_Background=100000:SplitMode=Random:NormMode=NumEvents:!V" );
 
    
    

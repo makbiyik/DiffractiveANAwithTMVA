@@ -193,10 +193,10 @@ int main( int argc, char** argv )
 
   //////////////////////////////////////////////////////////////////////////
   // // compare training variables MC with DATA
-  // training_variables_compare_mc_data(mSample);
-  discriminant_compare_mc_data(mSample);
+  training_variables_compare_mc_data(mSample);
+  // discriminant_compare_mc_data(mSample);
   // discriminant_compare_data_syst(mSample);
-  discriminant_results(mSample);
+  // discriminant_results(mSample);
 
 
 
@@ -233,13 +233,18 @@ int main( int argc, char** argv )
   // htest_clcut->SetMaximum(6000); // 600 
   ctest_clcut->cd()->SetRightMargin(0.1);
   
+  // htest_clcut->GetXaxis()->SetLabelOffset(1.5); // shift
+  // htest_clcut->GetXaxis()->SetNdivisions(505); // divisions of labels
+  // htest_clcut->GetXaxis()->SetRange(0,1);
+
+
   leg->AddEntry(htest_clcut,"CMS preliminery","");
   // leg->AddEntry(htest_clcut,"2015 pp; #sqrt{s} = 13 TeV","lep");
   htest_clcut->Draw();
   
   leg->Draw();
-  // htest_clcut->Print( figure_dir + "/htest_clcut_" + "." + figure_type );  
-    
+  // htest_clcut->Write(figure_dir + "/hThreshold" + "." + figure_type );  
+  
   // freeze program
   app->Run();
   /////////////////////////////////////////////////
@@ -404,11 +409,11 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
 */
   std::map<TString, sSingleVar> mSingleTrainingVar = build_hist_parameters();
 
-  vector<TString> sampleNames = {"EPOS","Pythia8"};
+  vector<TString> sampleNames = {"XiCutPythia8"};
   // vector<TString> sampleNames = {"Pythia8","EPOS"};
-  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,sampleNames,"Data");
+  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,sampleNames,"Data_sebastian247934");
   // single_sample_compare_syst(mSample,mSingleTrainingVar,"EPOS","Data");
-  // single_sample_compare_syst(mSample,mSingleTrainingVar,"Pythia8","Data"); // !!!!!
+  // single_sample_compare_syst(mSample,mSingleTrainingVar,"EPOS","Data"); // !!!!!
    // !!!!! icant run with "single_sample_compare_mc_data" scale problemfor systematic
   
 
@@ -434,9 +439,11 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
   mSingleTrainingVar["NTowHF_minus"].hist_name = "Hist_eventXiID_numberoftowerebovenoise_forwardminus";
   mSingleTrainingVar["NTowCastor"].hist_name = "Hist_eventXiID_numberoftowerebovenoise_castor";
   mSingleTrainingVar["NTow"].hist_name = "Hist_eventXiID_CaloReducedenergyClass";
-  mSingleTrainingVar["NTowMaxHF"].hist_name = "Hist_eventXiID_MaxHFEnergy"; 
+  mSingleTrainingVar["NTowMaxHFPlus"].hist_name = "Hist_eventXiID_MaxHFPlusEnergy"; 
+  mSingleTrainingVar["NTowMaxHFMinus"].hist_name = "Hist_eventXiID_MaxHFMinusEnergy"; 
   mSingleTrainingVar["NTowMaxCastor"].hist_name = "Hist_eventXiID_MaxCastorEnergy"; 
-  mSingleTrainingVar["SumEnergyHF"].hist_name = "Hist_eventXiID_HFSumEnergy"; 
+  mSingleTrainingVar["SumEnergyHFPlus"].hist_name = "Hist_HFPlusSumEnergy"; 
+  mSingleTrainingVar["SumEnergyHFMinus"].hist_name = "Hist_HFMinusSumEnergy"; 
   mSingleTrainingVar["SumEnergyCastor"].hist_name = "Hist_eventXiID_CastorSumEnergy"; 
 
   mSingleTrainingVar["NTracks"].hist_name = "Hist_eventXiID_NbrTracks";
@@ -674,44 +681,89 @@ void draw_legend_for_diff_canvas(std::map<TString, TCanvas*>& mCanvas,
   }
  
   {  
-    mCanvas["NTowMaxHF"]->cd(1);
-    mLegend["NTowMaxHF"] = new TLegend(0.19,0.47,0.59,0.87);
+    mCanvas["NTowMaxHFPlus"]->cd(1);
+    mLegend["NTowMaxHFPlus"] = new TLegend(0.19,0.47,0.59,0.87);
     for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
       // define legend text for stacked hist
       TString leg_text = vSuffix[iSuffix];
       leg_text.Remove(0,1);
       // add legend entry
-      mLegend["NTowMaxHF"]->AddEntry( mDrawHists["NTowMaxHF"][ vSuffix[iSuffix] ], leg_text, "f" );
+      mLegend["NTowMaxHFPlus"]->AddEntry( mDrawHists["NTowMaxHFPlus"][ vSuffix[iSuffix] ], leg_text, "f" );
     }
-    TString print = figure_dir + "/NTowMaxHF";
+    TString print = figure_dir + "/NTowMaxHFPlus";
     for (auto sample_name : sample_names){
-      mLegend["NTowMaxHF"]->AddEntry( mDrawHists["NTowMaxHF"][sample_name], sample_name, "l" );
+      mLegend["NTowMaxHFPlus"]->AddEntry( mDrawHists["NTowMaxHFPlus"][sample_name], sample_name, "l" );
       print += sample_name + "_";
     } 
 
-    mLegend["NTowMaxHF"]->AddEntry( mDrawHists["NTowMaxHF"][data_sample_name], "Data", "lep" );
-    mLegend["NTowMaxHF"]->Draw("same");
-    if(draw_figure) mCanvas["NTowMaxHF"]->Print(print +"." + figure_type );
+    mLegend["NTowMaxHFPlus"]->AddEntry( mDrawHists["NTowMaxHFPlus"][data_sample_name], "Data", "lep" );
+    mLegend["NTowMaxHFPlus"]->Draw("same");
+    if(draw_figure) mCanvas["NTowMaxHFPlus"]->Print(print +"." + figure_type );
   }
   
-  {
-    mCanvas["SumEnergyHF"]->cd(1);
-    mLegend["SumEnergyHF"] = new TLegend(0.19,0.47,0.59,0.87);
+  
+  {  
+    mCanvas["NTowMaxHFMinus"]->cd(1);
+    mLegend["NTowMaxHFMinus"] = new TLegend(0.19,0.47,0.59,0.87);
     for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
       // define legend text for stacked hist
       TString leg_text = vSuffix[iSuffix];
       leg_text.Remove(0,1);
       // add legend entry
-      mLegend["SumEnergyHF"]->AddEntry( mDrawHists["SumEnergyHF"][ vSuffix[iSuffix] ], leg_text, "f" );
+      mLegend["NTowMaxHFMinus"]->AddEntry( mDrawHists["NTowMaxHFMinus"][ vSuffix[iSuffix] ], leg_text, "f" );
     }
-    TString print = figure_dir + "/SumEnergyHF";
+    TString print = figure_dir + "/NTowMaxHFMinus";
     for (auto sample_name : sample_names){
-      mLegend["SumEnergyHF"]->AddEntry( mDrawHists["SumEnergyHF"][sample_name], sample_name, "l" );
+      mLegend["NTowMaxHFMinus"]->AddEntry( mDrawHists["NTowMaxHFMinus"][sample_name], sample_name, "l" );
+      print += sample_name + "_";
+    } 
+
+    mLegend["NTowMaxHFMinus"]->AddEntry( mDrawHists["NTowMaxHFMinus"][data_sample_name], "Data", "lep" );
+    mLegend["NTowMaxHFMinus"]->Draw("same");
+    if(draw_figure) mCanvas["NTowMaxHFMinus"]->Print(print +"." + figure_type );
+  }
+  
+  
+  {
+    mCanvas["SumEnergyHFPlus"]->cd(1);
+    mLegend["SumEnergyHFPlus"] = new TLegend(0.19,0.47,0.59,0.87);
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+      // define legend text for stacked hist
+      TString leg_text = vSuffix[iSuffix];
+      leg_text.Remove(0,1);
+      // add legend entry
+      mLegend["SumEnergyHFPlus"]->AddEntry( mDrawHists["SumEnergyHFPlus"][ vSuffix[iSuffix] ], leg_text, "f" );
+    }
+    TString print = figure_dir + "/SumEnergyHFPlus";
+    for (auto sample_name : sample_names){
+      mLegend["SumEnergyHFPlus"]->AddEntry( mDrawHists["SumEnergyHFPlus"][sample_name], sample_name, "l" );
       print += sample_name + "_";
     }  
-    mLegend["SumEnergyHF"]->AddEntry( mDrawHists["SumEnergyHF"][data_sample_name], "Data", "lep" );
-    mLegend["SumEnergyHF"]->Draw("same");
-    if(draw_figure) mCanvas["SumEnergyHF"]->Print(print +"." + figure_type );
+    mLegend["SumEnergyHFPlus"]->AddEntry( mDrawHists["SumEnergyHFPlus"][data_sample_name], "Data", "lep" );
+    mLegend["SumEnergyHFPlus"]->Draw("same");
+    if(draw_figure) mCanvas["SumEnergyHFPlus"]->Print(print +"." + figure_type );
+  }
+
+
+
+  {
+    mCanvas["SumEnergyHFMinus"]->cd(1);
+    mLegend["SumEnergyHFMinus"] = new TLegend(0.19,0.47,0.59,0.87);
+    for(unsigned int iSuffix=0; iSuffix<vSuffix.size(); iSuffix++) {
+      // define legend text for stacked hist
+      TString leg_text = vSuffix[iSuffix];
+      leg_text.Remove(0,1);
+      // add legend entry
+      mLegend["SumEnergyHFMinus"]->AddEntry( mDrawHists["SumEnergyHFMinus"][ vSuffix[iSuffix] ], leg_text, "f" );
+    }
+    TString print = figure_dir + "/SumEnergyHFMinus";
+    for (auto sample_name : sample_names){
+      mLegend["SumEnergyHFMinus"]->AddEntry( mDrawHists["SumEnergyHFMinus"][sample_name], sample_name, "l" );
+      print += sample_name + "_";
+    }  
+    mLegend["SumEnergyHFMinus"]->AddEntry( mDrawHists["SumEnergyHFMinus"][data_sample_name], "Data", "lep" );
+    mLegend["SumEnergyHFMinus"]->Draw("same");
+    if(draw_figure) mCanvas["SumEnergyHFMinus"]->Print(print +"." + figure_type );
   }
   {
     mCanvas["SumEnergyCastor"]->cd(1);
@@ -839,7 +891,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     }
   }
 
-  const bool showStack = false; // false to draw different MCs
+  const bool showStack = true; // false to draw different MCs
 //  vector<TString> models = {""};
   
   std::map<TString, TCanvas*> mCanvas;
@@ -863,7 +915,10 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     }
     std::map<TString, TH1*> moreHists = single_figure_compare_mc_data(ch,mSample,vSuffix,sample_names,data_sample_name,it->second.hist_name,scale_data);
     mDrawHists[it->first].insert(moreHists.begin(), moreHists.end());
-    ch.DrawCMSPreliminary(true,it->second.cms_alignment,"3.86 #mub^{-1} (13 TeV)");
+    // ch.DrawCMSPreliminary(true,it->second.cms_alignment,"4.58088 #mub^{-1} (13 TeV)");//mine
+    // ch.DrawCMSPreliminary(true,it->second.cms_alignment,"3.86 #mub^{-1} (13 TeV)"); //dNDeta
+    ch.DrawCMSPreliminary(true,it->second.cms_alignment,"24.99 #mub^{-1} (13 TeV)");//Sebastian 247934
+    // ch.DrawCMSPreliminary(true,it->second.cms_alignment,"32.24 #mub^{-1} (13 TeV)"); //sebastina 247920
   }
 
  
@@ -1010,19 +1065,17 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
 
   std::vector<TString> vSuffix;
   // vSuffix.push_back("_NONE");
-  vSuffix.push_back("_SD1");
+  vSuffix.push_back("_SD2");
   vSuffix.push_back("_Rest");
-  vSuffix.push_back("_DD"); 
+  vSuffix.push_back("_SD1"); 
   
-  vSuffix.push_back("_SD2");//Signal:DD,SD you need to switch
+  vSuffix.push_back("_DD");//Signal:DD,SD you need to switch
   
-  TString mc_sample_name = "XiCutPythia8SD2";
-  TString data_sample_name = "Data";
-  TString sSignal ="SD2";
-  TString training_sample_name = "XiCutPythia8SD2";
+  TString mc_sample_name = "XiCutEPOS";
+  TString data_sample_name = "Data_sebastian247920";
+  TString sSignal ="DD";
+  TString training_sample_name = "XiCutEPOS";
   TString training_method = "BDTG";
-
-  
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
 
@@ -1053,7 +1106,8 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
   CanvasHelper ch("cDiscriminant" + mc_sample_name + training_method);
   ch.initRatioCanvas(-1,1,
                      // 0,3e5,
-                     1e3,1e6,
+                     // 1e2,1e6,//dNdeta
+                     1e3,1e8,
                      0,3,
                      "Classifier X",
                      "1/N_{evt} dN/dX",
@@ -1128,7 +1182,7 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
 
 
 
-  ch.addDataHist( hData );
+  ch.addDataHist(hData);
   // add legend entry
   leg->AddEntry( hData, mSample[data_sample_name].legend_name , "lep" );
 
@@ -1142,7 +1196,13 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
   ch.getCanvas()->cd(1);
   leg->Draw("same");
   if(draw_figure)ch.getCanvas()->Print( figure_dir + "/hDisciminant_" + training_sample_name + "." + figure_type );
-  ch.DrawCMSPreliminary(true,11,"4.58 #mub^{-1} (13 TeV)");
+  ch.DrawCMSPreliminary(true,11,"32.24 #mub^{-1} (13 TeV)");
+  
+   // "4.58088 #mub^{-1} (13 TeV)");//mine 247934
+   // "3.86 #mub^{-1} (13 TeV)"); //dNDeta
+   // "24.99 #mub^{-1} (13 TeV)");//Sebastian 247934
+   // "32.24 #mub^{-1} (13 TeV)"); //sebastina 247920
+
 }
 
 
@@ -1154,15 +1214,15 @@ void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSam
 
   std::vector<TString> vSuffix;
   // vSuffix.push_back("_NONE");
-  vSuffix.push_back("_SD1");
+  vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
-  vSuffix.push_back("_DD"); 
+  vSuffix.push_back("_SD1"); 
 
   vSuffix.push_back("_SD2");//Signal:DD,SD you need to switch
   
   TString mc_sample_name = "XiCutPythia8SD2";
   TString data_sample_name = "Data";
-  const std::vector<TString> vData_Syst = {"Data_sysCastorPlus", "Data_sysCastorMinus","Data_sysHFPlus", "Data_sysTrackMinus"};
+  const std::vector<TString> vData_Syst = {"Data_sysCastorPlus", "Data_sysCastorMinus","Data_sysHFPlus","Data_sysHFMinus", "Data_sysTrackMinus"};
 
   TString sSignal ="SD2";
   TString training_method = "BDTG";
@@ -1200,7 +1260,7 @@ void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSam
   ch.initRatioCanvas(-1,1,
                      // 0,3e5,
                      1e3,1e6,
-                     0.8,1.2,
+                     0.8,1.4,
                      "Classifier X",
                      // "1/N_{evt} dN/dX",
                      "1/L dN/dX [#mub]",
@@ -1264,7 +1324,7 @@ void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSam
 
   //////////////////////////////////////////////////////////////////////////
   // access data hist with systematics
-  Color_t col_syst[5] = {kRed, kYellow-2, kGreen, kMagenta, kGreen-3};
+  Color_t col_syst[5] = {kRed+1, kYellow+1, kBlue+1, kMagenta+1, kGreen+3};
   std::vector<TH1F*> vHist_Data_Syst;
   for(unsigned int iHist=0; iHist<vData_Syst.size(); iHist++ ) {
     const TString data_sys_name = vData_Syst[iHist];
@@ -1308,8 +1368,15 @@ void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSam
   // draw legend
   ch.getCanvas()->cd(1);
   leg->Draw("same");
-  if(draw_figure)ch.getCanvas()->Print( figure_dir + "/hDisciminantsys_" + mc_sample_name + "." + figure_type );
-  ch.DrawCMSPreliminary(true,11,"4.58 #mub^{-1} (13 TeV)");
+  if(draw_figure)ch.getCanvas()->Print( figure_dir + "/hDisciminantsys_" + mc_sample_name + "" + data_sample_name +""+ sSignal+"."+ figure_type );
+  ch.DrawCMSPreliminary(true,11,"3.86 #mub^{-1} (13 TeV)");
+  
+  
+   // "4.58088 #mub^{-1} (13 TeV)");//mine 247934
+   // "3.86 #mub^{-1} (13 TeV)"); //dNDeta
+   // "24.99 #mub^{-1} (13 TeV)");//Sebastian 247934
+   // "32.24 #mub^{-1} (13 TeV)"); //sebastina 247920
+
 }
 
 
@@ -1325,10 +1392,10 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
-  TString mc_sample_name = "XiCutPythia8SD2";
-  TString data_sample_name = "Data";
+  TString mc_sample_name = "XiCutEPOS";
+  TString data_sample_name = "Data_sebastian247920";
 
-  TString training_sample_name = "XiCutPythia8SD2";
+  TString training_sample_name = "XiCutEPOS";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
@@ -1339,7 +1406,7 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
 
   TH1F* hMC   = (TH1F*)mc_file->Get(hist_name);
 
-  TString sSignal ="SD2";
+  TString sSignal ="DD";
   TH1F* hsig = (TH1F*)mc_file->Get(hist_name+"_"+sSignal);
 
   std::map<TString,TH1F*> hbkg;
@@ -1491,10 +1558,10 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
 
   TLatex tl;
   char buf[128];
-  sprintf(buf,"sig. eff = %3.1f",gr->GetX()[iCutVal_minimum]*100);
-  tl.DrawLatex(0.5,0.5,buf);
-  sprintf(buf,"bckg rejection = %3.1f",gr->GetY()[iCutVal_minimum]*100);
-  tl.DrawLatex(0.5,0.45,buf);
+  sprintf(buf,"Signal Efficiency = %3.1f",gr->GetX()[iCutVal_minimum]*100);
+  tl.DrawLatex(0.05,0.5,buf);
+  sprintf(buf,"Background rejection = %3.1f",gr->GetY()[iCutVal_minimum]*100);
+  tl.DrawLatex(0.05,0.35,buf);
 
 
   CanvasHelper::SetUpHist((TH1*)gr_prob_sig_bkg,kBlue);
@@ -1503,7 +1570,7 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
   c2->cd();
   CanvasHelper::SetUpHist((TH1*)gr_dist_aim_point,kBlue);
   gr_dist_aim_point->GetXaxis()->SetTitle("Classifier X");
-  gr_dist_aim_point->GetYaxis()->SetTitle("distance to eff=1;bkg=0");
+  gr_dist_aim_point->GetYaxis()->SetTitle("distance to Eff.=1; Bckg.=0");
   gr_dist_aim_point->SetMarkerSize(1);
   TLegend * leg = new TLegend(0.3,0.7,0.7,0.9);
   leg->SetFillColor(0);
@@ -1512,12 +1579,12 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
   leg->SetTextFont(42);
   leg->SetTextSize(0.05);
   
-  leg->AddEntry(gr_dist_aim_point,"distance to eff=1;bkg=0","lep");
+  leg->AddEntry(gr_dist_aim_point,"distance to Eff.=1; Bckg=0","lep");
   
   gr_dist_aim_point->Draw("ALP");
   chROCurve.DrawCMSSimulation();
   leg->Draw("same");
-  if(draw_figure)chROCurve.getCanvas()->Print( figure_dir + "/chROCurve_" + mc_sample_name + "." + figure_type );
+  if(draw_figure)chROCurve.getCanvas()->Print( figure_dir + "/chROCurve_" + mc_sample_name + "." + data_sample_name +"."+ figure_type );
 
 
 
@@ -1536,8 +1603,8 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
 
 
   legSdivSqrtSplusB->AddEntry(gr_prob_sig,"Sig probability","lep");
-  legSdivSqrtSplusB->AddEntry(gr_prob_bkg,"background probability","lep");
-  legSdivSqrtSplusB->AddEntry(gr_sig_purity_tims_eff,"purity_tims_eff","lep");
+  legSdivSqrtSplusB->AddEntry(gr_prob_bkg,"Background probability","lep");
+  legSdivSqrtSplusB->AddEntry(gr_sig_purity_tims_eff,"Purity X Eff.","lep");
  
  
 //  gr_SdivSqrtSplusB->Draw("APL");
@@ -1550,7 +1617,7 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
   gr_sig_purity_tims_eff->GetXaxis()->SetTitle("Classifier");
   gr_sig_purity_tims_eff->GetYaxis()->SetTitle("Values");
   legSdivSqrtSplusB->Draw();
-   if(draw_figure)chSdivSqrtSplusB.getCanvas()->Print( figure_dir + "/hSdivSqrtSplusB_" + mc_sample_name + "." + figure_type );
+  if(draw_figure)chSdivSqrtSplusB.getCanvas()->Print( figure_dir + "/hSdivSqrtSplusB_" + mc_sample_name + "." + data_sample_name +"."+ figure_type);
 }  
   
 
@@ -1573,12 +1640,14 @@ void calc_signal_cross_section(double& result_cross_section, double& totalcrosse
   vSuffix.push_back("_SD1");
   vSuffix.push_back("_SD2");
   vSuffix.push_back("_DD");
+
+
   vSuffix.push_back("_Rest");
 
-  TString mc_sample_name = "XiCutPythia8SD2";
-  TString data_sample_name = "Data";
+  TString mc_sample_name = "XiCutEPOS";
+  TString data_sample_name = "Data_sebastian247920";
 
-  TString training_sample_name = "XiCutPythia8SD2";
+  TString training_sample_name = "XiCutEPOS";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
@@ -1735,16 +1804,16 @@ void single_sample_compare_syst(std::map<TString, SampleList::sSample>& mSample,
   // acces hist with systematics
  
   //  /////////////HF Pluss//////////////////////////
-  // const vector<TString> SysList = {"Data_sysHFPlus"};
-  // const vector<TString> ParList = {"NTowHF_plus_sys", "NTowHF_minus_sys"};
+  const vector<TString> SysList = {"Data_sysHFPlus"};
+  const vector<TString> ParList = {"NTowHF_plus_sys", "NTowHF_minus_sys"};
  
   // ////////////////////////Castor//////////////////////////////
   // const vector<TString> SysList = {"Data_sysCastorPlus", "Data_sysCastorMinus"};
   // const vector<TString> ParList = {"NTowCastor_sys", "NTowMaxCastor_sys"};
   
   ///////////////////////Track////////////////////////////////////////////
-  const vector<TString> SysList = { "Data_sysTrackMinus"};
-  const vector<TString> ParList = {"NTracks_sys"};
+  // const vector<TString> SysList = { "Data_sysTrackMinus"};
+  // const vector<TString> ParList = {"NTracks_sys"};
  
 
   for (unsigned int ipar = 0; ipar<ParList.size(); ipar++){
