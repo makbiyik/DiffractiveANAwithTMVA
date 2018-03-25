@@ -154,36 +154,38 @@ void Diffractive_TMVApplication()
    // Create a set of variables and declare them to the reader
    // - the variable names MUST corresponds in name and type to those given in the weight file(s) used
    
+   ///////////////////////////the final varibles/////////////////////////////////
+   
    Float_t deltaeta, deltazero, etamax, etamin;
    // Float_t  log10XixReco, log10XiyReco;//log10XiDD;
-   Float_t HFminusNtowers, HFplusNtowers ,CastorNtowers,Ntracks;//RGmean;// ,Pythia8processid,EventselectionXiprocessid;
-   Float_t MaxCastorEnergy,CaloReducedenergyClass; //CastorSumEnergy,CaloReducedenergyClass, HFMinusSumEnergy;//;//MaxHFEnergy;
-   Float_t CastorSumEnergy,HFMinusSumEnergy,HFPlusSumEnergy;
+   Float_t HFminusNtowers, HFplusNtowers ,CastorNtowers,CaloReducedenergyClass, Ntracks;//RGmean;// ,Pythia8processid,EventselectionXiprocessid;
+   Float_t MaxCastorEnergy; //CastorSumEnergy,CaloReducedenergyClass, HFMinusSumEnergy;//;//MaxHFEnergy;
+   Float_t CastorSumEnergy;
+   Float_t HFPlusSumEnergy,HFMinusSumEnergy ;
+   // ,HFMinusSumEnergy;
    
-   reader->AddVariable("deltaeta", &deltaeta );
-   reader->AddVariable("deltazero", &deltazero );
-   reader->AddVariable("etamax" , &etamax );
-   reader->AddVariable("etamin" , &etamin );
-   reader->AddVariable("HFminusNtowers" , &HFminusNtowers);
-   reader->AddVariable("HFplusNtowers" , &HFplusNtowers);
-   reader->AddVariable("CastorNtowers" , &CastorNtowers);
-   reader->AddVariable("Ntracks" ,&Ntracks );
-   reader->AddVariable("CaloReducedenergyClass",&CaloReducedenergyClass);
-   reader->AddVariable("MaxCastorEnergy",&MaxCastorEnergy);
+   
+   reader->AddVariable("DeltaEta", &deltaeta );
+   reader->AddVariable("DeltaEtaZero", &deltazero );
+   reader->AddVariable("EtaMax" , &etamax );
+   reader->AddVariable("EtaMin" , &etamin );
+   reader->AddVariable("NbrTowersHFminus" , &HFminusNtowers);
+   reader->AddVariable("NbrTowersHFplus" , &HFplusNtowers);
+   reader->AddVariable("NbrTowersCastor" , &CastorNtowers);
+   reader->AddVariable("NbrTracks" ,&Ntracks );
+   reader->AddVariable("NbrAllTowers",&CaloReducedenergyClass);
+   reader->AddVariable("HottestTowerCastor",&MaxCastorEnergy);
    reader->AddVariable("CastorSumEnergy", &CastorSumEnergy);
-   reader->AddVariable("HFPlusSumEnergy", &HFPlusSumEnergy);
-  
-   reader->AddVariable("HFMinusSumEnergy", &HFMinusSumEnergy);
+   reader->AddVariable("SumEnergyHFPlus", &HFPlusSumEnergy);
+   reader->AddVariable("SumEnergyHFMinus", &HFMinusSumEnergy);
 
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // reader->AddVariable( "log10XixReco" , &log10XixReco );
-   // reader->AddVariable( "log10XiyReco" , &log10XiyReco );
-   // reader->AddVariable( "MaxHFEnergy",&MaxHFEnergy);
-   // reader->AddVariable( "RGmean",&RGmean);
+  //  reader->AddVariable( "log10XiyReco" , &log10XiyReco );
    
    
-   /*reader->AddVariable( "Pythia8processid" , &Pythia8processid );
-   reader->AddVariable( "EventselectionXiprocessid" , &EventselectionXiprocessid );*/
-   // reader->AddVariable("log10XiDD",&log10XiDD);
+  
 
    // --- Book the MVA methods
    std::map<TString, TString> mMethodeHistSuffix;
@@ -257,35 +259,38 @@ void Diffractive_TMVApplication()
    std::cout << "--- Select signal sample" << std::endl;
    TTree* theTree = (TTree*)mSample[sampleName].file->Get(mSample[sampleName].tree_name + "/AllTree");
 
-   Int_t HFminusNtowers_tree ,HFplusNtowers_tree ,CastorNtowers_tree,Ntracks_tree,CaloReducedenergyClass_tree;
+/////////////////////////// the final variables///////////////////////////////////////////
+   Int_t HFminusNtowers_tree ,HFplusNtowers_tree ,CastorNtowers_tree,CaloReducedenergyClass_tree,Ntracks_tree;
    Int_t Pythia8processid_tree;
    Int_t EventselectionXiprocessDD_tree, EventselectionXiprocessSD1_tree, EventselectionXiprocessSD2_tree, EventselectionXiprocessRest_tree;
    
-   theTree->SetBranchAddress("deltaeta", &deltaeta); 
-   theTree->SetBranchAddress("deltazero", &deltazero);
-   theTree->SetBranchAddress("etamax", &etamax);
-   theTree->SetBranchAddress("etamin", &etamin);
+   theTree->SetBranchAddress("DeltaEta", &deltaeta); 
+   theTree->SetBranchAddress("DeltaEtaZero", &deltazero);
+   theTree->SetBranchAddress("EtaMax", &etamax);
+   theTree->SetBranchAddress("EtaMin", &etamin);
+   theTree->SetBranchAddress("NbrTowersHFminus", &HFminusNtowers_tree);
+   theTree->SetBranchAddress("NbrTowersHFplus", &HFplusNtowers_tree);
+   theTree->SetBranchAddress("NbrTowersCastor", &CastorNtowers_tree);
+   theTree->SetBranchAddress("NbrTracks",&Ntracks_tree);
+   theTree->SetBranchAddress("NbrAllTowers", &CaloReducedenergyClass_tree);
+   theTree->SetBranchAddress("HottestTowerCastor",&MaxCastorEnergy);
+   theTree->SetBranchAddress("CastorSumEnergy",&CastorSumEnergy);
+   theTree->SetBranchAddress("SumEnergyHFPlus",&HFPlusSumEnergy);
+   // theTree->SetBranchAddress("SumEnergyHFMinus",&HFMinusSumEnergy);
+    
    // theTree->SetBranchAddress("log10XixReco", &log10XixReco);
    // theTree->SetBranchAddress("log10XiyReco", &log10XiyReco);
-   theTree->SetBranchAddress("HFminusNtowers", &HFminusNtowers_tree);
-   theTree->SetBranchAddress("HFplusNtowers", &HFplusNtowers_tree);
-   theTree->SetBranchAddress("CastorNtowers", &CastorNtowers_tree);
-   theTree->SetBranchAddress("Ntracks",&Ntracks_tree);
+//////////////////////////////////////////////////////////////////////////////////////////
+   
    theTree->SetBranchAddress("Pythia8processid",&Pythia8processid_tree);
-   // theTree->SetBranchAddress("EventselectionXiprocessid",&EventselectionXiprocessid_tree);
    theTree->SetBranchAddress("EventselectionXiprocessDD",&EventselectionXiprocessDD_tree);
    theTree->SetBranchAddress("EventselectionXiprocessSD1",&EventselectionXiprocessSD1_tree);
    theTree->SetBranchAddress("EventselectionXiprocessSD2",&EventselectionXiprocessSD2_tree);
    theTree->SetBranchAddress("EventselectionXiprocessRest",&EventselectionXiprocessRest_tree);
-   theTree->SetBranchAddress("CaloReducedenergyClass", &CaloReducedenergyClass_tree);
-   theTree->SetBranchAddress("MaxCastorEnergy",&MaxCastorEnergy);
-   theTree->SetBranchAddress("CastorSumEnergy",&CastorSumEnergy);
-   theTree->SetBranchAddress("HFPlusSumEnergy",&HFPlusSumEnergy);
+
    
-   theTree->SetBranchAddress("HFMinusSumEnergy",&HFMinusSumEnergy);
-   // theTree->SetBranchAddress( "RGmean",&RGmean );
-   // theTree->SetBranchAddress( "MaxHFEnergy",&MaxHFEnergy);
-   // theTree->SetBranchAddress("log10XiDD",&log10XiDD);
+   
+
 
    std::map<TString, double> mClassifier_Value;
 

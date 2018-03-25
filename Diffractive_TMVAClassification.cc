@@ -83,32 +83,33 @@ int Diffractive_TMVAClassification()
    std::map<TString, SampleList::sSample> mSample = SampleList::read_data_mc_files();
    ////////////////////////////////////////////////////////////////////////////
    // Create a ROOT output file where TMVA will store ntuples, histograms, etc.
-   TString outfileName( "data/TMVAClassification_XiCutEPOS.root" );
+   TString outfileName( "data/TMVAClassification_SplitBlock_XiCutEPOSSD1.root" );
    TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
    TMVA::Factory *factory = new TMVA::Factory( "TMVAClassification", outputFile,
                                                "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification" );
    
 
-   factory->AddVariable( "deltaeta","deltaeta", "units", 'F' );
-   factory->AddVariable( "deltazero","deltazero", "units", 'F' );
-   factory->AddVariable( "etamax","etamax", "units", 'F' );
-   factory->AddVariable( "etamin","etamin", "units", 'F' );
-   factory->AddVariable( "HFminusNtowers","HFminusNtowers", "units", 'I' );
-   factory->AddVariable( "HFplusNtowers","HFplusNtowers", "units", 'I' );//Log->logdegistirdin
-   factory->AddVariable( "CastorNtowers","CastorNtowers", "units", 'I' );
-   factory->AddVariable( "Ntracks","Ntracks", "units", 'I' );
-   factory->AddVariable( "CaloReducedenergyClass","CaloReducedenergyClass", "units", 'F' );
-   factory->AddVariable( "MaxCastorEnergy","MaxCastorEnergy", "units", 'F' );
+   //////////////////////////////the Final variables/////////////////////////////////////////////////
+
+   factory->AddVariable( "DeltaEta","DeltaEta", "units", 'F' );
+   factory->AddVariable( "DeltaEtaZero","DeltaEtaZero", "units", 'F' );
+   factory->AddVariable( "EtaMax","EtaMax", "units", 'F' );
+   factory->AddVariable( "EtaMin","EtaMin", "units", 'F' );
+   factory->AddVariable( "NbrTowersHFminus","NbrTowersHFminus", "units", 'I' );
+   factory->AddVariable( "NbrTowersHFplus","NbrTowersHFplus", "units", 'I' );//Log->logdegistirdin
+   factory->AddVariable( "NbrTowersCastor","NbrTowersCastor", "units", 'I' );
+   factory->AddVariable( "NbrTracks","NbrTracks", "units", 'I' );
+   factory->AddVariable( "NbrAllTowers","NbrAllTowers", "units", 'F' );
+   factory->AddVariable( "HottestTowerCastor","HottestTowerCastor", "units", 'F' );
    factory->AddVariable( "CastorSumEnergy","CastorSumEnergy", "units", 'F' );
-   factory->AddVariable( "HFPlusSumEnergy","HFPlusSumEnergy", "units", 'F' );
-   factory->AddVariable( "HFMinusSumEnergy","HFMinusSumEnergy", "units", 'F' );
-   // factory->AddVariable( "MaxHFEnergy","MaxHFEnergy", "units", 'F' );
+
+   factory->AddVariable( "SumEnergyHFPlus","SumEnergyHFPlus", "units", 'F' );
+   factory->AddVariable( "SumEnergyHFMinus","SumEnergyHFMinus", "units", 'F' );
    // factory->AddVariable( "log10XixReco","log10XixReco", "units", 'F' );
    // factory->AddVariable( "log10XiyReco","log10XiyReco", "units", 'F' );//Log->logdegistirdin
-   // factory->AddVariable( "RGmean","RGmean", "units", 'F' );
-
-
-   TString sample_name = "XiCutEPOS";
+   
+  
+   TString sample_name = "XiCutEPOSSD1";
    TFile *input = mSample[sample_name].file;
    std::cout << "--- TMVAClassification       : Using input file: " << input->GetName() << std::endl;
 
@@ -117,7 +118,7 @@ int Diffractive_TMVAClassification()
    // TTree *background = (TTree*)input->Get( mSample[sample_name].tree_name + "/bkgTreeDD");   
    // Double_t signalWeight     = 1.0;
    // Double_t backgroundWeight = 1.0;
-   // // You can add an arbitrary number of signal or background trees
+   // // // You can add an arbitrary number of signal or background trees
    // factory->AddSignalTree(signal, signalWeight);
    // factory->AddBackgroundTree(background, backgroundWeight);
 
@@ -142,22 +143,27 @@ int Diffractive_TMVAClassification()
 
    
    // Apply additional cuts on the signal and background samples (can be different)
-   TCut mycuts = "deltazero>=0" ; // for example: TCut mycuts = "abs(var1)<0.5 && abs(var2-0.5)<1";
-   TCut mycutb = "deltazero>=0"; // for example: TCut mycutb = "abs(var1)<0.5";
+   TCut mycuts = "DeltaEtaZero>=0" ; // for example: TCut mycuts = "abs(var1)<0.5 && abs(var2-0.5)<1";
+   TCut mycutb = "DeltaEtaZero>=0"; // for example: TCut mycutb = "abs(var1)<0.5";
    // 
    factory->PrepareTrainingAndTestTree( mycuts, mycutb,
-                                        //DD "nTrain_Signal= 300000:nTest_Signal=100000:nTrain_Background=300000:nTest_Background=100000:SplitMode=Random:NormMode=NumEvents:!V" );
-                                       //SD1// "nTrain_Signal=100000:nTest_Signal=50000:nTrain_Background=100000:nTest_Background=50000:SplitMode=Random:NormMode=NumEvents:!V" );
-                                      // "nTrain_Signal=6000:nTest_Signal=3000:nTrain_Background=6000:nTest_Background=3000:SplitMode=Random:NormMode=NumEvents:!V" );
-                                      // "nTrain_Signal=80000:nTest_Signal=40000:nTrain_Background=80000:nTest_Background=40000:SplitMode=Random:NormMode=NumEvents:!V" );
-                                    //EposSD2 //"nTrain_Signal=7000:nTest_Signal=4000:nTrain_Background=7000:nTest_Background=4000:SplitMode=Random:NormMode=NumEvents:!V" );
-                                       "nTrain_Signal= 300000:nTest_Signal=100000:nTrain_Background=300000:nTest_Background=100000:SplitMode=Random:NormMode=NumEvents:!V" );
-
+                                       // "nTrain_Signal= 4000:nTest_Signal=2000:nTrain_Background=4000:nTest_Background=2000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                     //Random  // "nTrain_Signal=200000:nTest_Signal=90000:nTrain_Background=300000:nTest_Background=90000:SplitMode=Random:NormMode=NumEvents:!V" );
+                                   //Alternate "nTrain_Signal=100000:nTrain_Background=100000::nTest_Signal=100000:nTest_Background=100000:SplitMode=Alternate:NormMode=NumEvents:!V" );
+                                 
+                                    // DD mbr 210000  0.14 (0.138) , 280000: 0.286 (0.419)
+                                    // "nTrain_Signal= 280000:nTest_Signal=280000:nTrain_Background=280000:nTest_Background=280000:SplitMode=Block:NormMode=NumEvents:!V" );
+                                    //epos 0.044 (0.452)
+                                    // "nTrain_Signal= 156000:nTest_Signal=156000:nTrain_Background=156000:nTest_Background=156000:SplitMode=Block:NormMode=NumEvents:!V" );
+                                    // SD1 kolmogorov mbr: 0.395 (0.009) 
+                                    // "nTrain_Signal= 20000:nTest_Signal=20000:nTrain_Background=20000:nTest_Background=20000:SplitMode=Block:NormMode=NumEvents:!V" );
+                                    // epos:  0.186 (0.376)
+                                   "nTrain_Signal= 40500:nTest_Signal=40500:nTrain_Background=40500:nTest_Background=40500:SplitMode=Block:NormMode=NumEvents:!V" );
+                                   //SD2 mbr kolmogorov 0.287 (0.109)
+                                    // "nTrain_Signal= 100000:nTest_Signal=100000:nTrain_Background=100000:nTest_Background=100000:SplitMode=Block:NormMode=NumEvents:!V" );
    
-   
 
-   // ---- Book MVA methods
-   //
+
    // Please lookup the various method configuration options in the corresponding cxx files, eg:
    // src/MethoCuts.cxx, etc, or here: http://tmva.sourceforge.net/optionRef.html
    // it is possible to preset ranges in the option string in which the cut optimisation should be done:
@@ -166,14 +172,21 @@ int Diffractive_TMVAClassification()
    // Cut optimisation
    
    // Boosted Decision Trees
-   factory->BookMethod( TMVA::Types::kBDT, "BDTG", "!H:!V:NTrees=1000:MinNodeSize=2.5%:BoostType=Grad:Shrinkage=0.3:UseBaggedBoost:BaggedSampleFraction=0.9:nCuts=20:MaxDepth=3" );
-   // factory->BookMethod( TMVA::Types::kBDT, "BDTG", "!H:!V:NTrees=1000:MinNodeSize=2.5%:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.9:nCuts=20:MaxDepth=2" );
 
-
+   
+    factory->BookMethod( TMVA::Types::kBDT, "BDTG","!H:!V:NTrees=300:MinNodeSize=2.5%:BoostType=Grad:Shrinkage=0.3:UseBaggedBoost:BaggedSampleFraction=0.9:nCuts=20:MaxDepth=2" );
+   
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   // factory->BookMethod( TMVA::Types::kBDT, "BDTG", "!H:!V:NTrees=1000:MinNodeSize=2.5%:BoostType=Grad:Shrinkage=0.3:UseBaggedBoost:BaggedSampleFraction=0.9:nCuts=20:MaxDepth=3" );
+   // factory->BookMethod( TMVA::Types::kBDT, "BDTG", "!H:!V:NTrees=1000:MinNodeSize=2.5%:BoostType=Grad:Shrinkage=0.3:UseBaggedBoost:BaggedSampleFraction=0.9:nCuts=20:MaxDepth=3" );
    // factory->BookMethod( TMVA::Types::kFisher, "Fisher", "H:!V:Fisher:VarTransform=None:CreateMVAPdfs:PDFInterpolMVAPdf=Spline2:NbinsMVAPdf=50:NsmoothMVAPdf=10" );
    // factory->BookMethod( TMVA::Types::kLD, "LD", "H:!V:VarTransform=None:CreateMVAPdfs:PDFInterpolMVAPdf=Spline2:NbinsMVAPdf=50:NsmoothMVAPdf=10" );
    // factory->BookMethod( TMVA::Types::kLikelihood, "Likelihood","H:!V:TransformOutput:PDFInterpol=Spline2:NSmoothSig[0]=20:NSmoothBkg[0]=20:NSmoothBkg[1]=10:NSmooth=1:NAvEvtPerBin=50" );
    // factory->BookMethod( TMVA::Types::kMLP, "MLP", "H:!V:NeuronType=tanh:VarTransform=N:NCycles=600:HiddenLayers=N+5:TestRate=5:!UseRegulator" );
+
+
+
+
 
 
    // // Train MVAs using the set of training events
@@ -193,6 +206,7 @@ int Diffractive_TMVAClassification()
    std::cout << "==> Wrote root file: " << outputFile->GetName() << std::endl;
    std::cout << "==> TMVAClassification is done!" << std::endl;
 
+   
    delete factory;
 
    // Launch the GUI for the root macros
@@ -204,7 +218,7 @@ int Diffractive_TMVAClassification()
 
 // !!! to start TMVAGui start Gui inside root
 // !!! > root -l
-// !!! > TMVA::TMVAGui("data/TMVA.root") // <- check outfileName
+// !!! > TMVA::TMVAGui("data/TMVA.root") // <- check outfileName Melike!!!
 int main( int argc, char** argv )
 {
    UNUSED(argc);

@@ -42,6 +42,7 @@ using namespace std;
 
 const TString figure_dir = "AN_figures";
 const TString figure_type = "png";
+// const TString figure_type = "pdf";
 // const TString figure_type = "gif";
 const bool draw_figure = true;
 
@@ -100,6 +101,7 @@ std::map<TString, TH1*> single_figure_addstack(CanvasHelper& ch,
                               std::map<TString, SampleList::sSample>& mSample,
                               std::vector<TString>& vSuffix,
                               TString sample_name,
+                              TString data_sample_name,
                               TString hist_var_name) ;
 
 
@@ -193,10 +195,10 @@ int main( int argc, char** argv )
 
   //////////////////////////////////////////////////////////////////////////
   // // compare training variables MC with DATA
-  training_variables_compare_mc_data(mSample);
-  // discriminant_compare_mc_data(mSample);
+  // training_variables_compare_mc_data(mSample);
+  discriminant_compare_mc_data(mSample);
   // discriminant_compare_data_syst(mSample);
-  // discriminant_results(mSample);
+  discriminant_results(mSample);
 
 
 
@@ -220,7 +222,7 @@ int main( int argc, char** argv )
 /////////////////////////////////////////////////////////////////////////////////////////
   for(double clcut = -1.0; clcut < 0.99; clcut += 0.1) {
     calc_signal_cross_section(cross_section_result, totalcrossectionError,
-                              mSample, "SD2", clcut); ////Burasi cok onemli degistir !!
+                              mSample, "DD", clcut); ////Burasi cok onemli degistir !!
      #warning Signal:?
     htest_clcut->Fill(clcut, cross_section_result);
     htest_clcut->SetBinError( htest_clcut->FindBin(clcut), totalcrossectionError );
@@ -238,7 +240,7 @@ int main( int argc, char** argv )
   // htest_clcut->GetXaxis()->SetRange(0,1);
 
 
-  leg->AddEntry(htest_clcut,"CMS preliminery","");
+  leg->AddEntry(htest_clcut,"CMS Own Work","");
   // leg->AddEntry(htest_clcut,"2015 pp; #sqrt{s} = 13 TeV","lep");
   htest_clcut->Draw();
   
@@ -335,7 +337,7 @@ void exampleCode()
   // draw stacked hists
   ch2.DrawHist();
   // plot CMS Preliminary
-  ch2.DrawCMSPreliminary(true,33,"3.86 #mub^{-1} (13 TeV)");
+  ch2.DrawCMSOwnWork(true,33,"3.86 #mub^{-1} (13 TeV)");
   // or CMS Simulation 
   // ch2.DrawCMSSimulation(true,11);
   // or CMS Own Work
@@ -409,9 +411,12 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
 */
   std::map<TString, sSingleVar> mSingleTrainingVar = build_hist_parameters();
 
-  vector<TString> sampleNames = {"XiCutPythia8"};
+  vector<TString> sampleNames = {"Pythia8","EPOS"};
   // vector<TString> sampleNames = {"Pythia8","EPOS"};
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,sampleNames,"Data");
+  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,sampleNames,"Data_sebastian247934");
   single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,sampleNames,"Data_sebastian247934");
+
   // single_sample_compare_syst(mSample,mSingleTrainingVar,"EPOS","Data");
   // single_sample_compare_syst(mSample,mSingleTrainingVar,"EPOS","Data"); // !!!!!
    // !!!!! icant run with "single_sample_compare_mc_data" scale problemfor systematic
@@ -910,15 +915,16 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
 
     for (auto sample_name : sample_names) {
       if (showStack) {
-        mDrawHists[it->first] = single_figure_addstack(ch,mSample,vSuffix,sample_name,it->second.hist_name);
+        // mDrawHists[it->first] = single_figure_addstack(ch,mSample,vSuffix,sample_name,it->second.hist_name);
+         mDrawHists[it->first] = single_figure_addstack(ch,mSample,vSuffix,sample_name, data_sample_name,it->second.hist_name);
       }
     }
     std::map<TString, TH1*> moreHists = single_figure_compare_mc_data(ch,mSample,vSuffix,sample_names,data_sample_name,it->second.hist_name,scale_data);
     mDrawHists[it->first].insert(moreHists.begin(), moreHists.end());
-    // ch.DrawCMSPreliminary(true,it->second.cms_alignment,"4.58088 #mub^{-1} (13 TeV)");//mine
-    // ch.DrawCMSPreliminary(true,it->second.cms_alignment,"3.86 #mub^{-1} (13 TeV)"); //dNDeta
-    ch.DrawCMSPreliminary(true,it->second.cms_alignment,"24.99 #mub^{-1} (13 TeV)");//Sebastian 247934
-    // ch.DrawCMSPreliminary(true,it->second.cms_alignment,"32.24 #mub^{-1} (13 TeV)"); //sebastina 247920
+    // ch.DrawCMSOwnWork(true,it->second.cms_alignment,"4.58088 #mub^{-1} (13 TeV)");//mine
+    // ch.DrawCMSOwnWork(true,it->second.cms_alignment,"3.86 #mub^{-1} (13 TeV)"); //dNDeta
+    // ch.DrawCMSOwnWork(true,it->second.cms_alignment,"91.7 #mub^{-1} (13 TeV)");//Sebastian 247934
+    ch.DrawCMSOwnWork(true,it->second.cms_alignment,"130 #mub^{-1} (13 TeV)"); //sebastina 247920
   }
 
  
@@ -954,6 +960,7 @@ single_figure_addstack(CanvasHelper& ch,
                               std::map<TString, SampleList::sSample>& mSample,
                               std::vector<TString>& vSuffix,
                               TString sample_name,
+                              TString data_sample_name,
                               TString hist_var_name) 
 {
   //////////////////////////////////////////////////////////////////////////
@@ -961,6 +968,9 @@ single_figure_addstack(CanvasHelper& ch,
   std::map<TString, TH1*> mDrawHists;
 
   double lumi_mc   = mSample[sample_name].lumi;
+  TH1F* hData = (TH1F*)mSample[data_sample_name].file->Get(mSample[data_sample_name].tree_name + "/" + hist_var_name);
+  TH1F* hMC = (TH1F*)mSample[sample_name].file->Get(mSample[sample_name].tree_name + "/" + hist_var_name);
+
 
   //////////////////////////////////////////////////////////////////////////
   // stack the hists together
@@ -985,7 +995,9 @@ single_figure_addstack(CanvasHelper& ch,
   ////////////////////////////// access the stacked hists and add it to the canvas helper/////////////////////////////i/////////////stacked hists2
  
   for(unsigned int iHist=0; iHist<shh.getHistSize(); iHist++) {
-    shh.getHist(iHist)->Scale( 1/lumi_mc, "width" );
+    // shh.getHist(iHist)->Scale( 1/lumi_mc, "width" );
+
+    shh.getHist(iHist)->Scale(hData->GetEntries()/hMC->GetEntries(), "width" );///444444normalizedbythenumberofevents
     ch.addHist( shh.getHist(iHist), "HIST", col[iHist], kSolid, 20, 1001 );
 
     TString hist_text = vSuffix[shh.getHistSize()-iHist-1];
@@ -1019,7 +1031,9 @@ single_figure_compare_mc_data(CanvasHelper& ch,
   // //////////////////////////////////////////////////////////////////////// comparision MCs2
   // access data hist
   TH1F* hData = (TH1F*)mSample[data_sample_name].file->Get(mSample[data_sample_name].tree_name + "/" + hist_var_name);
-  if(scale_data) hData->Scale( 1/lumi_data , "width" );
+  // if(scale_data) hData->Scale( 1/lumi_data , "width" );
+  if(scale_data) hData->Scale( 1. , "width" );//1111normalizedbythenumberofevents
+
   mDrawHists[data_sample_name] = hData;
  
   ///comparision MCs1
@@ -1033,7 +1047,9 @@ single_figure_compare_mc_data(CanvasHelper& ch,
     mDrawHists[sample_names[iHist]] = (TH1F*)mSample[sample_names[iHist]].file->Get(mSample[sample_names[iHist]].tree_name + "/" + hist_var_name);
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     #warning LUMI
-    mDrawHists[sample_names[iHist]]->Scale( 1./lumi_sample, "width");
+    // mDrawHists[sample_names[iHist]]->Scale( 1./lumi_sample, "width");
+
+    mDrawHists[sample_names[iHist]]->Scale(hData->GetEntries()/mDrawHists[sample_names[iHist]]->GetEntries(), "width");//222222normalizedbythenumberofevents
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     ch.addHist( mDrawHists[sample_names[iHist]], "HIST", col_diffMC[iHist] );
 
@@ -1071,10 +1087,10 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
   
   vSuffix.push_back("_DD");//Signal:DD,SD you need to switch
   
-  TString mc_sample_name = "XiCutEPOS";
-  TString data_sample_name = "Data_sebastian247920";
+  TString mc_sample_name = "XiCutPythia8";
+  TString data_sample_name = "Data_sysCastorMinus";
   TString sSignal ="DD";
-  TString training_sample_name = "XiCutEPOS";
+  TString training_sample_name = "XiCutPythia8";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
@@ -1107,7 +1123,7 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
   ch.initRatioCanvas(-1,1,
                      // 0,3e5,
                      // 1e2,1e6,//dNdeta
-                     1e3,1e8,
+                     1e3,1e9,
                      0,3,
                      "Classifier X",
                      "1/N_{evt} dN/dX",
@@ -1196,12 +1212,12 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
   ch.getCanvas()->cd(1);
   leg->Draw("same");
   if(draw_figure)ch.getCanvas()->Print( figure_dir + "/hDisciminant_" + training_sample_name + "." + figure_type );
-  ch.DrawCMSPreliminary(true,11,"32.24 #mub^{-1} (13 TeV)");
+  ch.DrawCMSOwnWork(true,11,"91.75 #mub^{-1} (13 TeV)");
   
    // "4.58088 #mub^{-1} (13 TeV)");//mine 247934
    // "3.86 #mub^{-1} (13 TeV)"); //dNDeta
-   // "24.99 #mub^{-1} (13 TeV)");//Sebastian 247934
-   // "32.24 #mub^{-1} (13 TeV)"); //sebastina 247920
+   // "91.75 #mub^{-1} (13 TeV)");//Sebastian 247934
+   // "130 #mub^{-1} (13 TeV)"); //sebastina 247920
 
 }
 
@@ -1220,11 +1236,11 @@ void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSam
 
   vSuffix.push_back("_SD2");//Signal:DD,SD you need to switch
   
-  TString mc_sample_name = "XiCutPythia8SD2";
+  TString mc_sample_name = "XiCutPythia8";
   TString data_sample_name = "Data";
   const std::vector<TString> vData_Syst = {"Data_sysCastorPlus", "Data_sysCastorMinus","Data_sysHFPlus","Data_sysHFMinus", "Data_sysTrackMinus"};
 
-  TString sSignal ="SD2";
+  TString sSignal ="DD";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + mc_sample_name + "_" + training_method;
@@ -1369,13 +1385,13 @@ void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSam
   ch.getCanvas()->cd(1);
   leg->Draw("same");
   if(draw_figure)ch.getCanvas()->Print( figure_dir + "/hDisciminantsys_" + mc_sample_name + "" + data_sample_name +""+ sSignal+"."+ figure_type );
-  ch.DrawCMSPreliminary(true,11,"3.86 #mub^{-1} (13 TeV)");
+  ch.DrawCMSOwnWork(true,11,"91.75 #mub^{-1} (13 TeV)");
   
   
    // "4.58088 #mub^{-1} (13 TeV)");//mine 247934
    // "3.86 #mub^{-1} (13 TeV)"); //dNDeta
-   // "24.99 #mub^{-1} (13 TeV)");//Sebastian 247934
-   // "32.24 #mub^{-1} (13 TeV)"); //sebastina 247920
+   // "91.75 #mub^{-1} (13 TeV)");//Sebastian 247934
+   // "130 #mub^{-1} (13 TeV)"); //sebastina 247920
 
 }
 
@@ -1392,10 +1408,10 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
-  TString mc_sample_name = "XiCutEPOS";
-  TString data_sample_name = "Data_sebastian247920";
+  TString mc_sample_name = "XiCutPythia8";
+  TString data_sample_name = "Data_sysCastorMinus";
 
-  TString training_sample_name = "XiCutEPOS";
+  TString training_sample_name = "XiCutPythia8";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
@@ -1603,7 +1619,7 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
 
 
   legSdivSqrtSplusB->AddEntry(gr_prob_sig,"Sig probability","lep");
-  legSdivSqrtSplusB->AddEntry(gr_prob_bkg,"Background probability","lep");
+  legSdivSqrtSplusB->AddEntry(gr_prob_bkg,"Background prob.","lep");
   legSdivSqrtSplusB->AddEntry(gr_sig_purity_tims_eff,"Purity X Eff.","lep");
  
  
@@ -1644,10 +1660,10 @@ void calc_signal_cross_section(double& result_cross_section, double& totalcrosse
 
   vSuffix.push_back("_Rest");
 
-  TString mc_sample_name = "XiCutEPOS";
-  TString data_sample_name = "Data_sebastian247920";
+  TString mc_sample_name = "XiCutPythia8";
+  TString data_sample_name = "Data_sysCastorMinus";
 
-  TString training_sample_name = "XiCutEPOS";
+  TString training_sample_name = "XiCutPythia8";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
@@ -1741,11 +1757,13 @@ void calc_signal_cross_section(double& result_cross_section, double& totalcrosse
   // double Error_eff_sig = std::sqrt(1/ pow(Entry_sig_all,2)*(Entry_sig * Fsplit)+ pow(((Entry_sig * Fsplit )/pow(Entry_sig_all,2)),2)*(Entry_sig_all));  
   double Error_eff_sig = calc_error_propagation((Entry_sig * Fsplit ) , Entry_sig_all); 
   double eff_number_of_signal_events_in_data = (Entry_data * prob_sig)/eff_sig; //effictive lumi data
+  double Error_eff_number_of_signal_events_in_data = calc_error_propagation((Entry_data * prob_sig),eff_sig);
   
   
   result_cross_section = eff_number_of_signal_events_in_data/(lumi_data/eff_PU_data);
   totalcrossectionError = std::sqrt(Entry_data) * prob_sig / (lumi_data/eff_PU_data) / eff_sig ;
   
+  double Error_result_cross_section = std::sqrt( pow(eff_number_of_signal_events_in_data,2)* pow(Error_eff_number_of_signal_events_in_data,2)+ pow(lumi_data,2)* pow(0.023,2)+ pow(eff_PU_data,2)*pow(Error_eff_PU_data,2));
   
   // double standartError = std::sqrt(totalcrossectionError) * Error_probsig / (Error_Lumi/Error_eff_PU_data) / Error_eff_sig ;
   
@@ -1775,13 +1793,13 @@ void calc_signal_cross_section(double& result_cross_section, double& totalcrosse
   std::cout << "eff_PU_data: " << eff_PU_data << std::endl;
   std::cout << "======================================================================" << std::endl;
 
-  std::cout << "==============================Standart Error========================================" << std::endl;
+  std::cout << "==============================Istatiscal Error========================================" << std::endl;
   std::cout << "--- Standart Error for signal efficiency = " << Error_eff_sig << std::endl;
   std::cout << "--- Standart Error for signal probability = " << Error_probsig << std::endl;
   std::cout << "Error_eff_PU_data: " << Error_eff_PU_data << std::endl; 
   std::cout << "Error_Fsplit: " << Error_Fsplit << std::endl; 
-  
-  
+  std::cout << "Error_eff_number_of_signal_events_in_data: " <<Error_eff_number_of_signal_events_in_data << std::endl; 
+  std::cout << "Error_result_cross_section: " <<Error_result_cross_section << std::endl; 
   
   // std::cout << "STANDART ERROR: " <<standartError << std::endl; 
 
@@ -1919,7 +1937,7 @@ void single_sample_compare_syst(std::map<TString, SampleList::sSample>& mSample,
     //ch.DrawHist(); //systematic draw stacked hists
     grData_Sys->Draw("same 2");
     leg->Draw("same");
-    ch.DrawCMSPreliminary(true,10,"3.86 #mub^{-1} (13 TeV)");
+    ch.DrawCMSOwnWork(true,10,"3.86 #mub^{-1} (13 TeV)");
     ch.getCanvas()->cd(2);
     grData_Sys_Ratio->Draw("same 2");
 
