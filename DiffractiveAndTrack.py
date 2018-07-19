@@ -116,6 +116,8 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
 
         self.hist["hProcessesIdPythia"] = ROOT.TH1F("hProcessesIdPythia","hProcessesIdPythia",10, 0, 20)
         self.hist["hProcessescut"] = ROOT.TH1F("hProcessescut","hProcessescut",10, 0, 20)
+        self.hist["Hist_2D_Processeseventselectioncut"] = ROOT.TH2D("Hist_2D_Processeseventselectioncut","Hist_2D_Processeseventselectioncut", 4, 0, 1000, 4, 0, 1000);
+
         self.hist["hProcessescuteta"] = ROOT.TH1F("hProcessescuteta","hProcessescuteta",10, 0, 20)
         self.hist["BunchCrossing"] = ROOT.TH1F("BunchCrossing", "BunchCrossing",  3600, 0-0.5, 3600-0.5)
         self.hist["Runs"] =  ROOT.TH1F("Runs", "Runs",  2000, 246000-0.5, 282000-0.5)
@@ -670,7 +672,7 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
 
         if Nbrvertex == 2:
             self.hist["Hist_NrVtxdeltacut"].Fill(deltavertex)
-            if self.isData and abs(deltavertex)> 0.5 : return 0
+            if self.isData and abs(deltavertex)> 0.5 : return 0 #0.5
             if not self.isData and abs(deltavertex)> 0.5 :
                 self.hist["hNentries"].Fill("mc_vtxcut",1)
                 self.hist["hNentriesWithEventSelectionCuts"].Fill("mc_vtxcut",1)
@@ -1645,7 +1647,9 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
                 self.hist["Hist_eventXiID_log10XiX"+EventSelectionXiProcess_ID].Fill(log10(xix))
                 self.hist["Hist_eventXiID_log10XiY"+EventSelectionXiProcess_ID].Fill(log10(xiy))
             # self.hist["hNentries"].Fill("Xi",1)
-               
+                # for EventSelectionXiProcess_ID_2 in  EventSelectionXiProcess_IDs:
+                #     self.hist["Hist_2D_Processeseventselectioncut"].Fill(EventSelectionXiProcess_ID[1:],EventSelectionXiProcess_ID_2[1:],1)
+
             
             
             self.OUTlog10XiDD[0] =log10(Xi_DD) 
@@ -1655,6 +1659,7 @@ class DiffractiveAndTrack(CommonFSQFramework.Core.ExampleProofReader.ExampleProo
             self.OUTforwardgendelta = forwardgendelta
             self.OUTdeltazero[0] = delta_zero
             self.OUTdeltaeta[0] = deltaetamax
+            
             self.OUTetamin[0] = mineta
             self.OUTetamax[0] = maxeta
             self.OUTrapditygapmean [0] = rapidityGapeta
@@ -1751,7 +1756,7 @@ if __name__ == "__main__":
 
     if ParameterSet == 'Seb_LHCf_Run247934'.lower():
         sampleList.append("Run2015A_ReReco_ZeroBias") #247934 #sebastians tree for HF towers            
-        Outputname =  Outputname + "_data_Seb_LHCf_Run247934" 
+        Outputname =  Outputname + "_data_Seb_LHCf_Run247934_sysVertex" 
     
     elif ParameterSet == 'Seb_LHCf_Run247920'.lower():
         sampleList.append("Run2015A_ReReco_ZeroBias") #247934 #sebastians tree for HF towers 
@@ -1835,7 +1840,7 @@ if __name__ == "__main__":
     # sampleList.append("data_ZeroBias1_CASTOR")
     maxFilesMC = None# run through all ffiles found
     maxFilesData =None # same
-    nWorkers = 15# Use all cpu cores
+    nWorkers = 4# Use all cpu cores
    
    
     slaveParams = {}
@@ -1860,7 +1865,7 @@ if __name__ == "__main__":
            maxFilesMC = maxFilesMC,
            maxFilesData = maxFilesData,
            nWorkers= nWorkers,
-           # maxNevents = 10000,
+           maxNevents = 1000,
            verbosity = 2,
            outFile = Outputname) 
 
