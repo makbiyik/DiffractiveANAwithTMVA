@@ -195,10 +195,10 @@ int main( int argc, char** argv )
 
   //////////////////////////////////////////////////////////////////////////
   // // compare training variables MC with DATA
-  // training_variables_compare_mc_data(mSample);
+  training_variables_compare_mc_data(mSample);
   // discriminant_compare_mc_data(mSample);
-  discriminant_compare_data_syst(mSample);
-  //discriminant_results(mSample);
+  // discriminant_compare_data_syst(mSample);
+  // discriminant_results(mSample);
 
 
 
@@ -417,13 +417,13 @@ void training_variables_compare_mc_data(std::map<TString, SampleList::sSample>& 
 
   vector<TString> sampleNames = {"Pythia8","EPOS"};
   // vector<TString> sampleNames = {"Pythia8","EPOS"};
-  // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,sampleNames,"Data_sebastian247920");
+  single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,sampleNames,"Data_sebastian247920");
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,sampleNames,"Data_sebastian247934");
   // single_sample_compare_mc_data(mSample,vSuffix,mSingleTrainingVar,sampleNames,"Data_dNdEta");
 
  
 /////////////////////////////////systematic uncertainty////////////////////////////////////////////////////////////////////
-  single_sample_compare_syst(mSample,mSingleTrainingVar,"EPOS","Data_sebastian247934");
+  // single_sample_compare_syst(mSample,mSingleTrainingVar,"EPOS","Data_sebastian247934");
   // single_sample_compare_syst(mSample,mSingleTrainingVar,"EPOS","Data"); // !!!!!
    // !!!!! icant run with "single_sample_compare_mc_data" scale problemfor systematic
   
@@ -902,7 +902,7 @@ void single_sample_compare_mc_data(std::map<TString, SampleList::sSample>& mSamp
     }
   }
 
-  const bool showStack = false; // false to draw different MCs
+  const bool showStack = true; // false to draw different MCs
 //  vector<TString> models = {""};
   
   std::map<TString, TCanvas*> mCanvas;
@@ -1087,16 +1087,16 @@ void discriminant_compare_mc_data(std::map<TString, SampleList::sSample>& mSampl
 
   std::vector<TString> vSuffix;
   // vSuffix.push_back("_NONE");
-  vSuffix.push_back("_SD1");
+  vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
-  vSuffix.push_back("_DD"); 
+  vSuffix.push_back("_SD1"); 
   
   vSuffix.push_back("_SD2");//Signal:DD,SD you need to switch
   
-  TString mc_sample_name = "XiCutEPOSSD2";
-  TString data_sample_name = "Data_sysTrackMinus";
+  TString mc_sample_name = "XiCutPythia8SD2";
+  TString data_sample_name = "Data_sysVertex_04";
   TString sSignal ="SD2";
-  TString training_sample_name = "XiCutEPOSSD2";
+  TString training_sample_name = "XiCutPythia8SD2";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
@@ -1232,10 +1232,10 @@ void discriminant_compare_data_syst(std::map<TString, SampleList::sSample>& mSam
 
   vSuffix.push_back("_SD2");//Signal:DD,SD you need to switch
   
-  TString mc_sample_name = "XiCutPythia8SD2";
+  TString mc_sample_name = "XiCutPythia8SD2SD2";
   TString data_sample_name = "Data_sebastian247934";
   const std::vector<TString> vData_Syst = {"Data_sysCastorMinus","Data_sysCastorPlus", "Data_sysHFMinus",
-                                           "Data_sysHFPlus","Data_sysTrackMinus"};
+                                           "Data_sysHFPlus","Data_sysVertex_04"};
 
 
   TString sSignal ="SD2";
@@ -1408,10 +1408,10 @@ void discriminant_results(std::map<TString, SampleList::sSample>& mSample)
   vSuffix.push_back("_DD");
   vSuffix.push_back("_Rest");
 
-  TString mc_sample_name = "XiCutEPOSSD2";
-  TString data_sample_name = "Data_sysTrackMinus";
+  TString mc_sample_name = "XiCutPythia8SD2";
+  TString data_sample_name = "Data_sysVertex_04";
 
-  TString training_sample_name = "XiCutEPOSSD2";
+  TString training_sample_name = "XiCutPythia8SD2";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
@@ -1660,10 +1660,10 @@ void calc_signal_cross_section(double& result_cross_section, double& totalcrosse
 
   vSuffix.push_back("_Rest");
 
-  TString mc_sample_name = "XiCutEPOSSD2";
-  TString data_sample_name = "Data_sysTrackMinus";
+  TString mc_sample_name = "XiCutPythia8SD2";
+  TString data_sample_name = "Data_sysVertex_04";
 
-  TString training_sample_name = "XiCutEPOSSD2";
+  TString training_sample_name = "XiCutPythia8SD2";
   TString training_method = "BDTG";
 
   TString hist_name = TString("hDisciminant_") + training_sample_name + "_" + training_method;
@@ -1747,9 +1747,9 @@ void calc_signal_cross_section(double& result_cross_section, double& totalcrosse
   // calc_error_propagation( eventswithvrtzcut_mc ,Allevents_mc));
   double Error_Fsplit =1- calc_error_propagation(eventswithvrtzcut_mc ,Allevents_mc);
   
-  double eff_PU_data = Allevents_data / eventswithvrtzcut_data;
+  // double eff_PU_data = Allevents_data / eventswithvrtzcut_data;
   
-  // double eff_PU_data = Allevents_data / eventswithvrtzcut_data >0 ? eventswithvrtzcut_data: 1.03195; // run_dndeta1.001706e+00; //;  
+  double eff_PU_data = Allevents_data / eventswithvrtzcut_data >0 ? eventswithvrtzcut_data:1.006953;//run34 1.03195; // run_dndeta1.001706e+00; //;  
  
 
   double Error_eff_PU_data = std::sqrt(1/ pow(eventswithvrtzcut_data,2)*Allevents_data+ pow((Allevents_data/pow(eventswithvrtzcut_data,2)),2)*(eventswithvrtzcut_data)); 
